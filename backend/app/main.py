@@ -5,6 +5,8 @@ from sqlalchemy import text
 from app.database.metadata import get_schema_summary
 from app.config.settings import settings
 from app.database.connection import get_db
+from pydantic import BaseModel
+from app.services.gemini_service import generate_sql
 
 app = FastAPI(title="DataPilot API")
 
@@ -28,3 +30,24 @@ def health_db(db: Session = Depends(get_db)):
 @app.get("/api/schema")
 def get_schema():
     return get_schema_summary()
+
+from app.database.metadata import get_schema_summary, get_compact_schema
+
+@app.get("/api/schema")
+def get_schema():
+    return get_schema_summary()
+
+@app.get("/api/schema/compact")
+def get_schema_compact():
+    return {"schema_text": get_compact_schema()}
+
+
+
+class AskRequest(BaseModel):
+    question: str
+
+@app.post("/api/ask")
+def ask(request: AskRequest):
+    schema_text = get_compact_schema()
+    sql = generate_sql(request.question, schema_text)
+    return {"question": request.question, "sql": sql}

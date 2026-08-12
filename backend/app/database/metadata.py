@@ -28,3 +28,40 @@ def get_schema_summary() -> dict:
         }
 
     return schema
+
+NUMERIC_TYPES = ("INTEGER", "NUMERIC", "FLOAT", "DOUBLE", "BIGINT", "SMALLINT")
+TIME_TYPES = ("DATE", "TIMESTAMP", "TIME")
+
+
+def get_compact_schema() -> str:
+    """Turn the raw schema into a short text block for Gemini, with each
+    column tagged as a measure, dimension, or time field."""
+    schema = get_schema_summary()
+    lines = []
+
+    for table_name, info in schema.items():
+        fk_map = {fk["column"][0]: fk["references"] for fk in info["foreign_keys"]}
+        col_descriptions = []
+
+        for col in info["columns"]:
+            name, col_type = col["name"], col["type"].upper()
+            tags = []
+
+            if name in info["primary_key"]:
+                tags.append("PK")
+            if name in fk_map:
+                tags.append(f"FK->{fk_map[name]}")
+            if any(t in col_type for t in TIME_TYPES):
+                tags.append("time")
+            elif any(t in col_type for t in NUMERIC_TYPES) and name not in info["primary_key"] and name not in fk_map:
+                tags.append("measure")
+            elif "PK" not in tags and "FK" not in "".join(tags):
+                tags.append("dimension")
+
+            tag_str = f" ({', '.join(tags)})" if tags else ""
+            col_descriptions.append(f"{name}{tag_str}")
+
+        lines.append(f"Table: {table_name}")
+        lines.append(f"  Columns: {', '.join(col_descriptions)}")
+
+    return "\n".join(lines)
