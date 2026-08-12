@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-
+from app.database.metadata import get_schema_summary
 from app.config.settings import settings
 from app.database.connection import get_db
 
@@ -24,3 +24,7 @@ def health():
 def health_db(db: Session = Depends(get_db)):
     db.execute(text("SELECT 1"))
     return {"status": "ok", "database": "connected"}
+
+@app.get("/api/schema")
+def get_schema():
+    return get_schema_summary()
