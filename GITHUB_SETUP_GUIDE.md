@@ -34,8 +34,8 @@ cd C:\Users\Ankit_Johari\Downloads\GOD_POC\DataPilot
 git init
 
 # Configure your git user (replace with your details)
-git config user.email "your-email@example.com"
-git config user.name "Ankit Johari"
+git config user.email "jankit.hari2000@gmail.com"
+git config user.name "AnkitJohari01"
 
 # Add all files (the .gitignore file is already configured)
 git add .
