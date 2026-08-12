@@ -1,3 +1,4 @@
+# Just to check whether the database connection is working or not
 from sqlalchemy import create_engine, text
 from dotenv import load_dotenv
 import os
