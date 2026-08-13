@@ -31,3 +31,30 @@ def generate_sql(question: str, schema_text: str) -> str:
     if sql.startswith("```"):
         sql = sql.strip("`").removeprefix("sql").strip()
     return sql
+
+
+import re
+
+FORBIDDEN = {
+    "insert", "update", "delete", "drop", "alter", "truncate",
+    "create", "grant", "revoke", "attach", "exec", "execute", "call"
+}                                                                        # Blocks anything not starting with SELECT
+
+def validate_sql(sql: str) -> tuple[bool, str]:
+    """Rejects anything that isn't a single, safe SELECT statement."""
+    cleaned = sql.strip().rstrip(";")                                    # Blocks stacked statements (;)
+
+    if not cleaned.lower().startswith("select"):
+        return False, "Only SELECT statements are allowed."              # Blocks DDL/DML keywords anywhere in the query 
+    if ";" in cleaned:
+        return False, "Multiple statements are not allowed."
+
+    tokens = set(re.findall(r"[a-zA-Z_]+", cleaned.lower()))            # (word-boundary token check, so it won't false-positive on things like a column named created_at)
+    hit = tokens & FORBIDDEN
+    if hit:
+        return False, f"Disallowed keyword(s): {', '.join(hit)}"
+
+    if "limit" not in tokens:
+        cleaned += " LIMIT 100"       # Auto-caps unbounded results at LIMIT 100 so a broad question can't pull the whole table
+
+    return True, cleaned
