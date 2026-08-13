@@ -17,20 +17,78 @@ Rules:
 """
 
 
-def generate_sql(question: str, schema_text: str) -> str:
-    prompt = f"Schema:\n{schema_text}\n\nQuestion: {question}\n\nSQL:"
+def generate_sql(question: str, schema_text: str, history: list[dict] = None) -> str:
+    history_text = ""
+    if history:
+        recent = history[-3:]
+        history_text = "\n".join(
+            f"Q: {h['question']}\nSQL: {h['sql']}" for h in recent
+        )
+        history_text = f"\nPrevious questions in this conversation:\n{history_text}\n"
 
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=prompt,
-        config={"system_instruction": SQL_SYSTEM_INSTRUCTION, "temperature": 0},
-    )
+    prompt = f"Schema:\n{schema_text}\n{history_text}\nQuestion: {question}\n\nSQL:"
+
+    try:
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt,
+            config={
+                "system_instruction": SQL_SYSTEM_INSTRUCTION,
+                "temperature": 0,
+                "http_options": {"timeout": 10000},  # 10 seconds, in ms
+            },
+        )
+    except Exception as e:
+        raise RuntimeError(f"SQL generation failed: {e}")
 
     sql = response.text.strip()
-    # Strip markdown fences if Gemini adds them despite instructions
     if sql.startswith("```"):
         sql = sql.strip("`").removeprefix("sql").strip()
-    return sql
+    return sql       
+
+def generate_insights(question: str, rows: list[dict]) -> dict:
+    """Turns raw query rows into a What happened / Why / What's next narrative."""
+    if not rows:
+        return {
+            "what_happened": "No data matched this question.",
+            "why": "",
+            "next_steps": "Try rephrasing the question or check if the filters are too narrow."
+        }
+
+    prompt = f"""
+    Question: {question}
+    This data is the RESULT of a SQL query that already answers the question — it is not raw unfiltered data.
+    Result rows (first 20): {rows[:20]}
+
+    Answer in exactly this format, no extra text:
+    WHAT HAPPENED: <1-2 sentence factual summary of the result>
+    WHY: <1-2 sentence likely explanation, based only on the data shown>
+    NEXT STEPS: <1-2 sentence actionable suggestion>
+    """
+    try:
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt,
+            config={
+                "temperature": 0,
+                "http_options": {"timeout": 10000},  # 10 seconds, in ms
+            },
+        )
+    except Exception as e:
+        raise RuntimeError(f"Insight generation failed: {e}")
+
+    text_out = response.text.strip()
+
+    sections = {"what_happened": "", "why": "", "next_steps": ""}
+    for line in text_out.splitlines():
+        if line.startswith("WHAT HAPPENED:"):
+            sections["what_happened"] = line.replace("WHAT HAPPENED:", "").strip()
+        elif line.startswith("WHY:"):
+            sections["why"] = line.replace("WHY:", "").strip()
+        elif line.startswith("NEXT STEPS:"):
+            sections["next_steps"] = line.replace("NEXT STEPS:", "").strip()
+
+    return sections
 
 
 import re
@@ -58,3 +116,6 @@ def validate_sql(sql: str) -> tuple[bool, str]:
         cleaned += " LIMIT 100"       # Auto-caps unbounded results at LIMIT 100 so a broad question can't pull the whole table
 
     return True, cleaned
+
+
+
