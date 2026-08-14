@@ -94,19 +94,19 @@ function App() {
           DataPilot
         </div>
 
-        <button className="new-chat-btn" onClick={() => setMessages([])}>
+        <button className="new-chat-btn" onClick={() => setMessages([])} aria-label="Start a new chat">
           <span>+</span> New Chat
         </button>
 
         <nav className="sidebar-nav">
-          <span className="nav-item active">Recent Chats</span>
-          <span className="nav-item">Saved Insights</span>
-          <span className="nav-item">Data Sources</span>
+          <button className="nav-item active" aria-label="Recent Chats">Recent Chats</button>
+          <button className="nav-item" aria-label="Saved Insights">Saved Insights</button>
+          <button className="nav-item" aria-label="Data Sources">Data Sources</button>
         </nav>
 
         <div className="sidebar-footer">
-          <span className="nav-item muted">Settings</span>
-          <span className="nav-item muted">Help & Support</span>
+          <button className="nav-item muted" aria-label="Settings">Settings</button>
+          <button className="nav-item muted" aria-label="Help & Support">Help & Support</button>
         </div>
       </aside>
 

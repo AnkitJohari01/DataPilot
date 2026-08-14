@@ -113,6 +113,11 @@ body {
 }
 
 .nav-item {
+  border: none;
+  background: none;
+  text-align: left;
+  width: 100%;
+  font-family: inherit;
   font-size: 13.5px;
   color: var(--text-muted);
   cursor: pointer;
@@ -488,5 +493,55 @@ body {
 
   .suggestion-card {
     width: 100%;
+  }
+}
+
+/* Custom scrollbars */
+.sidebar::-webkit-scrollbar,
+.conversation::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track,
+.conversation::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb,
+.conversation::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover,
+.conversation::-webkit-scrollbar-thumb:hover {
+  background: var(--text-faint);
+}
+
+.sidebar,
+.conversation {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+/* Message entrance animation */
+.msg-row {
+  animation: messageIn 0.25s ease;
+}
+
+@keyframes messageIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .msg-row {
+    animation: none;
   }
 }
