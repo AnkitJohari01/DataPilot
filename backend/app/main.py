@@ -7,7 +7,7 @@ from app.config.settings import settings
 from app.database.connection import get_db
 from pydantic import BaseModel
 from app.services.gemini_service import generate_insights, generate_sql, validate_sql
-
+from app.database.metadata import get_schema_summary, get_compact_schema, get_valid_identifiers
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -56,7 +56,8 @@ def ask(request: AskRequest, db: Session = Depends(get_db)):
         logger.error(str(e))
         raise HTTPException(status_code=503, detail="AI service is unavailable right now. Please try again.")
 
-    is_valid, result = validate_sql(raw_sql)
+    valid_identifiers = get_valid_identifiers()
+    is_valid, result = validate_sql(raw_sql, valid_identifiers)
     if not is_valid:
         raise HTTPException(status_code=400, detail=result)
 

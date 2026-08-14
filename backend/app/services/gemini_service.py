@@ -30,7 +30,7 @@ def generate_sql(question: str, schema_text: str, history: list[dict] = None) ->
 
     try:
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-3.6-flash",
             contents=prompt,
             config={
                 "system_instruction": SQL_SYSTEM_INSTRUCTION,
@@ -67,7 +67,7 @@ def generate_insights(question: str, rows: list[dict]) -> dict:
     """
     try:
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-3.6-flash",
             contents=prompt,
             config={
                 "temperature": 0,
@@ -98,22 +98,43 @@ FORBIDDEN = {
     "create", "grant", "revoke", "attach", "exec", "execute", "call"
 }                                                                        # Blocks anything not starting with SELECT
 
-def validate_sql(sql: str) -> tuple[bool, str]:
-    """Rejects anything that isn't a single, safe SELECT statement."""
-    cleaned = sql.strip().rstrip(";")                                    # Blocks stacked statements (;)
+def validate_sql(sql: str, valid_identifiers: set[str]) -> tuple[bool, str]:
+    """Rejects anything that isn't a single, safe SELECT statement
+    using only real tables/columns from the schema."""
+    cleaned = sql.strip().rstrip(";")
 
     if not cleaned.lower().startswith("select"):
-        return False, "Only SELECT statements are allowed."              # Blocks DDL/DML keywords anywhere in the query 
+        return False, "Only SELECT statements are allowed."
+
     if ";" in cleaned:
         return False, "Multiple statements are not allowed."
 
-    tokens = set(re.findall(r"[a-zA-Z_]+", cleaned.lower()))            # (word-boundary token check, so it won't false-positive on things like a column named created_at)
+    tokens = set(re.findall(r"[a-zA-Z_]+", cleaned.lower()))
+
     hit = tokens & FORBIDDEN
     if hit:
         return False, f"Disallowed keyword(s): {', '.join(hit)}"
 
+    # SQL reserved words / functions that aren't schema identifiers,
+    # so they shouldn't be flagged as "unknown"
+    sql_keywords = {
+        "select", "from", "where", "and", "or", "not", "in", "as",
+        "join", "left", "right", "inner", "outer", "on", "group", "by",
+        "order", "desc", "asc", "limit", "offset", "having", "distinct",
+        "count", "sum", "avg", "min", "max", "null", "is", "between",
+        "like", "with", "case", "when", "then", "else", "end", "cast",
+        "extract", "date", "interval", "over", "partition", "coalesce"
+    }
+
+    unknown = tokens - FORBIDDEN - sql_keywords - valid_identifiers
+    # Drop pure numbers/short tokens that regex may have caught (e.g. "e" from scientific notation)
+    unknown = {t for t in unknown if len(t) > 2}
+
+    if unknown:
+        return False, f"Query references unknown table/column(s): {', '.join(unknown)}"
+
     if "limit" not in tokens:
-        cleaned += " LIMIT 100"       # Auto-caps unbounded results at LIMIT 100 so a broad question can't pull the whole table
+        cleaned += " LIMIT 100"
 
     return True, cleaned
 

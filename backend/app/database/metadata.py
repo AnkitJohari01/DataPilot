@@ -65,3 +65,15 @@ def get_compact_schema() -> str:
         lines.append(f"  Columns: {', '.join(col_descriptions)}")
 
     return "\n".join(lines)
+
+def get_valid_identifiers() -> set[str]:
+    """Returns a lowercase set of every real table and column name in the DB."""
+    inspector = inspect(engine)
+    identifiers = set()
+
+    for table_name in inspector.get_table_names():
+        identifiers.add(table_name.lower())
+        for col in inspector.get_columns(table_name):
+            identifiers.add(col["name"].lower())
+
+    return identifiers
