@@ -15,6 +15,15 @@ logger = logging.getLogger("datapilot")
 
 app = FastAPI(title="DataPilot API")
 
+
+import re
+
+SCHEMA_KEYWORDS = {"table", "tables", "column", "columns", "schema", "field", "fields"}
+
+def is_schema_question(question: str) -> bool:
+    words = set(re.findall(r"[a-zA-Z]+", question.lower()))
+    return bool(words & SCHEMA_KEYWORDS)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins_list,
@@ -48,6 +57,18 @@ class AskRequest(BaseModel):
 
 @app.post("/api/ask")
 def ask(request: AskRequest, db: Session = Depends(get_db)):
+    if is_schema_question(request.question):
+        schema_text = get_compact_schema()
+        return {
+            "question": request.question,
+            "sql": None,
+            "rows": [],
+            "insights": {
+                "what_happened": f"Here's the structure of the connected database:\n\n{schema_text}",
+                "why": "",
+                "next_steps": "Ask a business question about this data — e.g. 'What are total sales by category?'",
+            },
+        }
     schema_text = get_compact_schema()
 
     try:

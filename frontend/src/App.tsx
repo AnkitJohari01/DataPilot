@@ -1,19 +1,20 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 
+
 type Message = {
   role: "user" | "assistant";
   question: string;
   sql?: string;
-  insights?: { what_happened: string; why: string; next_steps: string };
+  insights?: { what_happened: string; why: string[]; next_steps: string[] };
   showSql?: boolean;
 };
 
 const SUGGESTIONS = [
-  "Why did sales decrease this month?",
-  "Show my top-performing products",
+  "Which product category generates the most sales?",
+  "Show me the top 5 products by sales amount",
   "What caused the revenue change?",
-  "Compare this month with last month",
+  "Which products had the most returns?",
 ];
 
 function App() {
@@ -182,14 +183,27 @@ function App() {
               <div key={i} className="msg-row assistant-row">
                 <div className="msg assistant-msg">
                   <p className="insight-line">{m.insights?.what_happened}</p>
-                  <p className="insight-sub">
-                    <strong>Why: </strong>
-                    {m.insights?.why}
-                  </p>
-                  <p className="insight-sub">
-                    <strong>Next steps: </strong>
-                    {m.insights?.next_steps}
-                  </p>
+                  {m.insights?.why && m.insights.why.length > 0 && (
+                    <div className="insight-section">
+                      <strong>Why</strong>
+                      <ul>
+                        {m.insights.why.map((point: string, idx: number) => (
+                          <li key={idx}>{point}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {m.insights?.next_steps && m.insights.next_steps.length > 0 && (
+                    <div className="insight-section">
+                      <strong>Next steps</strong>
+                      <ul>
+                        {m.insights.next_steps.map((point: string, idx: number) => (
+                          <li key={idx}>{point}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
 
                   <div className="msg-actions">
                     <button onClick={() => copySql(m.sql || "")}>Copy SQL</button>

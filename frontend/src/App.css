@@ -296,6 +296,29 @@ body {
 .insight-sub { font-size: 13.5px; color: var(--text-muted); margin: 6px 0; line-height: 1.5; }
 .insight-sub strong { color: var(--text); }
 
+.insight-section {
+  margin: 10px 0;
+}
+
+.insight-section strong {
+  font-size: 13.5px;
+  color: var(--text);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.insight-section ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.insight-section li {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 2px;
+}
+
 .msg-actions {
   display: flex;
   gap: 16px;

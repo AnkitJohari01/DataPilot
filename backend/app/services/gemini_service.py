@@ -7,8 +7,17 @@ client = genai.Client(api_key=settings.gemini_api_key)
 
 SQL_SYSTEM_INSTRUCTION = """You generate PostgreSQL queries from natural-language questions.
 
+The user does not know the database's table or column names. Business terms in their
+question (e.g. "revenue", "sales", "product") almost always map to a real column or a
+computation over real columns — your job is to find that mapping, not to reject the question.
+
 Rules:
-- Use ONLY the tables and columns given in the schema below. Never invent tables or columns.
+- Use ONLY the tables and columns given in the schema below. Never invent a table or column name.
+- If the question uses a business term with no exact matching column (e.g. "revenue" when the
+  column is "sales_amount"), map it to the closest real column or compute it with an aggregate
+  (e.g. SUM(sales_amount)). Do this silently — do not ask the user to clarify.
+- If the question refers to an entity loosely (e.g. "product 12" when the real identifier is
+  product_id or product_code), match it to the appropriate key column and filter on it.
 - Only generate SELECT or WITH queries. Never INSERT, UPDATE, DELETE, DROP, ALTER, TRUNCATE, or CREATE.
 - Use explicit JOIN conditions based on the foreign keys shown.
 - Add a reasonable LIMIT unless the question clearly needs all rows (e.g. an aggregate).
@@ -30,7 +39,7 @@ def generate_sql(question: str, schema_text: str, history: list[dict] = None) ->
 
     try:
         response = client.models.generate_content(
-            model="gemini-3.6-flash",
+            model="gemini-3.5-flash",
             contents=prompt,
             config={
                 "system_instruction": SQL_SYSTEM_INSTRUCTION,
@@ -51,8 +60,8 @@ def generate_insights(question: str, rows: list[dict]) -> dict:
     if not rows:
         return {
             "what_happened": "No data matched this question.",
-            "why": "",
-            "next_steps": "Try rephrasing the question or check if the filters are too narrow."
+            "why": [],
+            "next_steps": ["Try rephrasing the question or check if the filters are too narrow."]
         }
 
     prompt = f"""
@@ -60,18 +69,24 @@ def generate_insights(question: str, rows: list[dict]) -> dict:
     This data is the RESULT of a SQL query that already answers the question — it is not raw unfiltered data.
     Result rows (first 20): {rows[:20]}
 
+    Explain this to a business user in simple, everyday English. No jargon, no technical terms.
+
     Answer in exactly this format, no extra text:
-    WHAT HAPPENED: <1-2 sentence factual summary of the result>
-    WHY: <1-2 sentence likely explanation, based only on the data shown>
-    NEXT STEPS: <1-2 sentence actionable suggestion>
+    WHAT HAPPENED: <one short, plain-English headline sentence summarizing the result>
+    WHY:
+    - <short bullet point, plain English>
+    - <short bullet point, plain English>
+    NEXT STEPS:
+    - <short bullet point, one clear action>
+    - <short bullet point, one clear action>
     """
     try:
         response = client.models.generate_content(
-            model="gemini-3.6-flash",
+            model="gemini-3.5-flash",
             contents=prompt,
             config={
                 "temperature": 0,
-                "http_options": {"timeout": 10000},  # 10 seconds, in ms
+                "http_options": {"timeout": 10000},
             },
         )
     except Exception as e:
@@ -79,14 +94,22 @@ def generate_insights(question: str, rows: list[dict]) -> dict:
 
     text_out = response.text.strip()
 
-    sections = {"what_happened": "", "why": "", "next_steps": ""}
+    sections = {"what_happened": "", "why": [], "next_steps": []}
+    current_key = None
+
     for line in text_out.splitlines():
+        line = line.strip()
+        if not line:
+            continue
         if line.startswith("WHAT HAPPENED:"):
             sections["what_happened"] = line.replace("WHAT HAPPENED:", "").strip()
+            current_key = None
         elif line.startswith("WHY:"):
-            sections["why"] = line.replace("WHY:", "").strip()
+            current_key = "why"
         elif line.startswith("NEXT STEPS:"):
-            sections["next_steps"] = line.replace("NEXT STEPS:", "").strip()
+            current_key = "next_steps"
+        elif line.startswith("-") and current_key:
+            sections[current_key].append(line.lstrip("-").strip())
 
     return sections
 
@@ -115,8 +138,6 @@ def validate_sql(sql: str, valid_identifiers: set[str]) -> tuple[bool, str]:
     if hit:
         return False, f"Disallowed keyword(s): {', '.join(hit)}"
 
-    # SQL reserved words / functions that aren't schema identifiers,
-    # so they shouldn't be flagged as "unknown"
     sql_keywords = {
         "select", "from", "where", "and", "or", "not", "in", "as",
         "join", "left", "right", "inner", "outer", "on", "group", "by",
@@ -126,8 +147,11 @@ def validate_sql(sql: str, valid_identifiers: set[str]) -> tuple[bool, str]:
         "extract", "date", "interval", "over", "partition", "coalesce"
     }
 
-    unknown = tokens - FORBIDDEN - sql_keywords - valid_identifiers
-    # Drop pure numbers/short tokens that regex may have caught (e.g. "e" from scientific notation)
+    # Column/table aliases (the word right after AS) are made-up labels,
+    # not real schema identifiers — exclude them from the unknown check.
+    aliases = set(re.findall(r"\bas\s+([a-zA-Z_]+)", cleaned.lower()))
+
+    unknown = tokens - FORBIDDEN - sql_keywords - valid_identifiers - aliases
     unknown = {t for t in unknown if len(t) > 2}
 
     if unknown:
@@ -137,6 +161,5 @@ def validate_sql(sql: str, valid_identifiers: set[str]) -> tuple[bool, str]:
         cleaned += " LIMIT 100"
 
     return True, cleaned
-
 
 
