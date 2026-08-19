@@ -76,6 +76,28 @@ def rank_by_similarity(
 
 CATALOG_CACHE_SECONDS = 300
 
+MIN_SEMANTIC_CONFIDENCE = 0.55
+MIN_SEMANTIC_SCORE_GAP = 0.08
+
+
+def needs_clarification(
+    best_score: float,
+    second_best_score: float | None = None,
+) -> bool:
+    """
+    Return True when DataPilot cannot confidently choose one meaning.
+    """
+    if best_score < MIN_SEMANTIC_CONFIDENCE:
+        return True
+
+    if (
+        second_best_score is not None
+        and best_score - second_best_score < MIN_SEMANTIC_SCORE_GAP
+    ):
+        return True
+
+    return False
+
 _catalog_embedding_cache = {
     "created_at": 0.0,
     "candidates": [],
