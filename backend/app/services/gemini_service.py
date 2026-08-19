@@ -55,6 +55,34 @@ def generate_sql(question: str, schema_text: str, history: list[dict] = None) ->
         sql = sql.strip("`").removeprefix("sql").strip()
     return sql       
 
+
+def build_insights_prompt(question: str, rows: list[dict]) -> str:
+    """Build a safe, data-grounded prompt for the answer AI."""
+    return f"""
+Question: {question}
+
+Use only the result rows below:
+{rows[:20]}
+
+Rules:
+- Base every statement only on the result rows provided above.
+- Do not guess, infer, or invent causes, trends, events, or numbers.
+- If the result rows do not contain the reason for something, say:
+  "The data does not show the cause."
+- Do not claim that an operational problem, customer behavior, or business event happened unless it appears in the result rows.
+- In Next Steps, suggest a safe follow-up question or filter to investigate. Do not recommend an action based on an assumed cause.
+- Use simple business English.
+
+Return exactly this format:
+
+WHAT HAPPENED: <one short factual answer based only on the result rows>
+WHY:
+- <a fact directly shown by the rows, or "The data does not show the cause.">
+NEXT STEPS:
+- <a safe follow-up question or data check>
+"""
+
+
 def generate_insights(question: str, rows: list[dict]) -> dict:
     """Turns raw query rows into a What happened / Why / What's next narrative."""
     if not rows:
@@ -64,22 +92,7 @@ def generate_insights(question: str, rows: list[dict]) -> dict:
             "next_steps": ["Try rephrasing the question or check if the filters are too narrow."]
         }
 
-    prompt = f"""
-    Question: {question}
-    This data is the RESULT of a SQL query that already answers the question — it is not raw unfiltered data.
-    Result rows (first 20): {rows[:20]}
-
-    Explain this to a business user in simple, everyday English. No jargon, no technical terms.
-
-    Answer in exactly this format, no extra text:
-    WHAT HAPPENED: <one short, plain-English headline sentence summarizing the result>
-    WHY:
-    - <short bullet point, plain English>
-    - <short bullet point, plain English>
-    NEXT STEPS:
-    - <short bullet point, one clear action>
-    - <short bullet point, one clear action>
-    """
+    prompt = build_insights_prompt(question, rows)
     try:
         response = client.models.generate_content(
             model="gemini-3.5-flash",

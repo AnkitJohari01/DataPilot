@@ -1,0 +1,313 @@
+return_key,sales_key,date_key,product_key,customer_key,return_quantity,return_amount,return_reason_category,return_reason,return_condition,days_to_return,refund_type,defect_flag,damaged_flag,wrong_item_flag,quality_issue_flag,delivery_issue_flag,customer_comment
+1,1,20260108,1,2,1,4999.0,Product Quality,Battery Issue,Defective,4,Exchange,True,False,False,True,False,Battery performance below expectation
+2,2,20260115,1,3,1,4999.0,Product Quality,Audio Defect,Defective,4,Store Credit,True,False,False,True,False,Audio quality issue
+3,3,20260122,1,4,1,4499.1,Customer Preference,Changed Mind,Good,4,Refund,False,False,False,False,False,Customer requested return
+4,12,20260327,1,13,1,4499.1,Product Quality,Audio Defect,Defective,4,Refund,True,False,False,True,False,Audio quality issue
+5,13,20260403,1,14,1,4999.0,Customer Preference,Not As Expected,Good,4,Exchange,False,False,False,False,False,Customer requested return
+6,14,20260410,1,15,1,4249.15,Delivery,Damaged During Delivery,Damaged,4,Store Credit,False,True,False,False,True,Package arrived damaged
+7,15,20260417,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+8,24,20260620,1,10,1,4499.1,Customer Preference,Changed Mind,Good,4,Refund,False,False,False,False,False,Customer requested return
+9,25,20260627,1,11,1,9998.0,Product Quality,Battery Issue,Defective,9,Exchange,True,False,False,True,False,Battery performance below expectation
+10,26,20260704,1,12,1,4999.0,Product Quality,Battery Issue,Defective,4,Store Credit,True,False,False,True,False,Battery performance below expectation
+11,36,20260913,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+12,50,20261221,1,6,1,9998.0,Product Quality,Battery Issue,Defective,9,Store Credit,True,False,False,True,False,Battery performance below expectation
+13,51,20261228,1,7,1,14497.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+14,60,20260302,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+15,61,20260309,1,2,1,4999.0,Product Quality,Battery Issue,Defective,4,Exchange,True,False,False,True,False,Battery performance below expectation
+16,62,20260316,1,3,1,4999.0,Product Quality,Audio Defect,Defective,4,Store Credit,True,False,False,True,False,Audio quality issue
+17,63,20260323,1,4,1,4249.15,Delivery,Damaged During Delivery,Damaged,4,Refund,False,True,False,False,True,Package arrived damaged
+18,72,20260526,1,13,1,4499.1,Product Quality,Audio Defect,Defective,4,Refund,True,False,False,True,False,Audio quality issue
+19,73,20260602,1,14,1,4999.0,Customer Preference,Changed Mind,Good,4,Exchange,False,False,False,False,False,Customer requested return
+20,74,20260609,1,15,1,4999.0,Customer Preference,Not As Expected,Good,4,Store Credit,False,False,False,False,False,Customer requested return
+21,75,20260616,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+22,84,20260819,1,10,1,4249.15,Delivery,Damaged During Delivery,Damaged,4,Refund,False,True,False,False,True,Package arrived damaged
+23,85,20260826,1,11,1,14997.0,Product Quality,Battery Issue,Defective,9,Exchange,True,False,False,True,False,Battery performance below expectation
+24,86,20260902,1,12,1,4999.0,Product Quality,Battery Issue,Defective,4,Store Credit,True,False,False,True,False,Battery performance below expectation
+25,96,20261112,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+26,100,20261211,5,11,1,3998.0,Product Quality,Quality Issue,Defective,9,Exchange,True,False,False,True,False,Quality issue
+27,110,20260220,1,6,1,8748.25,Product Quality,Battery Issue,Defective,14,Store Credit,True,False,False,True,False,Battery performance below expectation
+28,111,20260227,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+29,120,20260501,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+30,121,20260509,1,2,1,3749.25,Product Quality,Battery Issue,Defective,14,Exchange,True,False,False,True,False,Battery performance below expectation
+31,122,20260516,1,3,1,4999.0,Product Quality,Audio Defect,Defective,4,Store Credit,True,False,False,True,False,Audio quality issue
+32,123,20260523,1,4,1,4499.1,Customer Preference,Not As Expected,Good,4,Refund,False,False,False,False,False,Customer requested return
+33,125,20260606,6,6,1,5998.0,Customer Preference,Not As Expected,Good,9,Store Credit,False,False,False,False,False,Customer requested return
+34,132,20260726,1,13,1,3749.25,Product Quality,Audio Defect,Defective,14,Refund,True,False,False,True,False,Audio quality issue
+35,133,20260802,1,14,1,4249.15,Delivery,Damaged During Delivery,Damaged,4,Exchange,False,True,False,False,True,Package arrived damaged
+36,134,20260809,1,15,1,4999.0,Wrong Item,Wrong Item Delivered,Good,4,Store Credit,False,False,True,False,False,Received different product
+37,135,20260816,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+38,144,20261019,1,10,1,4499.1,Customer Preference,Not As Expected,Good,4,Refund,False,False,False,False,False,Customer requested return
+39,145,20261026,1,11,1,9998.0,Product Quality,Battery Issue,Defective,9,Exchange,True,False,False,True,False,Battery performance below expectation
+40,146,20261102,1,12,1,4999.0,Product Quality,Battery Issue,Defective,4,Store Credit,True,False,False,True,False,Battery performance below expectation
+41,150,20261130,7,1,1,4748.1,Customer Preference,Changed Mind,Good,9,Refund,False,False,False,False,False,Customer requested return
+42,156,20260112,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+43,170,20260421,1,6,1,14997.0,Product Quality,Battery Issue,Defective,9,Store Credit,True,False,False,True,False,Battery performance below expectation
+44,171,20260428,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+45,175,20260526,8,11,1,51798.15,Delivery,Damaged During Delivery,Damaged,9,Exchange,False,True,False,False,True,Package arrived damaged
+46,180,20260701,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+47,181,20260708,1,2,1,4999.0,Product Quality,Battery Issue,Defective,4,Exchange,True,False,False,True,False,Battery performance below expectation
+48,182,20260715,1,3,1,4249.15,Product Quality,Audio Defect,Defective,4,Store Credit,True,False,False,True,False,Audio quality issue
+49,183,20260722,1,4,1,4499.1,Wrong Item,Wrong Item Delivered,Good,4,Refund,False,False,True,False,False,Received different product
+50,192,20260924,1,13,1,4499.1,Product Quality,Audio Defect,Defective,4,Refund,True,False,False,True,False,Audio quality issue
+51,193,20261001,1,14,1,4999.0,Customer Preference,Not As Expected,Good,4,Exchange,False,False,False,False,False,Customer requested return
+52,194,20261008,1,15,1,4999.0,Customer Preference,Not As Expected,Good,4,Store Credit,False,False,False,False,False,Customer requested return
+53,195,20261015,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+54,200,20261120,9,6,1,31998.0,Customer Preference,Not As Expected,Good,9,Store Credit,False,False,False,False,False,Customer requested return
+55,204,20261218,1,10,1,14497.1,Wrong Item,Wrong Item Delivered,Good,4,Refund,False,False,True,False,False,Received different product
+56,205,20261225,1,11,1,9998.0,Product Quality,Battery Issue,Defective,9,Exchange,True,False,False,True,False,Battery performance below expectation
+57,206,20260101,1,12,1,4999.0,Product Quality,Battery Issue,Defective,4,Store Credit,True,False,False,True,False,Battery performance below expectation
+58,216,20260313,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+59,225,20260516,10,1,1,18998.1,Wrong Item,Wrong Item Delivered,Good,9,Refund,False,False,True,False,False,Received different product
+60,230,20260620,1,6,1,9998.0,Product Quality,Battery Issue,Defective,9,Store Credit,True,False,False,True,False,Battery performance below expectation
+61,231,20260628,1,7,1,3749.25,Product Quality,Battery Issue,Defective,14,Refund,True,False,False,True,False,Battery performance below expectation
+62,240,20260830,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+63,241,20260906,1,2,1,4999.0,Product Quality,Battery Issue,Defective,4,Exchange,True,False,False,True,False,Battery performance below expectation
+64,242,20260914,1,3,1,3749.25,Product Quality,Audio Defect,Defective,14,Store Credit,True,False,False,True,False,Audio quality issue
+65,243,20260921,1,4,1,4499.1,Customer Preference,Not As Expected,Good,4,Refund,False,False,False,False,False,Customer requested return
+66,250,20261109,11,11,1,15998.0,Customer Preference,Not As Expected,Good,9,Exchange,False,False,False,False,False,Customer requested return
+67,252,20261123,1,13,1,4249.15,Product Quality,Audio Defect,Defective,4,Refund,True,False,False,True,False,Audio quality issue
+68,253,20261201,1,14,1,3749.25,Wrong Item,Wrong Item Delivered,Good,14,Exchange,False,False,True,False,False,Received different product
+69,254,20261208,1,15,1,4999.0,Product Quality,Quality Issue,Defective,4,Store Credit,True,False,False,True,False,Quality issue
+70,255,20261215,1,1,1,14497.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+71,264,20260217,1,10,1,3749.25,Customer Preference,Not As Expected,Good,14,Refund,False,False,False,False,False,Customer requested return
+72,265,20260224,1,11,1,9998.0,Product Quality,Battery Issue,Defective,9,Exchange,True,False,False,True,False,Battery performance below expectation
+73,266,20260303,1,12,1,4249.15,Product Quality,Battery Issue,Defective,4,Store Credit,True,False,False,True,False,Battery performance below expectation
+74,275,20260506,12,6,1,6123.25,Product Quality,Quality Issue,Defective,14,Store Credit,True,False,False,True,False,Quality issue
+75,276,20260513,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+76,290,20260820,1,6,1,9998.0,Product Quality,Battery Issue,Defective,9,Store Credit,True,False,False,True,False,Battery performance below expectation
+77,291,20260827,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+78,300,20261030,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+79,301,20261106,1,2,1,4249.15,Product Quality,Battery Issue,Defective,4,Exchange,True,False,False,True,False,Battery performance below expectation
+80,302,20261113,1,3,1,4999.0,Product Quality,Audio Defect,Defective,4,Store Credit,True,False,False,True,False,Audio quality issue
+81,303,20261120,1,4,1,4499.1,Product Quality,Quality Issue,Defective,4,Refund,True,False,False,True,False,Quality issue
+82,312,20260123,1,13,1,4499.1,Product Quality,Audio Defect,Defective,4,Refund,True,False,False,True,False,Audio quality issue
+83,313,20260130,1,14,1,4999.0,Customer Preference,Not As Expected,Good,4,Exchange,False,False,False,False,False,Customer requested return
+84,314,20260206,1,15,1,4999.0,Customer Preference,Not As Expected,Good,4,Store Credit,False,False,False,False,False,Customer requested return
+85,315,20260213,1,1,1,9248.15,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+86,324,20260418,1,10,1,4499.1,Product Quality,Quality Issue,Defective,4,Refund,True,False,False,True,False,Quality issue
+87,325,20260425,1,11,1,9998.0,Product Quality,Battery Issue,Defective,9,Exchange,True,False,False,True,False,Battery performance below expectation
+88,326,20260502,1,12,1,4999.0,Product Quality,Battery Issue,Defective,4,Store Credit,True,False,False,True,False,Battery performance below expectation
+89,336,20260712,1,7,1,4249.15,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+90,350,20261019,1,6,1,9248.15,Product Quality,Battery Issue,Defective,9,Store Credit,True,False,False,True,False,Battery performance below expectation
+91,351,20261026,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+92,360,20261229,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+93,361,20260105,1,2,1,4999.0,Product Quality,Battery Issue,Defective,4,Exchange,True,False,False,True,False,Battery performance below expectation
+94,362,20260112,1,3,1,4999.0,Product Quality,Audio Defect,Defective,4,Store Credit,True,False,False,True,False,Audio quality issue
+95,363,20260120,1,4,1,3749.25,Customer Preference,Not As Expected,Good,14,Refund,False,False,False,False,False,Customer requested return
+96,372,20260324,1,13,1,4499.1,Product Quality,Audio Defect,Defective,4,Refund,True,False,False,True,False,Audio quality issue
+97,373,20260331,1,14,1,4999.0,Product Quality,Quality Issue,Defective,4,Exchange,True,False,False,True,False,Quality issue
+98,374,20260408,1,15,1,13747.25,Customer Preference,Changed Mind,Good,14,Store Credit,False,False,False,False,False,Customer requested return
+99,375,20260415,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+100,384,20260617,1,10,1,4499.1,Customer Preference,Not As Expected,Good,4,Refund,False,False,False,False,False,Customer requested return
+101,385,20260625,1,11,1,8748.25,Product Quality,Battery Issue,Defective,14,Exchange,True,False,False,True,False,Battery performance below expectation
+102,386,20260702,1,12,1,4999.0,Product Quality,Battery Issue,Defective,4,Store Credit,True,False,False,True,False,Battery performance below expectation
+103,396,20260911,1,7,1,3749.25,Product Quality,Battery Issue,Defective,14,Refund,True,False,False,True,False,Battery performance below expectation
+104,400,20261009,5,11,1,3998.0,Wrong Item,Wrong Item Delivered,Good,9,Exchange,False,False,True,False,False,Received different product
+105,410,20261219,1,6,1,9998.0,Product Quality,Battery Issue,Defective,9,Store Credit,True,False,False,True,False,Battery performance below expectation
+106,411,20261226,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+107,420,20260228,1,1,1,9248.15,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+108,421,20260307,1,2,1,4999.0,Product Quality,Battery Issue,Defective,4,Exchange,True,False,False,True,False,Battery performance below expectation
+109,422,20260314,1,3,1,4999.0,Product Quality,Audio Defect,Defective,4,Store Credit,True,False,False,True,False,Audio quality issue
+110,423,20260321,1,4,1,4499.1,Customer Preference,Changed Mind,Good,4,Refund,False,False,False,False,False,Customer requested return
+111,425,20260404,6,6,1,8997.0,Customer Preference,Not As Expected,Good,9,Store Credit,False,False,False,False,False,Customer requested return
+112,432,20260524,1,13,1,4499.1,Product Quality,Audio Defect,Defective,4,Refund,True,False,False,True,False,Audio quality issue
+113,433,20260531,1,14,1,4999.0,Customer Preference,Not As Expected,Good,4,Exchange,False,False,False,False,False,Customer requested return
+114,434,20260607,1,15,1,4249.15,Delivery,Damaged During Delivery,Damaged,4,Store Credit,False,True,False,False,True,Package arrived damaged
+115,435,20260614,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+116,444,20260817,1,10,1,4499.1,Customer Preference,Changed Mind,Good,4,Refund,False,False,False,False,False,Customer requested return
+117,445,20260824,1,11,1,9998.0,Product Quality,Battery Issue,Defective,9,Exchange,True,False,False,True,False,Battery performance below expectation
+118,446,20260831,1,12,1,4999.0,Product Quality,Battery Issue,Defective,4,Store Credit,True,False,False,True,False,Battery performance below expectation
+119,450,20260928,7,1,1,4748.1,Product Quality,Quality Issue,Defective,9,Refund,True,False,False,True,False,Quality issue
+120,456,20261110,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+121,470,20260217,1,6,1,9998.0,Product Quality,Battery Issue,Defective,9,Store Credit,True,False,False,True,False,Battery performance below expectation
+122,471,20260224,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+123,475,20260325,8,11,1,55998.0,Customer Preference,Not As Expected,Good,9,Exchange,False,False,False,False,False,Customer requested return
+124,480,20260429,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+125,481,20260506,1,2,1,4999.0,Product Quality,Battery Issue,Defective,4,Exchange,True,False,False,True,False,Battery performance below expectation
+126,482,20260513,1,3,1,4999.0,Product Quality,Audio Defect,Defective,4,Store Credit,True,False,False,True,False,Audio quality issue
+127,483,20260520,1,4,1,4249.15,Delivery,Damaged During Delivery,Damaged,4,Refund,False,True,False,False,True,Package arrived damaged
+128,492,20260723,1,13,1,4499.1,Product Quality,Audio Defect,Defective,4,Refund,True,False,False,True,False,Audio quality issue
+129,493,20260730,1,14,1,14997.0,Customer Preference,Changed Mind,Good,4,Exchange,False,False,False,False,False,Customer requested return
+130,494,20260806,1,15,1,4999.0,Customer Preference,Not As Expected,Good,4,Store Credit,False,False,False,False,False,Customer requested return
+131,495,20260814,1,1,1,8748.25,Product Quality,Battery Issue,Defective,14,Refund,True,False,False,True,False,Battery performance below expectation
+132,500,20260918,9,6,1,31998.0,Customer Preference,Changed Mind,Good,9,Store Credit,False,False,False,False,False,Customer requested return
+133,504,20261016,1,10,1,4249.15,Delivery,Damaged During Delivery,Damaged,4,Refund,False,True,False,False,True,Package arrived damaged
+134,505,20261023,1,11,1,9998.0,Product Quality,Battery Issue,Defective,9,Exchange,True,False,False,True,False,Battery performance below expectation
+135,506,20261031,1,12,1,3749.25,Product Quality,Battery Issue,Defective,14,Store Credit,True,False,False,True,False,Battery performance below expectation
+136,516,20260109,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+137,525,20260314,10,1,1,18498.15,Delivery,Damaged During Delivery,Damaged,9,Refund,False,True,False,False,True,Package arrived damaged
+138,530,20260419,1,6,1,9998.0,Product Quality,Battery Issue,Defective,9,Store Credit,True,False,False,True,False,Battery performance below expectation
+139,531,20260426,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+140,540,20260629,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+141,541,20260706,1,2,1,4999.0,Product Quality,Battery Issue,Defective,4,Exchange,True,False,False,True,False,Battery performance below expectation
+142,542,20260713,1,3,1,4999.0,Product Quality,Audio Defect,Defective,4,Store Credit,True,False,False,True,False,Audio quality issue
+143,543,20260720,1,4,1,4499.1,Customer Preference,Not As Expected,Good,4,Refund,False,False,False,False,False,Customer requested return
+144,550,20260908,11,11,1,13998.25,Customer Preference,Not As Expected,Good,14,Exchange,False,False,False,False,False,Customer requested return
+145,552,20260922,1,13,1,4499.1,Product Quality,Audio Defect,Defective,4,Refund,True,False,False,True,False,Audio quality issue
+146,553,20260929,1,14,1,4249.15,Delivery,Damaged During Delivery,Damaged,4,Exchange,False,True,False,False,True,Package arrived damaged
+147,554,20261006,1,15,1,4999.0,Wrong Item,Wrong Item Delivered,Good,4,Store Credit,False,False,True,False,False,Received different product
+148,555,20261013,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+149,564,20261216,1,10,1,4499.1,Customer Preference,Not As Expected,Good,4,Refund,False,False,False,False,False,Customer requested return
+150,565,20261223,1,11,1,9998.0,Product Quality,Battery Issue,Defective,9,Exchange,True,False,False,True,False,Battery performance below expectation
+151,566,20261230,1,12,1,4999.0,Product Quality,Battery Issue,Defective,4,Store Credit,True,False,False,True,False,Battery performance below expectation
+152,575,20260304,12,6,1,6998.0,Wrong Item,Wrong Item Delivered,Good,9,Store Credit,False,False,True,False,False,Received different product
+153,576,20260311,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+154,590,20260618,1,6,1,9998.0,Product Quality,Battery Issue,Defective,9,Store Credit,True,False,False,True,False,Battery performance below expectation
+155,591,20260625,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+156,600,20260828,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+157,601,20260904,1,2,1,4999.0,Product Quality,Battery Issue,Defective,4,Exchange,True,False,False,True,False,Battery performance below expectation
+158,602,20260911,1,3,1,4249.15,Product Quality,Audio Defect,Defective,4,Store Credit,True,False,False,True,False,Audio quality issue
+159,603,20260918,1,4,1,4499.1,Wrong Item,Wrong Item Delivered,Good,4,Refund,False,False,True,False,False,Received different product
+160,612,20261121,1,13,1,14497.1,Product Quality,Audio Defect,Defective,4,Refund,True,False,False,True,False,Audio quality issue
+161,613,20261128,1,14,1,4999.0,Customer Preference,Not As Expected,Good,4,Exchange,False,False,False,False,False,Customer requested return
+162,614,20261205,1,15,1,4999.0,Customer Preference,Not As Expected,Good,4,Store Credit,False,False,False,False,False,Customer requested return
+163,615,20261212,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+164,624,20260214,1,10,1,4499.1,Wrong Item,Wrong Item Delivered,Good,4,Refund,False,False,True,False,False,Received different product
+165,625,20260221,1,11,1,9998.0,Product Quality,Battery Issue,Defective,9,Exchange,True,False,False,True,False,Battery performance below expectation
+166,626,20260228,1,12,1,4999.0,Product Quality,Battery Issue,Defective,4,Store Credit,True,False,False,True,False,Battery performance below expectation
+167,636,20260510,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+168,650,20260818,1,6,1,9998.0,Product Quality,Battery Issue,Defective,9,Store Credit,True,False,False,True,False,Battery performance below expectation
+169,651,20260825,1,7,1,4249.15,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+170,660,20261028,1,1,1,8748.25,Product Quality,Battery Issue,Defective,14,Refund,True,False,False,True,False,Battery performance below expectation
+171,661,20261104,1,2,1,4999.0,Product Quality,Battery Issue,Defective,4,Exchange,True,False,False,True,False,Battery performance below expectation
+172,662,20261111,1,3,1,4999.0,Product Quality,Audio Defect,Defective,4,Store Credit,True,False,False,True,False,Audio quality issue
+173,663,20261118,1,4,1,14497.1,Customer Preference,Not As Expected,Good,4,Refund,False,False,False,False,False,Customer requested return
+174,672,20260121,1,13,1,4249.15,Product Quality,Audio Defect,Defective,4,Refund,True,False,False,True,False,Audio quality issue
+175,673,20260128,1,14,1,4999.0,Wrong Item,Wrong Item Delivered,Good,4,Exchange,False,False,True,False,False,Received different product
+176,674,20260204,1,15,1,4999.0,Product Quality,Quality Issue,Defective,4,Store Credit,True,False,False,True,False,Quality issue
+177,675,20260211,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+178,684,20260416,1,10,1,4499.1,Customer Preference,Not As Expected,Good,4,Refund,False,False,False,False,False,Customer requested return
+179,685,20260423,1,11,1,9998.0,Product Quality,Battery Issue,Defective,9,Exchange,True,False,False,True,False,Battery performance below expectation
+180,686,20260430,1,12,1,4249.15,Product Quality,Battery Issue,Defective,4,Store Credit,True,False,False,True,False,Battery performance below expectation
+181,696,20260710,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+182,700,20260807,5,11,1,3698.15,Delivery,Damaged During Delivery,Damaged,9,Exchange,False,True,False,False,True,Package arrived damaged
+183,710,20261017,1,6,1,9998.0,Product Quality,Battery Issue,Defective,9,Store Credit,True,False,False,True,False,Battery performance below expectation
+184,711,20261024,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+185,720,20261227,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+186,721,20260103,1,2,1,4249.15,Product Quality,Battery Issue,Defective,4,Exchange,True,False,False,True,False,Battery performance below expectation
+187,722,20260110,1,3,1,4999.0,Product Quality,Audio Defect,Defective,4,Store Credit,True,False,False,True,False,Audio quality issue
+188,723,20260117,1,4,1,4499.1,Product Quality,Quality Issue,Defective,4,Refund,True,False,False,True,False,Quality issue
+189,725,20260131,6,6,1,5998.0,Customer Preference,Not As Expected,Good,9,Store Credit,False,False,False,False,False,Customer requested return
+190,732,20260322,1,13,1,4499.1,Product Quality,Audio Defect,Defective,4,Refund,True,False,False,True,False,Audio quality issue
+191,733,20260329,1,14,1,4999.0,Customer Preference,Not As Expected,Good,4,Exchange,False,False,False,False,False,Customer requested return
+192,734,20260405,1,15,1,4999.0,Customer Preference,Not As Expected,Good,4,Store Credit,False,False,False,False,False,Customer requested return
+193,735,20260412,1,1,1,9248.15,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+194,744,20260615,1,10,1,4499.1,Product Quality,Quality Issue,Defective,4,Refund,True,False,False,True,False,Quality issue
+195,745,20260622,1,11,1,9998.0,Product Quality,Battery Issue,Defective,9,Exchange,True,False,False,True,False,Battery performance below expectation
+196,746,20260629,1,12,1,4999.0,Product Quality,Battery Issue,Defective,4,Store Credit,True,False,False,True,False,Battery performance below expectation
+197,750,20260728,7,1,1,4748.1,Wrong Item,Wrong Item Delivered,Good,9,Refund,False,False,True,False,False,Received different product
+198,756,20260908,1,7,1,4249.15,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+199,770,20261217,1,6,1,8748.25,Product Quality,Battery Issue,Defective,14,Store Credit,True,False,False,True,False,Battery performance below expectation
+200,771,20261224,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+201,775,20260121,8,11,1,55998.0,Customer Preference,Not As Expected,Good,9,Exchange,False,False,False,False,False,Customer requested return
+202,780,20260225,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+203,781,20260305,1,2,1,3749.25,Product Quality,Battery Issue,Defective,14,Exchange,True,False,False,True,False,Battery performance below expectation
+204,782,20260312,1,3,1,14997.0,Product Quality,Audio Defect,Defective,4,Store Credit,True,False,False,True,False,Audio quality issue
+205,783,20260319,1,4,1,4499.1,Customer Preference,Not As Expected,Good,4,Refund,False,False,False,False,False,Customer requested return
+206,792,20260522,1,13,1,3749.25,Product Quality,Audio Defect,Defective,14,Refund,True,False,False,True,False,Audio quality issue
+207,793,20260529,1,14,1,4999.0,Product Quality,Quality Issue,Defective,4,Exchange,True,False,False,True,False,Quality issue
+208,794,20260605,1,15,1,4999.0,Customer Preference,Changed Mind,Good,4,Store Credit,False,False,False,False,False,Customer requested return
+209,795,20260612,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+210,800,20260717,9,6,1,31998.0,Product Quality,Quality Issue,Defective,9,Store Credit,True,False,False,True,False,Quality issue
+211,804,20260815,1,10,1,4499.1,Customer Preference,Not As Expected,Good,4,Refund,False,False,False,False,False,Customer requested return
+212,805,20260822,1,11,1,9248.15,Product Quality,Battery Issue,Defective,9,Exchange,True,False,False,True,False,Battery performance below expectation
+213,806,20260829,1,12,1,4999.0,Product Quality,Battery Issue,Defective,4,Store Credit,True,False,False,True,False,Battery performance below expectation
+214,816,20261108,1,7,1,14497.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+215,825,20260111,10,1,1,17498.25,Customer Preference,Not As Expected,Good,14,Refund,False,False,False,False,False,Customer requested return
+216,830,20260215,1,6,1,9998.0,Product Quality,Battery Issue,Defective,9,Store Credit,True,False,False,True,False,Battery performance below expectation
+217,831,20260222,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+218,840,20260427,1,1,1,9248.15,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+219,841,20260504,1,2,1,4999.0,Product Quality,Battery Issue,Defective,4,Exchange,True,False,False,True,False,Battery performance below expectation
+220,842,20260511,1,3,1,4999.0,Product Quality,Audio Defect,Defective,4,Store Credit,True,False,False,True,False,Audio quality issue
+221,843,20260518,1,4,1,4499.1,Customer Preference,Changed Mind,Good,4,Refund,False,False,False,False,False,Customer requested return
+222,850,20260707,11,11,1,23997.0,Customer Preference,Changed Mind,Good,9,Exchange,False,False,False,False,False,Customer requested return
+223,852,20260721,1,13,1,4499.1,Product Quality,Audio Defect,Defective,4,Refund,True,False,False,True,False,Audio quality issue
+224,853,20260728,1,14,1,4999.0,Customer Preference,Not As Expected,Good,4,Exchange,False,False,False,False,False,Customer requested return
+225,854,20260804,1,15,1,4249.15,Delivery,Damaged During Delivery,Damaged,4,Store Credit,False,True,False,False,True,Package arrived damaged
+226,855,20260811,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+227,864,20261014,1,10,1,4499.1,Customer Preference,Changed Mind,Good,4,Refund,False,False,False,False,False,Customer requested return
+228,865,20261021,1,11,1,9998.0,Product Quality,Battery Issue,Defective,9,Exchange,True,False,False,True,False,Battery performance below expectation
+229,866,20261028,1,12,1,4999.0,Product Quality,Battery Issue,Defective,4,Store Credit,True,False,False,True,False,Battery performance below expectation
+230,875,20261231,12,6,1,6473.15,Delivery,Damaged During Delivery,Damaged,9,Store Credit,False,True,False,False,True,Package arrived damaged
+231,876,20260107,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+232,890,20260416,1,6,1,9998.0,Product Quality,Battery Issue,Defective,9,Store Credit,True,False,False,True,False,Battery performance below expectation
+233,891,20260424,1,7,1,3749.25,Product Quality,Battery Issue,Defective,14,Refund,True,False,False,True,False,Battery performance below expectation
+234,900,20260626,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+235,901,20260703,1,2,1,14997.0,Product Quality,Battery Issue,Defective,4,Exchange,True,False,False,True,False,Battery performance below expectation
+236,902,20260711,1,3,1,3749.25,Product Quality,Audio Defect,Defective,14,Store Credit,True,False,False,True,False,Audio quality issue
+237,903,20260718,1,4,1,4249.15,Delivery,Damaged During Delivery,Damaged,4,Refund,False,True,False,False,True,Package arrived damaged
+238,912,20260919,1,13,1,4499.1,Product Quality,Audio Defect,Defective,4,Refund,True,False,False,True,False,Audio quality issue
+239,913,20260927,1,14,1,3749.25,Customer Preference,Changed Mind,Good,14,Exchange,False,False,False,False,False,Customer requested return
+240,914,20261004,1,15,1,4999.0,Customer Preference,Not As Expected,Good,4,Store Credit,False,False,False,False,False,Customer requested return
+241,915,20261011,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+242,924,20261214,1,10,1,3749.25,Delivery,Damaged During Delivery,Damaged,14,Refund,False,True,False,False,True,Package arrived damaged
+243,925,20261221,1,11,1,9998.0,Product Quality,Battery Issue,Defective,9,Exchange,True,False,False,True,False,Battery performance below expectation
+244,926,20261228,1,12,1,4999.0,Product Quality,Battery Issue,Defective,4,Store Credit,True,False,False,True,False,Battery performance below expectation
+245,936,20260309,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+246,950,20260616,1,6,1,9998.0,Product Quality,Battery Issue,Defective,9,Store Credit,True,False,False,True,False,Battery performance below expectation
+247,951,20260623,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+248,960,20260826,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+249,961,20260902,1,2,1,4999.0,Product Quality,Battery Issue,Defective,4,Exchange,True,False,False,True,False,Battery performance below expectation
+250,962,20260909,1,3,1,4999.0,Product Quality,Audio Defect,Defective,4,Store Credit,True,False,False,True,False,Audio quality issue
+251,963,20260916,1,4,1,4499.1,Customer Preference,Not As Expected,Good,4,Refund,False,False,False,False,False,Customer requested return
+252,972,20261119,1,13,1,4499.1,Product Quality,Audio Defect,Defective,4,Refund,True,False,False,True,False,Audio quality issue
+253,973,20261126,1,14,1,4249.15,Delivery,Damaged During Delivery,Damaged,4,Exchange,False,True,False,False,True,Package arrived damaged
+254,974,20261203,1,15,1,4999.0,Wrong Item,Wrong Item Delivered,Good,4,Store Credit,False,False,True,False,False,Received different product
+255,975,20261210,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+256,984,20260212,1,10,1,4499.1,Customer Preference,Not As Expected,Good,4,Refund,False,False,False,False,False,Customer requested return
+257,985,20260219,1,11,1,9998.0,Product Quality,Battery Issue,Defective,9,Exchange,True,False,False,True,False,Battery performance below expectation
+258,986,20260226,1,12,1,14997.0,Product Quality,Battery Issue,Defective,4,Store Credit,True,False,False,True,False,Battery performance below expectation
+259,996,20260508,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+260,1000,20260605,5,11,1,3998.0,Customer Preference,Not As Expected,Good,9,Exchange,False,False,False,False,False,Customer requested return
+261,1010,20260815,1,6,1,9998.0,Product Quality,Battery Issue,Defective,9,Store Credit,True,False,False,True,False,Battery performance below expectation
+262,1011,20260822,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+263,1020,20261025,1,1,1,14497.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+264,1021,20261101,1,2,1,4999.0,Product Quality,Battery Issue,Defective,4,Exchange,True,False,False,True,False,Battery performance below expectation
+265,1022,20261108,1,3,1,4249.15,Product Quality,Audio Defect,Defective,4,Store Credit,True,False,False,True,False,Audio quality issue
+266,1023,20261116,1,4,1,3749.25,Wrong Item,Wrong Item Delivered,Good,14,Refund,False,False,True,False,False,Received different product
+267,1025,20261130,6,6,1,5998.0,Customer Preference,Changed Mind,Good,9,Store Credit,False,False,False,False,False,Customer requested return
+268,1032,20260118,1,13,1,4499.1,Product Quality,Audio Defect,Defective,4,Refund,True,False,False,True,False,Audio quality issue
+269,1033,20260125,1,14,1,4999.0,Customer Preference,Not As Expected,Good,4,Exchange,False,False,False,False,False,Customer requested return
+270,1034,20260202,1,15,1,3749.25,Customer Preference,Not As Expected,Good,14,Store Credit,False,False,False,False,False,Customer requested return
+271,1035,20260209,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+272,1044,20260413,1,10,1,4499.1,Wrong Item,Wrong Item Delivered,Good,4,Refund,False,False,True,False,False,Received different product
+273,1045,20260421,1,11,1,8748.25,Product Quality,Battery Issue,Defective,14,Exchange,True,False,False,True,False,Battery performance below expectation
+274,1046,20260428,1,12,1,4999.0,Product Quality,Battery Issue,Defective,4,Store Credit,True,False,False,True,False,Battery performance below expectation
+275,1050,20260526,7,1,1,4623.15,Delivery,Damaged During Delivery,Damaged,9,Refund,False,True,False,False,True,Package arrived damaged
+276,1056,20260708,1,7,1,3749.25,Product Quality,Battery Issue,Defective,14,Refund,True,False,False,True,False,Battery performance below expectation
+277,1070,20261015,1,6,1,9998.0,Product Quality,Battery Issue,Defective,9,Store Credit,True,False,False,True,False,Battery performance below expectation
+278,1071,20261022,1,7,1,14247.15,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+279,1075,20261119,8,11,1,55998.0,Customer Preference,Not As Expected,Good,9,Exchange,False,False,False,False,False,Customer requested return
+280,1080,20261225,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+281,1081,20260101,1,2,1,4999.0,Product Quality,Battery Issue,Defective,4,Exchange,True,False,False,True,False,Battery performance below expectation
+282,1082,20260108,1,3,1,4999.0,Product Quality,Audio Defect,Defective,4,Store Credit,True,False,False,True,False,Audio quality issue
+283,1083,20260115,1,4,1,4499.1,Customer Preference,Not As Expected,Good,4,Refund,False,False,False,False,False,Customer requested return
+284,1092,20260320,1,13,1,4249.15,Product Quality,Audio Defect,Defective,4,Refund,True,False,False,True,False,Audio quality issue
+285,1093,20260327,1,14,1,4999.0,Wrong Item,Wrong Item Delivered,Good,4,Exchange,False,False,True,False,False,Received different product
+286,1094,20260403,1,15,1,4999.0,Product Quality,Quality Issue,Defective,4,Store Credit,True,False,False,True,False,Quality issue
+287,1095,20260410,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+288,1100,20260516,9,6,1,27998.25,Wrong Item,Wrong Item Delivered,Good,14,Store Credit,False,False,True,False,False,Received different product
+289,1104,20260613,1,10,1,4499.1,Customer Preference,Not As Expected,Good,4,Refund,False,False,False,False,False,Customer requested return
+290,1105,20260620,1,11,1,14997.0,Product Quality,Battery Issue,Defective,9,Exchange,True,False,False,True,False,Battery performance below expectation
+291,1106,20260627,1,12,1,4249.15,Product Quality,Battery Issue,Defective,4,Store Credit,True,False,False,True,False,Battery performance below expectation
+292,1116,20260906,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+293,1125,20261109,10,1,1,18998.1,Customer Preference,Not As Expected,Good,9,Refund,False,False,False,False,False,Customer requested return
+294,1130,20261214,1,6,1,9998.0,Product Quality,Battery Issue,Defective,9,Store Credit,True,False,False,True,False,Battery performance below expectation
+295,1131,20261221,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+296,1140,20260223,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation
+297,1141,20260302,1,2,1,4249.15,Product Quality,Battery Issue,Defective,4,Exchange,True,False,False,True,False,Battery performance below expectation
+298,1142,20260309,1,3,1,4999.0,Product Quality,Audio Defect,Defective,4,Store Credit,True,False,False,True,False,Audio quality issue
+299,1143,20260316,1,4,1,4499.1,Product Quality,Quality Issue,Defective,4,Refund,True,False,False,True,False,Quality issue
+300,1150,20260505,11,11,1,15998.0,Product Quality,Quality Issue,Defective,9,Exchange,True,False,False,True,False,Quality issue
+301,1152,20260519,1,13,1,4499.1,Product Quality,Audio Defect,Defective,4,Refund,True,False,False,True,False,Audio quality issue
+302,1153,20260526,1,14,1,4999.0,Customer Preference,Not As Expected,Good,4,Exchange,False,False,False,False,False,Customer requested return
+303,1154,20260602,1,15,1,4999.0,Customer Preference,Not As Expected,Good,4,Store Credit,False,False,False,False,False,Customer requested return
+304,1155,20260610,1,1,1,8748.25,Product Quality,Battery Issue,Defective,14,Refund,True,False,False,True,False,Battery performance below expectation
+305,1164,20260812,1,10,1,4499.1,Product Quality,Quality Issue,Defective,4,Refund,True,False,False,True,False,Quality issue
+306,1165,20260819,1,11,1,9998.0,Product Quality,Battery Issue,Defective,9,Exchange,True,False,False,True,False,Battery performance below expectation
+307,1166,20260827,1,12,1,3749.25,Product Quality,Battery Issue,Defective,14,Store Credit,True,False,False,True,False,Battery performance below expectation
+308,1175,20261029,12,6,1,6998.0,Customer Preference,Not As Expected,Good,9,Store Credit,False,False,False,False,False,Customer requested return
+309,1176,20261105,1,7,1,4249.15,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+310,1190,20260213,1,6,1,14247.15,Product Quality,Battery Issue,Defective,9,Store Credit,True,False,False,True,False,Battery performance below expectation
+311,1191,20260220,1,7,1,4499.1,Product Quality,Battery Issue,Defective,4,Refund,True,False,False,True,False,Battery performance below expectation
+312,1200,20260425,1,1,1,9498.1,Product Quality,Battery Issue,Defective,9,Refund,True,False,False,True,False,Battery performance below expectation

@@ -2,27 +2,38 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-from app.database.metadata import get_schema_summary, get_compact_schema
+from pydantic import BaseModel
+
 from app.config.settings import settings
 from app.database.connection import get_db
-from pydantic import BaseModel
+from app.database.metadata import (
+    get_schema_summary,
+    get_compact_schema,
+    get_valid_identifiers,
+    get_schema_catalog,
+    get_catalog_for_llm,
+)
+
+from app.services.semantic_retrieval_service import (
+    get_semantically_relevant_catalog_for_llm,
+)
 from app.services.gemini_service import generate_insights, generate_sql, validate_sql
-from app.database.metadata import get_schema_summary, get_compact_schema, get_valid_identifiers
+
 import logging
+import re
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("datapilot")
 
 app = FastAPI(title="DataPilot API")
 
-
-import re
-
 SCHEMA_KEYWORDS = {"table", "tables", "column", "columns", "schema", "field", "fields"}
+
 
 def is_schema_question(question: str) -> bool:
     words = set(re.findall(r"[a-zA-Z]+", question.lower()))
     return bool(words & SCHEMA_KEYWORDS)
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -32,22 +43,31 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/api/health")
 def health():
     return {"status": "ok"}
+
 
 @app.get("/api/health/db")
 def health_db(db: Session = Depends(get_db)):
     db.execute(text("SELECT 1"))
     return {"status": "ok", "database": "connected"}
 
+
 @app.get("/api/schema")
 def get_schema():
     return get_schema_summary()
 
+
 @app.get("/api/schema/compact")
 def get_schema_compact():
     return {"schema_text": get_compact_schema()}
+
+
+@app.get("/api/catalog")
+def get_catalog():
+    return get_schema_catalog()
 
 
 class AskRequest(BaseModel):
@@ -58,7 +78,8 @@ class AskRequest(BaseModel):
 @app.post("/api/ask")
 def ask(request: AskRequest, db: Session = Depends(get_db)):
     if is_schema_question(request.question):
-        schema_text = get_compact_schema()
+        schema_text = get_catalog_for_llm()
+
         return {
             "question": request.question,
             "sql": None,
@@ -69,16 +90,21 @@ def ask(request: AskRequest, db: Session = Depends(get_db)):
                 "next_steps": "Ask a business question about this data — e.g. 'What are total sales by category?'",
             },
         }
-    schema_text = get_compact_schema()
+
+    schema_text = get_semantically_relevant_catalog_for_llm(request.question)
 
     try:
         raw_sql = generate_sql(request.question, schema_text, request.history)
     except RuntimeError as e:
         logger.error(str(e))
-        raise HTTPException(status_code=503, detail="AI service is unavailable right now. Please try again.")
+        raise HTTPException(
+            status_code=503,
+            detail="AI service is unavailable right now. Please try again.",
+        )
 
     valid_identifiers = get_valid_identifiers()
     is_valid, result = validate_sql(raw_sql, valid_identifiers)
+
     if not is_valid:
         raise HTTPException(status_code=400, detail=result)
 
@@ -87,7 +113,10 @@ def ask(request: AskRequest, db: Session = Depends(get_db)):
         rows = db.execute(text(result)).mappings().all()
     except Exception as e:
         logger.error(f"Query failed: {e}")
-        raise HTTPException(status_code=400, detail="The query took too long or failed. Try a narrower question.")
+        raise HTTPException(
+            status_code=400,
+            detail="The query took too long or failed. Try a narrower question.",
+        )
 
     row_dicts = [dict(row) for row in rows]
 
@@ -95,7 +124,10 @@ def ask(request: AskRequest, db: Session = Depends(get_db)):
         insights = generate_insights(request.question, row_dicts)
     except RuntimeError as e:
         logger.error(str(e))
-        raise HTTPException(status_code=503, detail="AI service is unavailable right now. Please try again.")
+        raise HTTPException(
+            status_code=503,
+            detail="AI service is unavailable right now. Please try again.",
+        )
 
     return {
         "question": request.question,

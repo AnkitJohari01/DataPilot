@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef} from "react";
 import "./App.css";
 
 
@@ -23,6 +23,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     const saved = localStorage.getItem("theme");
@@ -36,38 +37,51 @@ function App() {
   }, [theme]);
 
   async function handleAsk(question: string) {
-    if (!question.trim() || loading) return;
-    setError("");
-    setInput("");
-    setLoading(true);
+  if (!question.trim() || loading) return;
+  setError("");
+  setInput("");
+  setLoading(true);
 
-    const history = messages
-      .filter((m) => m.role === "assistant" && m.sql)
-      .slice(-3)
-      .map((m) => ({ question: m.question, sql: m.sql }));
+  const controller = new AbortController();
+  abortControllerRef.current = controller;
 
-    setMessages((prev) => [...prev, { role: "user", question }]);
+  const history = messages
+    .filter((m) => m.role === "assistant" && m.sql)
+    .slice(-3)
+    .map((m) => ({ question: m.question, sql: m.sql }));
 
-    try {
-      const res = await fetch("http://localhost:8000/api/ask", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question, history }),
-      });
+  setMessages((prev) => [...prev, { role: "user", question }]);
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.detail || "Something went wrong");
+  try {
+    const res = await fetch("http://localhost:8000/api/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question, history }),
+      signal: controller.signal,
+    });
 
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", question, sql: data.sql, insights: data.insights },
-      ]);
-    } catch (err: any) {
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || "Something went wrong");
+
+    setMessages((prev) => [
+      ...prev,
+      { role: "assistant", question, sql: data.sql, insights: data.insights },
+    ]);
+  } catch (err: any) {
+    if (err.name === "AbortError") {
+      setError("Request stopped.");
+    } else {
       setError(err.message);
-    } finally {
-      setLoading(false);
     }
+  } finally {
+    setLoading(false);
+    abortControllerRef.current = null;
   }
+}
+
+function handleStop() {
+  abortControllerRef.current?.abort();
+}
 
   function toggleSql(index: number) {
     setMessages((prev) =>
@@ -235,9 +249,15 @@ function App() {
             onKeyDown={(e) => e.key === "Enter" && handleAsk(input)}
             placeholder="Ask anything about your business data..."
           />
-          <button className="send-btn" onClick={() => handleAsk(input)} disabled={loading}>
-            Send
-          </button>
+          {loading ? (
+            <button className="send-btn" onClick={handleStop}>
+              Stop
+            </button>
+          ) : (
+            <button className="send-btn" onClick={() => handleAsk(input)} disabled={loading}>
+              Send
+            </button>
+          )}
         </div>
       </main>
     </div>

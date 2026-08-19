@@ -1,0 +1,801 @@
+ticket_id,customer_id,product_id,created_date,issue_category,issue_type,priority,contact_channel,first_response_hours,resolution_hours,ticket_status,customer_satisfaction_score,sla_breached_flag,customer_comment
+TKT000001,C002,P002,2026-01-06,Delivery,Late Delivery,Medium,Chat,4,13,Resolved,3.7,No,Standard support request
+TKT000002,C003,P003,2026-01-11,Payment,Payment Failed,High,Phone,7,23,Resolved,4.4,No,Standard support request
+TKT000003,C004,P004,2026-01-16,Account,Login Issue,Medium,Web,10,33,Resolved,3.0,No,Standard support request
+TKT000004,C005,P005,2026-01-21,Product Information,Wrong Specification,Medium,Email,13,43,Resolved,3.7,No,Standard support request
+TKT000005,C006,P006,2026-01-26,Refund,Refund Pending,High,Chat,16,53,Resolved,4.4,Yes,Standard support request
+TKT000006,C007,P007,2026-01-31,Technical,App Error,High,Phone,1,45,Resolved,3.0,No,Standard support request
+TKT000007,C008,P008,2026-02-05,Order,Order Cancellation,Low,Web,4,55,Resolved,3.7,Yes,Standard support request
+TKT000008,C009,P009,2026-02-10,Product Quality,Defective Product,High,Email,7,65,Resolved,4.4,Yes,Standard support request
+TKT000009,C010,P010,2026-02-15,Delivery,Late Delivery,Medium,Chat,10,75,Resolved,3.0,Yes,Standard support request
+TKT000010,C011,P011,2026-02-20,Payment,Payment Failed,High,Phone,13,85,Resolved,3.7,Yes,Standard support request
+TKT000011,C012,P012,2026-02-25,Account,Login Issue,Medium,Web,16,23,Resolved,4.4,No,Standard support request
+TKT000012,C013,P001,2026-03-02,Product Information,Wrong Specification,Medium,Email,1,15,Resolved,3.0,No,Standard support request
+TKT000013,C014,P002,2026-03-07,Refund,Refund Pending,High,Chat,4,25,Open,3.7,No,Standard support request
+TKT000014,C015,P003,2026-03-12,Technical,App Error,High,Phone,7,35,Resolved,4.4,No,Standard support request
+TKT000015,C001,P004,2026-03-17,Order,Order Cancellation,Low,Web,10,45,Resolved,3.0,No,Standard support request
+TKT000016,C002,P005,2026-03-22,Product Quality,Defective Product,High,Email,13,55,Resolved,3.7,Yes,Standard support request
+TKT000017,C003,P006,2026-03-27,Delivery,Late Delivery,Medium,Chat,16,65,Resolved,4.4,Yes,Standard support request
+TKT000018,C004,P007,2026-04-01,Payment,Payment Failed,High,Phone,1,57,Resolved,3.0,Yes,Standard support request
+TKT000019,C005,P008,2026-04-06,Account,Login Issue,Medium,Web,4,67,Resolved,3.7,Yes,Standard support request
+TKT000020,C006,P009,2026-04-11,Product Information,Wrong Specification,Medium,Email,7,77,Resolved,4.4,Yes,Standard support request
+TKT000021,C007,P010,2026-04-16,Refund,Refund Pending,High,Chat,10,15,Resolved,3.0,No,Standard support request
+TKT000022,C008,P011,2026-04-21,Technical,App Error,High,Phone,13,25,Resolved,3.7,No,Standard support request
+TKT000023,C009,P012,2026-04-26,Order,Order Cancellation,Low,Web,16,35,Resolved,4.4,No,Standard support request
+TKT000024,C010,P001,2026-05-01,Product Quality,Defective Product,High,Email,1,27,Resolved,3.0,No,Standard support request
+TKT000025,C011,P002,2026-05-06,Delivery,Late Delivery,Medium,Chat,4,37,Resolved,3.7,No,Standard support request
+TKT000026,C012,P003,2026-05-11,Payment,Payment Failed,High,Phone,7,47,Open,4.4,No,Standard support request
+TKT000027,C013,P004,2026-05-16,Account,Login Issue,Medium,Web,10,57,Resolved,3.0,Yes,Standard support request
+TKT000028,C014,P005,2026-05-21,Product Information,Wrong Specification,Medium,Email,13,67,Resolved,3.7,Yes,Standard support request
+TKT000029,C015,P006,2026-05-26,Refund,Refund Pending,High,Chat,16,125,Resolved,3.2,Yes,Customer reported repeated issue
+TKT000030,C001,P007,2026-05-31,Technical,App Error,High,Phone,1,69,Resolved,3.0,Yes,Standard support request
+TKT000031,C002,P008,2026-06-05,Order,Order Cancellation,Low,Web,4,7,Resolved,3.7,No,Standard support request
+TKT000032,C003,P009,2026-06-10,Product Quality,Defective Product,High,Email,7,17,Resolved,4.4,No,Standard support request
+TKT000033,C004,P010,2026-06-15,Delivery,Late Delivery,Medium,Chat,10,27,Resolved,3.0,No,Standard support request
+TKT000034,C005,P011,2026-06-20,Payment,Payment Failed,High,Phone,13,37,Resolved,3.7,No,Standard support request
+TKT000035,C006,P012,2026-06-25,Account,Login Issue,Medium,Web,16,47,Resolved,4.4,No,Standard support request
+TKT000036,C007,P001,2026-06-30,Product Information,Wrong Specification,Medium,Email,1,39,Resolved,3.0,No,Standard support request
+TKT000037,C008,P002,2026-01-05,Refund,Refund Pending,High,Chat,4,49,Resolved,3.7,Yes,Standard support request
+TKT000038,C009,P003,2026-01-10,Technical,App Error,High,Phone,7,59,Resolved,4.4,Yes,Standard support request
+TKT000039,C010,P004,2026-01-15,Order,Order Cancellation,Low,Web,10,69,Open,3.0,Yes,Standard support request
+TKT000040,C011,P005,2026-01-20,Product Quality,Defective Product,High,Email,13,79,Resolved,3.7,Yes,Standard support request
+TKT000041,C012,P006,2026-01-25,Delivery,Late Delivery,Medium,Chat,16,89,Resolved,4.4,Yes,Standard support request
+TKT000042,C013,P007,2026-01-30,Payment,Payment Failed,High,Phone,1,9,Resolved,3.0,No,Standard support request
+TKT000043,C014,P008,2026-02-04,Account,Login Issue,Medium,Web,4,19,Resolved,3.7,No,Standard support request
+TKT000044,C015,P009,2026-02-09,Product Information,Wrong Specification,Medium,Email,7,29,Resolved,4.4,No,Standard support request
+TKT000045,C001,P010,2026-02-14,Refund,Refund Pending,High,Chat,10,39,Resolved,3.0,No,Standard support request
+TKT000046,C002,P011,2026-02-19,Technical,App Error,High,Phone,13,49,Resolved,3.7,Yes,Standard support request
+TKT000047,C003,P012,2026-02-24,Order,Order Cancellation,Low,Web,16,59,Resolved,4.4,Yes,Standard support request
+TKT000048,C004,P001,2026-03-01,Product Quality,Defective Product,High,Email,1,51,Resolved,3.0,Yes,Standard support request
+TKT000049,C005,P002,2026-03-06,Delivery,Late Delivery,Medium,Chat,4,61,Resolved,3.7,Yes,Standard support request
+TKT000050,C006,P003,2026-03-11,Payment,Payment Failed,High,Phone,7,71,Resolved,4.4,Yes,Standard support request
+TKT000051,C007,P004,2026-03-16,Account,Login Issue,Medium,Web,10,81,Resolved,3.0,Yes,Standard support request
+TKT000052,C008,P005,2026-03-21,Product Information,Wrong Specification,Medium,Email,13,19,Open,3.7,No,Standard support request
+TKT000053,C009,P006,2026-03-26,Refund,Refund Pending,High,Chat,16,29,Resolved,4.4,No,Standard support request
+TKT000054,C010,P007,2026-03-31,Technical,App Error,High,Phone,1,21,Resolved,3.0,No,Standard support request
+TKT000055,C011,P008,2026-04-05,Order,Order Cancellation,Low,Web,4,31,Resolved,3.7,No,Standard support request
+TKT000056,C012,P009,2026-04-10,Product Quality,Defective Product,High,Email,7,41,Resolved,4.4,No,Standard support request
+TKT000057,C013,P010,2026-04-15,Delivery,Late Delivery,Medium,Chat,10,51,Resolved,3.0,Yes,Standard support request
+TKT000058,C014,P011,2026-04-20,Payment,Payment Failed,High,Phone,13,109,Resolved,2.5,Yes,Customer reported repeated issue
+TKT000059,C015,P012,2026-04-25,Account,Login Issue,Medium,Web,16,71,Resolved,4.4,Yes,Standard support request
+TKT000060,C001,P001,2026-04-30,Product Information,Wrong Specification,Medium,Email,1,63,Resolved,3.0,Yes,Standard support request
+TKT000061,C002,P002,2026-05-05,Refund,Refund Pending,High,Chat,4,73,Resolved,3.7,Yes,Standard support request
+TKT000062,C003,P003,2026-05-10,Technical,App Error,High,Phone,7,11,Resolved,4.4,No,Standard support request
+TKT000063,C004,P004,2026-05-15,Order,Order Cancellation,Low,Web,10,21,Resolved,3.0,No,Standard support request
+TKT000064,C005,P005,2026-05-20,Product Quality,Defective Product,High,Email,13,31,Resolved,3.7,No,Standard support request
+TKT000065,C006,P006,2026-05-25,Delivery,Late Delivery,Medium,Chat,16,41,Open,4.4,No,Standard support request
+TKT000066,C007,P007,2026-05-30,Payment,Payment Failed,High,Phone,1,33,Resolved,3.0,No,Standard support request
+TKT000067,C008,P008,2026-06-04,Account,Login Issue,Medium,Web,4,43,Resolved,3.7,No,Standard support request
+TKT000068,C009,P009,2026-06-09,Product Information,Wrong Specification,Medium,Email,7,53,Resolved,4.4,Yes,Standard support request
+TKT000069,C010,P010,2026-06-14,Refund,Refund Pending,High,Chat,10,63,Resolved,3.0,Yes,Standard support request
+TKT000070,C011,P011,2026-06-19,Technical,App Error,High,Phone,13,73,Resolved,3.7,Yes,Standard support request
+TKT000071,C012,P012,2026-06-24,Order,Order Cancellation,Low,Web,16,83,Resolved,4.4,Yes,Standard support request
+TKT000072,C013,P001,2026-06-29,Product Quality,Defective Product,High,Email,1,3,Resolved,3.0,No,Standard support request
+TKT000073,C014,P002,2026-01-04,Delivery,Late Delivery,Medium,Chat,4,13,Resolved,3.7,No,Standard support request
+TKT000074,C015,P003,2026-01-09,Payment,Payment Failed,High,Phone,7,23,Resolved,4.4,No,Standard support request
+TKT000075,C001,P004,2026-01-14,Account,Login Issue,Medium,Web,10,33,Resolved,3.0,No,Standard support request
+TKT000076,C002,P005,2026-01-19,Product Information,Wrong Specification,Medium,Email,13,43,Resolved,3.7,No,Standard support request
+TKT000077,C003,P006,2026-01-24,Refund,Refund Pending,High,Chat,16,53,Resolved,4.4,Yes,Standard support request
+TKT000078,C004,P007,2026-01-29,Technical,App Error,High,Phone,1,45,Open,3.0,No,Standard support request
+TKT000079,C005,P008,2026-02-03,Order,Order Cancellation,Low,Web,4,55,Resolved,3.7,Yes,Standard support request
+TKT000080,C006,P009,2026-02-08,Product Quality,Defective Product,High,Email,7,65,Resolved,4.4,Yes,Standard support request
+TKT000081,C007,P010,2026-02-13,Delivery,Late Delivery,Medium,Chat,10,75,Resolved,3.0,Yes,Standard support request
+TKT000082,C008,P011,2026-02-18,Payment,Payment Failed,High,Phone,13,85,Resolved,3.7,Yes,Standard support request
+TKT000083,C009,P012,2026-02-23,Account,Login Issue,Medium,Web,16,23,Resolved,4.4,No,Standard support request
+TKT000084,C010,P001,2026-02-28,Product Information,Wrong Specification,Medium,Email,1,15,Resolved,3.0,No,Standard support request
+TKT000085,C011,P002,2026-03-05,Refund,Refund Pending,High,Chat,4,25,Resolved,3.7,No,Standard support request
+TKT000086,C012,P003,2026-03-10,Technical,App Error,High,Phone,7,35,Resolved,4.4,No,Standard support request
+TKT000087,C013,P004,2026-03-15,Order,Order Cancellation,Low,Web,10,93,Resolved,1.8,Yes,Customer reported repeated issue
+TKT000088,C014,P005,2026-03-20,Product Quality,Defective Product,High,Email,13,55,Resolved,3.7,Yes,Standard support request
+TKT000089,C015,P006,2026-03-25,Delivery,Late Delivery,Medium,Chat,16,65,Resolved,4.4,Yes,Standard support request
+TKT000090,C001,P007,2026-03-30,Payment,Payment Failed,High,Phone,1,57,Resolved,3.0,Yes,Standard support request
+TKT000091,C002,P008,2026-04-04,Account,Login Issue,Medium,Web,4,67,Open,3.7,Yes,Standard support request
+TKT000092,C003,P009,2026-04-09,Product Information,Wrong Specification,Medium,Email,7,77,Resolved,4.4,Yes,Standard support request
+TKT000093,C004,P010,2026-04-14,Refund,Refund Pending,High,Chat,10,15,Resolved,3.0,No,Standard support request
+TKT000094,C005,P011,2026-04-19,Technical,App Error,High,Phone,13,25,Resolved,3.7,No,Standard support request
+TKT000095,C006,P012,2026-04-24,Order,Order Cancellation,Low,Web,16,35,Resolved,4.4,No,Standard support request
+TKT000096,C007,P001,2026-04-29,Product Quality,Defective Product,High,Email,1,27,Resolved,3.0,No,Standard support request
+TKT000097,C008,P002,2026-05-04,Delivery,Late Delivery,Medium,Chat,4,37,Resolved,3.7,No,Standard support request
+TKT000098,C009,P003,2026-05-09,Payment,Payment Failed,High,Phone,7,47,Resolved,4.4,No,Standard support request
+TKT000099,C010,P004,2026-05-14,Account,Login Issue,Medium,Web,10,57,Resolved,3.0,Yes,Standard support request
+TKT000100,C011,P005,2026-05-19,Product Information,Wrong Specification,Medium,Email,13,67,Resolved,3.7,Yes,Standard support request
+TKT000101,C012,P006,2026-05-24,Refund,Refund Pending,High,Chat,16,77,Resolved,4.4,Yes,Standard support request
+TKT000102,C013,P007,2026-05-29,Technical,App Error,High,Phone,1,69,Resolved,3.0,Yes,Standard support request
+TKT000103,C014,P008,2026-06-03,Order,Order Cancellation,Low,Web,4,7,Resolved,3.7,No,Standard support request
+TKT000104,C015,P009,2026-06-08,Product Quality,Defective Product,High,Email,7,17,Open,4.4,No,Standard support request
+TKT000105,C001,P010,2026-06-13,Delivery,Late Delivery,Medium,Chat,10,27,Resolved,3.0,No,Standard support request
+TKT000106,C002,P011,2026-06-18,Payment,Payment Failed,High,Phone,13,37,Resolved,3.7,No,Standard support request
+TKT000107,C003,P012,2026-06-23,Account,Login Issue,Medium,Web,16,47,Resolved,4.4,No,Standard support request
+TKT000108,C004,P001,2026-06-28,Product Information,Wrong Specification,Medium,Email,1,39,Resolved,3.0,No,Standard support request
+TKT000109,C005,P002,2026-01-03,Refund,Refund Pending,High,Chat,4,49,Resolved,3.7,Yes,Standard support request
+TKT000110,C006,P003,2026-01-08,Technical,App Error,High,Phone,7,59,Resolved,4.4,Yes,Standard support request
+TKT000111,C007,P004,2026-01-13,Order,Order Cancellation,Low,Web,10,69,Resolved,3.0,Yes,Standard support request
+TKT000112,C008,P005,2026-01-18,Product Quality,Defective Product,High,Email,13,79,Resolved,3.7,Yes,Standard support request
+TKT000113,C009,P006,2026-01-23,Delivery,Late Delivery,Medium,Chat,16,89,Resolved,4.4,Yes,Standard support request
+TKT000114,C010,P007,2026-01-28,Payment,Payment Failed,High,Phone,1,9,Resolved,3.0,No,Standard support request
+TKT000115,C011,P008,2026-02-02,Account,Login Issue,Medium,Web,4,19,Resolved,3.7,No,Standard support request
+TKT000116,C012,P009,2026-02-07,Product Information,Wrong Specification,Medium,Email,7,77,Resolved,3.2,Yes,Customer reported repeated issue
+TKT000117,C013,P010,2026-02-12,Refund,Refund Pending,High,Chat,10,39,Open,3.0,No,Standard support request
+TKT000118,C014,P011,2026-02-17,Technical,App Error,High,Phone,13,49,Resolved,3.7,Yes,Standard support request
+TKT000119,C015,P012,2026-02-22,Order,Order Cancellation,Low,Web,16,59,Resolved,4.4,Yes,Standard support request
+TKT000120,C001,P001,2026-02-27,Product Quality,Defective Product,High,Email,1,51,Resolved,3.0,Yes,Standard support request
+TKT000121,C002,P002,2026-03-04,Delivery,Late Delivery,Medium,Chat,4,61,Resolved,3.7,Yes,Standard support request
+TKT000122,C003,P003,2026-03-09,Payment,Payment Failed,High,Phone,7,71,Resolved,4.4,Yes,Standard support request
+TKT000123,C004,P004,2026-03-14,Account,Login Issue,Medium,Web,10,81,Resolved,3.0,Yes,Standard support request
+TKT000124,C005,P005,2026-03-19,Product Information,Wrong Specification,Medium,Email,13,19,Resolved,3.7,No,Standard support request
+TKT000125,C006,P006,2026-03-24,Refund,Refund Pending,High,Chat,16,29,Resolved,4.4,No,Standard support request
+TKT000126,C007,P007,2026-03-29,Technical,App Error,High,Phone,1,21,Resolved,3.0,No,Standard support request
+TKT000127,C008,P008,2026-04-03,Order,Order Cancellation,Low,Web,4,31,Resolved,3.7,No,Standard support request
+TKT000128,C009,P009,2026-04-08,Product Quality,Defective Product,High,Email,7,41,Resolved,4.4,No,Standard support request
+TKT000129,C010,P010,2026-04-13,Delivery,Late Delivery,Medium,Chat,10,51,Resolved,3.0,Yes,Standard support request
+TKT000130,C011,P011,2026-04-18,Payment,Payment Failed,High,Phone,13,61,Open,3.7,Yes,Standard support request
+TKT000131,C012,P012,2026-04-23,Account,Login Issue,Medium,Web,16,71,Resolved,4.4,Yes,Standard support request
+TKT000132,C013,P001,2026-04-28,Product Information,Wrong Specification,Medium,Email,1,63,Resolved,3.0,Yes,Standard support request
+TKT000133,C014,P002,2026-05-03,Refund,Refund Pending,High,Chat,4,73,Resolved,3.7,Yes,Standard support request
+TKT000134,C015,P003,2026-05-08,Technical,App Error,High,Phone,7,11,Resolved,4.4,No,Standard support request
+TKT000135,C001,P004,2026-05-13,Order,Order Cancellation,Low,Web,10,21,Resolved,3.0,No,Standard support request
+TKT000136,C002,P005,2026-05-18,Product Quality,Defective Product,High,Email,13,31,Resolved,3.7,No,Standard support request
+TKT000137,C003,P006,2026-05-23,Delivery,Late Delivery,Medium,Chat,16,41,Resolved,4.4,No,Standard support request
+TKT000138,C004,P007,2026-05-28,Payment,Payment Failed,High,Phone,1,33,Resolved,3.0,No,Standard support request
+TKT000139,C005,P008,2026-06-02,Account,Login Issue,Medium,Web,4,43,Resolved,3.7,No,Standard support request
+TKT000140,C006,P009,2026-06-07,Product Information,Wrong Specification,Medium,Email,7,53,Resolved,4.4,Yes,Standard support request
+TKT000141,C007,P010,2026-06-12,Refund,Refund Pending,High,Chat,10,63,Resolved,3.0,Yes,Standard support request
+TKT000142,C008,P011,2026-06-17,Technical,App Error,High,Phone,13,73,Resolved,3.7,Yes,Standard support request
+TKT000143,C009,P012,2026-06-22,Order,Order Cancellation,Low,Web,16,83,Open,4.4,Yes,Standard support request
+TKT000144,C010,P001,2026-06-27,Product Quality,Defective Product,High,Email,1,3,Resolved,3.0,No,Standard support request
+TKT000145,C011,P002,2026-01-02,Delivery,Late Delivery,Medium,Chat,4,61,Resolved,2.5,Yes,Customer reported repeated issue
+TKT000146,C012,P003,2026-01-07,Payment,Payment Failed,High,Phone,7,23,Resolved,4.4,No,Standard support request
+TKT000147,C013,P004,2026-01-12,Account,Login Issue,Medium,Web,10,33,Resolved,3.0,No,Standard support request
+TKT000148,C014,P005,2026-01-17,Product Information,Wrong Specification,Medium,Email,13,43,Resolved,3.7,No,Standard support request
+TKT000149,C015,P006,2026-01-22,Refund,Refund Pending,High,Chat,16,53,Resolved,4.4,Yes,Standard support request
+TKT000150,C001,P007,2026-01-27,Technical,App Error,High,Phone,1,45,Resolved,3.0,No,Standard support request
+TKT000151,C002,P008,2026-02-01,Order,Order Cancellation,Low,Web,4,55,Resolved,3.7,Yes,Standard support request
+TKT000152,C003,P009,2026-02-06,Product Quality,Defective Product,High,Email,7,65,Resolved,4.4,Yes,Standard support request
+TKT000153,C004,P010,2026-02-11,Delivery,Late Delivery,Medium,Chat,10,75,Resolved,3.0,Yes,Standard support request
+TKT000154,C005,P011,2026-02-16,Payment,Payment Failed,High,Phone,13,85,Resolved,3.7,Yes,Standard support request
+TKT000155,C006,P012,2026-02-21,Account,Login Issue,Medium,Web,16,23,Resolved,4.4,No,Standard support request
+TKT000156,C007,P001,2026-02-26,Product Information,Wrong Specification,Medium,Email,1,15,Open,3.0,No,Standard support request
+TKT000157,C008,P002,2026-03-03,Refund,Refund Pending,High,Chat,4,25,Resolved,3.7,No,Standard support request
+TKT000158,C009,P003,2026-03-08,Technical,App Error,High,Phone,7,35,Resolved,4.4,No,Standard support request
+TKT000159,C010,P004,2026-03-13,Order,Order Cancellation,Low,Web,10,45,Resolved,3.0,No,Standard support request
+TKT000160,C011,P005,2026-03-18,Product Quality,Defective Product,High,Email,13,55,Resolved,3.7,Yes,Standard support request
+TKT000161,C012,P006,2026-03-23,Delivery,Late Delivery,Medium,Chat,16,65,Resolved,4.4,Yes,Standard support request
+TKT000162,C013,P007,2026-03-28,Payment,Payment Failed,High,Phone,1,57,Resolved,3.0,Yes,Standard support request
+TKT000163,C014,P008,2026-04-02,Account,Login Issue,Medium,Web,4,67,Resolved,3.7,Yes,Standard support request
+TKT000164,C015,P009,2026-04-07,Product Information,Wrong Specification,Medium,Email,7,77,Resolved,4.4,Yes,Standard support request
+TKT000165,C001,P010,2026-04-12,Refund,Refund Pending,High,Chat,10,15,Resolved,3.0,No,Standard support request
+TKT000166,C002,P011,2026-04-17,Technical,App Error,High,Phone,13,25,Resolved,3.7,No,Standard support request
+TKT000167,C003,P012,2026-04-22,Order,Order Cancellation,Low,Web,16,35,Resolved,4.4,No,Standard support request
+TKT000168,C004,P001,2026-04-27,Product Quality,Defective Product,High,Email,1,27,Resolved,3.0,No,Standard support request
+TKT000169,C005,P002,2026-05-02,Delivery,Late Delivery,Medium,Chat,4,37,Open,3.7,No,Standard support request
+TKT000170,C006,P003,2026-05-07,Payment,Payment Failed,High,Phone,7,47,Resolved,4.4,No,Standard support request
+TKT000171,C007,P004,2026-05-12,Account,Login Issue,Medium,Web,10,57,Resolved,3.0,Yes,Standard support request
+TKT000172,C008,P005,2026-05-17,Product Information,Wrong Specification,Medium,Email,13,67,Resolved,3.7,Yes,Standard support request
+TKT000173,C009,P006,2026-05-22,Refund,Refund Pending,High,Chat,16,77,Resolved,4.4,Yes,Standard support request
+TKT000174,C010,P007,2026-05-27,Technical,App Error,High,Phone,1,117,Resolved,1.8,Yes,Customer reported repeated issue
+TKT000175,C011,P008,2026-06-01,Order,Order Cancellation,Low,Web,4,7,Resolved,3.7,No,Standard support request
+TKT000176,C012,P009,2026-06-06,Product Quality,Defective Product,High,Email,7,17,Resolved,4.4,No,Standard support request
+TKT000177,C013,P010,2026-06-11,Delivery,Late Delivery,Medium,Chat,10,27,Resolved,3.0,No,Standard support request
+TKT000178,C014,P011,2026-06-16,Payment,Payment Failed,High,Phone,13,37,Resolved,3.7,No,Standard support request
+TKT000179,C015,P012,2026-06-21,Account,Login Issue,Medium,Web,16,47,Resolved,4.4,No,Standard support request
+TKT000180,C001,P001,2026-06-26,Product Information,Wrong Specification,Medium,Email,1,39,Resolved,3.0,No,Standard support request
+TKT000181,C002,P002,2026-01-01,Refund,Refund Pending,High,Chat,4,49,Resolved,3.7,Yes,Standard support request
+TKT000182,C003,P003,2026-01-06,Technical,App Error,High,Phone,7,59,Open,4.4,Yes,Standard support request
+TKT000183,C004,P004,2026-01-11,Order,Order Cancellation,Low,Web,10,69,Resolved,3.0,Yes,Standard support request
+TKT000184,C005,P005,2026-01-16,Product Quality,Defective Product,High,Email,13,79,Resolved,3.7,Yes,Standard support request
+TKT000185,C006,P006,2026-01-21,Delivery,Late Delivery,Medium,Chat,16,89,Resolved,4.4,Yes,Standard support request
+TKT000186,C007,P007,2026-01-26,Payment,Payment Failed,High,Phone,1,9,Resolved,3.0,No,Standard support request
+TKT000187,C008,P008,2026-01-31,Account,Login Issue,Medium,Web,4,19,Resolved,3.7,No,Standard support request
+TKT000188,C009,P009,2026-02-05,Product Information,Wrong Specification,Medium,Email,7,29,Resolved,4.4,No,Standard support request
+TKT000189,C010,P010,2026-02-10,Refund,Refund Pending,High,Chat,10,39,Resolved,3.0,No,Standard support request
+TKT000190,C011,P011,2026-02-15,Technical,App Error,High,Phone,13,49,Resolved,3.7,Yes,Standard support request
+TKT000191,C012,P012,2026-02-20,Order,Order Cancellation,Low,Web,16,59,Resolved,4.4,Yes,Standard support request
+TKT000192,C013,P001,2026-02-25,Product Quality,Defective Product,High,Email,1,51,Resolved,3.0,Yes,Standard support request
+TKT000193,C014,P002,2026-03-02,Delivery,Late Delivery,Medium,Chat,4,61,Resolved,3.7,Yes,Standard support request
+TKT000194,C015,P003,2026-03-07,Payment,Payment Failed,High,Phone,7,71,Resolved,4.4,Yes,Standard support request
+TKT000195,C001,P004,2026-03-12,Account,Login Issue,Medium,Web,10,81,Open,3.0,Yes,Standard support request
+TKT000196,C002,P005,2026-03-17,Product Information,Wrong Specification,Medium,Email,13,19,Resolved,3.7,No,Standard support request
+TKT000197,C003,P006,2026-03-22,Refund,Refund Pending,High,Chat,16,29,Resolved,4.4,No,Standard support request
+TKT000198,C004,P007,2026-03-27,Technical,App Error,High,Phone,1,21,Resolved,3.0,No,Standard support request
+TKT000199,C005,P008,2026-04-01,Order,Order Cancellation,Low,Web,4,31,Resolved,3.7,No,Standard support request
+TKT000200,C006,P009,2026-04-06,Product Quality,Defective Product,High,Email,7,41,Resolved,4.4,No,Standard support request
+TKT000201,C007,P010,2026-04-11,Delivery,Late Delivery,Medium,Chat,10,51,Resolved,3.0,Yes,Standard support request
+TKT000202,C008,P011,2026-04-16,Payment,Payment Failed,High,Phone,13,61,Resolved,3.7,Yes,Standard support request
+TKT000203,C009,P012,2026-04-21,Account,Login Issue,Medium,Web,16,119,Resolved,3.2,Yes,Customer reported repeated issue
+TKT000204,C010,P001,2026-04-26,Product Information,Wrong Specification,Medium,Email,1,63,Resolved,3.0,Yes,Standard support request
+TKT000205,C011,P002,2026-05-01,Refund,Refund Pending,High,Chat,4,73,Resolved,3.7,Yes,Standard support request
+TKT000206,C012,P003,2026-05-06,Technical,App Error,High,Phone,7,11,Resolved,4.4,No,Standard support request
+TKT000207,C013,P004,2026-05-11,Order,Order Cancellation,Low,Web,10,21,Resolved,3.0,No,Standard support request
+TKT000208,C014,P005,2026-05-16,Product Quality,Defective Product,High,Email,13,31,Open,3.7,No,Standard support request
+TKT000209,C015,P006,2026-05-21,Delivery,Late Delivery,Medium,Chat,16,41,Resolved,4.4,No,Standard support request
+TKT000210,C001,P007,2026-05-26,Payment,Payment Failed,High,Phone,1,33,Resolved,3.0,No,Standard support request
+TKT000211,C002,P008,2026-05-31,Account,Login Issue,Medium,Web,4,43,Resolved,3.7,No,Standard support request
+TKT000212,C003,P009,2026-06-05,Product Information,Wrong Specification,Medium,Email,7,53,Resolved,4.4,Yes,Standard support request
+TKT000213,C004,P010,2026-06-10,Refund,Refund Pending,High,Chat,10,63,Resolved,3.0,Yes,Standard support request
+TKT000214,C005,P011,2026-06-15,Technical,App Error,High,Phone,13,73,Resolved,3.7,Yes,Standard support request
+TKT000215,C006,P012,2026-06-20,Order,Order Cancellation,Low,Web,16,83,Resolved,4.4,Yes,Standard support request
+TKT000216,C007,P001,2026-06-25,Product Quality,Defective Product,High,Email,1,3,Resolved,3.0,No,Standard support request
+TKT000217,C008,P002,2026-06-30,Delivery,Late Delivery,Medium,Chat,4,13,Resolved,3.7,No,Standard support request
+TKT000218,C009,P003,2026-01-05,Payment,Payment Failed,High,Phone,7,23,Resolved,4.4,No,Standard support request
+TKT000219,C010,P004,2026-01-10,Account,Login Issue,Medium,Web,10,33,Resolved,3.0,No,Standard support request
+TKT000220,C011,P005,2026-01-15,Product Information,Wrong Specification,Medium,Email,13,43,Resolved,3.7,No,Standard support request
+TKT000221,C012,P006,2026-01-20,Refund,Refund Pending,High,Chat,16,53,Open,4.4,Yes,Standard support request
+TKT000222,C013,P007,2026-01-25,Technical,App Error,High,Phone,1,45,Resolved,3.0,No,Standard support request
+TKT000223,C014,P008,2026-01-30,Order,Order Cancellation,Low,Web,4,55,Resolved,3.7,Yes,Standard support request
+TKT000224,C015,P009,2026-02-04,Product Quality,Defective Product,High,Email,7,65,Resolved,4.4,Yes,Standard support request
+TKT000225,C001,P010,2026-02-09,Delivery,Late Delivery,Medium,Chat,10,75,Resolved,3.0,Yes,Standard support request
+TKT000226,C002,P011,2026-02-14,Payment,Payment Failed,High,Phone,13,85,Resolved,3.7,Yes,Standard support request
+TKT000227,C003,P012,2026-02-19,Account,Login Issue,Medium,Web,16,23,Resolved,4.4,No,Standard support request
+TKT000228,C004,P001,2026-02-24,Product Information,Wrong Specification,Medium,Email,1,15,Resolved,3.0,No,Standard support request
+TKT000229,C005,P002,2026-03-01,Refund,Refund Pending,High,Chat,4,25,Resolved,3.7,No,Standard support request
+TKT000230,C006,P003,2026-03-06,Technical,App Error,High,Phone,7,35,Resolved,4.4,No,Standard support request
+TKT000231,C007,P004,2026-03-11,Order,Order Cancellation,Low,Web,10,45,Resolved,3.0,No,Standard support request
+TKT000232,C008,P005,2026-03-16,Product Quality,Defective Product,High,Email,13,103,Resolved,2.5,Yes,Customer reported repeated issue
+TKT000233,C009,P006,2026-03-21,Delivery,Late Delivery,Medium,Chat,16,65,Resolved,4.4,Yes,Standard support request
+TKT000234,C010,P007,2026-03-26,Payment,Payment Failed,High,Phone,1,57,Open,3.0,Yes,Standard support request
+TKT000235,C011,P008,2026-03-31,Account,Login Issue,Medium,Web,4,67,Resolved,3.7,Yes,Standard support request
+TKT000236,C012,P009,2026-04-05,Product Information,Wrong Specification,Medium,Email,7,77,Resolved,4.4,Yes,Standard support request
+TKT000237,C013,P010,2026-04-10,Refund,Refund Pending,High,Chat,10,15,Resolved,3.0,No,Standard support request
+TKT000238,C014,P011,2026-04-15,Technical,App Error,High,Phone,13,25,Resolved,3.7,No,Standard support request
+TKT000239,C015,P012,2026-04-20,Order,Order Cancellation,Low,Web,16,35,Resolved,4.4,No,Standard support request
+TKT000240,C001,P001,2026-04-25,Product Quality,Defective Product,High,Email,1,27,Resolved,3.0,No,Standard support request
+TKT000241,C002,P002,2026-04-30,Delivery,Late Delivery,Medium,Chat,4,37,Resolved,3.7,No,Standard support request
+TKT000242,C003,P003,2026-05-05,Payment,Payment Failed,High,Phone,7,47,Resolved,4.4,No,Standard support request
+TKT000243,C004,P004,2026-05-10,Account,Login Issue,Medium,Web,10,57,Resolved,3.0,Yes,Standard support request
+TKT000244,C005,P005,2026-05-15,Product Information,Wrong Specification,Medium,Email,13,67,Resolved,3.7,Yes,Standard support request
+TKT000245,C006,P006,2026-05-20,Refund,Refund Pending,High,Chat,16,77,Resolved,4.4,Yes,Standard support request
+TKT000246,C007,P007,2026-05-25,Technical,App Error,High,Phone,1,69,Resolved,3.0,Yes,Standard support request
+TKT000247,C008,P008,2026-05-30,Order,Order Cancellation,Low,Web,4,7,Open,3.7,No,Standard support request
+TKT000248,C009,P009,2026-06-04,Product Quality,Defective Product,High,Email,7,17,Resolved,4.4,No,Standard support request
+TKT000249,C010,P010,2026-06-09,Delivery,Late Delivery,Medium,Chat,10,27,Resolved,3.0,No,Standard support request
+TKT000250,C011,P011,2026-06-14,Payment,Payment Failed,High,Phone,13,37,Resolved,3.7,No,Standard support request
+TKT000251,C012,P012,2026-06-19,Account,Login Issue,Medium,Web,16,47,Resolved,4.4,No,Standard support request
+TKT000252,C013,P001,2026-06-24,Product Information,Wrong Specification,Medium,Email,1,39,Resolved,3.0,No,Standard support request
+TKT000253,C014,P002,2026-06-29,Refund,Refund Pending,High,Chat,4,49,Resolved,3.7,Yes,Standard support request
+TKT000254,C015,P003,2026-01-04,Technical,App Error,High,Phone,7,59,Resolved,4.4,Yes,Standard support request
+TKT000255,C001,P004,2026-01-09,Order,Order Cancellation,Low,Web,10,69,Resolved,3.0,Yes,Standard support request
+TKT000256,C002,P005,2026-01-14,Product Quality,Defective Product,High,Email,13,79,Resolved,3.7,Yes,Standard support request
+TKT000257,C003,P006,2026-01-19,Delivery,Late Delivery,Medium,Chat,16,89,Resolved,4.4,Yes,Standard support request
+TKT000258,C004,P007,2026-01-24,Payment,Payment Failed,High,Phone,1,9,Resolved,3.0,No,Standard support request
+TKT000259,C005,P008,2026-01-29,Account,Login Issue,Medium,Web,4,19,Resolved,3.7,No,Standard support request
+TKT000260,C006,P009,2026-02-03,Product Information,Wrong Specification,Medium,Email,7,29,Open,4.4,No,Standard support request
+TKT000261,C007,P010,2026-02-08,Refund,Refund Pending,High,Chat,10,87,Resolved,1.8,Yes,Customer reported repeated issue
+TKT000262,C008,P011,2026-02-13,Technical,App Error,High,Phone,13,49,Resolved,3.7,Yes,Standard support request
+TKT000263,C009,P012,2026-02-18,Order,Order Cancellation,Low,Web,16,59,Resolved,4.4,Yes,Standard support request
+TKT000264,C010,P001,2026-02-23,Product Quality,Defective Product,High,Email,1,51,Resolved,3.0,Yes,Standard support request
+TKT000265,C011,P002,2026-02-28,Delivery,Late Delivery,Medium,Chat,4,61,Resolved,3.7,Yes,Standard support request
+TKT000266,C012,P003,2026-03-05,Payment,Payment Failed,High,Phone,7,71,Resolved,4.4,Yes,Standard support request
+TKT000267,C013,P004,2026-03-10,Account,Login Issue,Medium,Web,10,81,Resolved,3.0,Yes,Standard support request
+TKT000268,C014,P005,2026-03-15,Product Information,Wrong Specification,Medium,Email,13,19,Resolved,3.7,No,Standard support request
+TKT000269,C015,P006,2026-03-20,Refund,Refund Pending,High,Chat,16,29,Resolved,4.4,No,Standard support request
+TKT000270,C001,P007,2026-03-25,Technical,App Error,High,Phone,1,21,Resolved,3.0,No,Standard support request
+TKT000271,C002,P008,2026-03-30,Order,Order Cancellation,Low,Web,4,31,Resolved,3.7,No,Standard support request
+TKT000272,C003,P009,2026-04-04,Product Quality,Defective Product,High,Email,7,41,Resolved,4.4,No,Standard support request
+TKT000273,C004,P010,2026-04-09,Delivery,Late Delivery,Medium,Chat,10,51,Open,3.0,Yes,Standard support request
+TKT000274,C005,P011,2026-04-14,Payment,Payment Failed,High,Phone,13,61,Resolved,3.7,Yes,Standard support request
+TKT000275,C006,P012,2026-04-19,Account,Login Issue,Medium,Web,16,71,Resolved,4.4,Yes,Standard support request
+TKT000276,C007,P001,2026-04-24,Product Information,Wrong Specification,Medium,Email,1,63,Resolved,3.0,Yes,Standard support request
+TKT000277,C008,P002,2026-04-29,Refund,Refund Pending,High,Chat,4,73,Resolved,3.7,Yes,Standard support request
+TKT000278,C009,P003,2026-05-04,Technical,App Error,High,Phone,7,11,Resolved,4.4,No,Standard support request
+TKT000279,C010,P004,2026-05-09,Order,Order Cancellation,Low,Web,10,21,Resolved,3.0,No,Standard support request
+TKT000280,C011,P005,2026-05-14,Product Quality,Defective Product,High,Email,13,31,Resolved,3.7,No,Standard support request
+TKT000281,C012,P006,2026-05-19,Delivery,Late Delivery,Medium,Chat,16,41,Resolved,4.4,No,Standard support request
+TKT000282,C013,P007,2026-05-24,Payment,Payment Failed,High,Phone,1,33,Resolved,3.0,No,Standard support request
+TKT000283,C014,P008,2026-05-29,Account,Login Issue,Medium,Web,4,43,Resolved,3.7,No,Standard support request
+TKT000284,C015,P009,2026-06-03,Product Information,Wrong Specification,Medium,Email,7,53,Resolved,4.4,Yes,Standard support request
+TKT000285,C001,P010,2026-06-08,Refund,Refund Pending,High,Chat,10,63,Resolved,3.0,Yes,Standard support request
+TKT000286,C002,P011,2026-06-13,Technical,App Error,High,Phone,13,73,Open,3.7,Yes,Standard support request
+TKT000287,C003,P012,2026-06-18,Order,Order Cancellation,Low,Web,16,83,Resolved,4.4,Yes,Standard support request
+TKT000288,C004,P001,2026-06-23,Product Quality,Defective Product,High,Email,1,3,Resolved,3.0,No,Standard support request
+TKT000289,C005,P002,2026-06-28,Delivery,Late Delivery,Medium,Chat,4,13,Resolved,3.7,No,Standard support request
+TKT000290,C006,P003,2026-01-03,Payment,Payment Failed,High,Phone,7,71,Resolved,3.2,Yes,Customer reported repeated issue
+TKT000291,C007,P004,2026-01-08,Account,Login Issue,Medium,Web,10,33,Resolved,3.0,No,Standard support request
+TKT000292,C008,P005,2026-01-13,Product Information,Wrong Specification,Medium,Email,13,43,Resolved,3.7,No,Standard support request
+TKT000293,C009,P006,2026-01-18,Refund,Refund Pending,High,Chat,16,53,Resolved,4.4,Yes,Standard support request
+TKT000294,C010,P007,2026-01-23,Technical,App Error,High,Phone,1,45,Resolved,3.0,No,Standard support request
+TKT000295,C011,P008,2026-01-28,Order,Order Cancellation,Low,Web,4,55,Resolved,3.7,Yes,Standard support request
+TKT000296,C012,P009,2026-02-02,Product Quality,Defective Product,High,Email,7,65,Resolved,4.4,Yes,Standard support request
+TKT000297,C013,P010,2026-02-07,Delivery,Late Delivery,Medium,Chat,10,75,Resolved,3.0,Yes,Standard support request
+TKT000298,C014,P011,2026-02-12,Payment,Payment Failed,High,Phone,13,85,Resolved,3.7,Yes,Standard support request
+TKT000299,C015,P012,2026-02-17,Account,Login Issue,Medium,Web,16,23,Open,4.4,No,Standard support request
+TKT000300,C001,P001,2026-02-22,Product Information,Wrong Specification,Medium,Email,1,15,Resolved,3.0,No,Standard support request
+TKT000301,C002,P002,2026-02-27,Refund,Refund Pending,High,Chat,4,25,Resolved,3.7,No,Standard support request
+TKT000302,C003,P003,2026-03-04,Technical,App Error,High,Phone,7,35,Resolved,4.4,No,Standard support request
+TKT000303,C004,P004,2026-03-09,Order,Order Cancellation,Low,Web,10,45,Resolved,3.0,No,Standard support request
+TKT000304,C005,P005,2026-03-14,Product Quality,Defective Product,High,Email,13,55,Resolved,3.7,Yes,Standard support request
+TKT000305,C006,P006,2026-03-19,Delivery,Late Delivery,Medium,Chat,16,65,Resolved,4.4,Yes,Standard support request
+TKT000306,C007,P007,2026-03-24,Payment,Payment Failed,High,Phone,1,57,Resolved,3.0,Yes,Standard support request
+TKT000307,C008,P008,2026-03-29,Account,Login Issue,Medium,Web,4,67,Resolved,3.7,Yes,Standard support request
+TKT000308,C009,P009,2026-04-03,Product Information,Wrong Specification,Medium,Email,7,77,Resolved,4.4,Yes,Standard support request
+TKT000309,C010,P010,2026-04-08,Refund,Refund Pending,High,Chat,10,15,Resolved,3.0,No,Standard support request
+TKT000310,C011,P011,2026-04-13,Technical,App Error,High,Phone,13,25,Resolved,3.7,No,Standard support request
+TKT000311,C012,P012,2026-04-18,Order,Order Cancellation,Low,Web,16,35,Resolved,4.4,No,Standard support request
+TKT000312,C013,P001,2026-04-23,Product Quality,Defective Product,High,Email,1,27,Open,3.0,No,Standard support request
+TKT000313,C014,P002,2026-04-28,Delivery,Late Delivery,Medium,Chat,4,37,Resolved,3.7,No,Standard support request
+TKT000314,C015,P003,2026-05-03,Payment,Payment Failed,High,Phone,7,47,Resolved,4.4,No,Standard support request
+TKT000315,C001,P004,2026-05-08,Account,Login Issue,Medium,Web,10,57,Resolved,3.0,Yes,Standard support request
+TKT000316,C002,P005,2026-05-13,Product Information,Wrong Specification,Medium,Email,13,67,Resolved,3.7,Yes,Standard support request
+TKT000317,C003,P006,2026-05-18,Refund,Refund Pending,High,Chat,16,77,Resolved,4.4,Yes,Standard support request
+TKT000318,C004,P007,2026-05-23,Technical,App Error,High,Phone,1,69,Resolved,3.0,Yes,Standard support request
+TKT000319,C005,P008,2026-05-28,Order,Order Cancellation,Low,Web,4,55,Resolved,2.5,Yes,Customer reported repeated issue
+TKT000320,C006,P009,2026-06-02,Product Quality,Defective Product,High,Email,7,17,Resolved,4.4,No,Standard support request
+TKT000321,C007,P010,2026-06-07,Delivery,Late Delivery,Medium,Chat,10,27,Resolved,3.0,No,Standard support request
+TKT000322,C008,P011,2026-06-12,Payment,Payment Failed,High,Phone,13,37,Resolved,3.7,No,Standard support request
+TKT000323,C009,P012,2026-06-17,Account,Login Issue,Medium,Web,16,47,Resolved,4.4,No,Standard support request
+TKT000324,C010,P001,2026-06-22,Product Information,Wrong Specification,Medium,Email,1,39,Resolved,3.0,No,Standard support request
+TKT000325,C011,P002,2026-06-27,Refund,Refund Pending,High,Chat,4,49,Open,3.7,Yes,Standard support request
+TKT000326,C012,P003,2026-01-02,Technical,App Error,High,Phone,7,59,Resolved,4.4,Yes,Standard support request
+TKT000327,C013,P004,2026-01-07,Order,Order Cancellation,Low,Web,10,69,Resolved,3.0,Yes,Standard support request
+TKT000328,C014,P005,2026-01-12,Product Quality,Defective Product,High,Email,13,79,Resolved,3.7,Yes,Standard support request
+TKT000329,C015,P006,2026-01-17,Delivery,Late Delivery,Medium,Chat,16,89,Resolved,4.4,Yes,Standard support request
+TKT000330,C001,P007,2026-01-22,Payment,Payment Failed,High,Phone,1,9,Resolved,3.0,No,Standard support request
+TKT000331,C002,P008,2026-01-27,Account,Login Issue,Medium,Web,4,19,Resolved,3.7,No,Standard support request
+TKT000332,C003,P009,2026-02-01,Product Information,Wrong Specification,Medium,Email,7,29,Resolved,4.4,No,Standard support request
+TKT000333,C004,P010,2026-02-06,Refund,Refund Pending,High,Chat,10,39,Resolved,3.0,No,Standard support request
+TKT000334,C005,P011,2026-02-11,Technical,App Error,High,Phone,13,49,Resolved,3.7,Yes,Standard support request
+TKT000335,C006,P012,2026-02-16,Order,Order Cancellation,Low,Web,16,59,Resolved,4.4,Yes,Standard support request
+TKT000336,C007,P001,2026-02-21,Product Quality,Defective Product,High,Email,1,51,Resolved,3.0,Yes,Standard support request
+TKT000337,C008,P002,2026-02-26,Delivery,Late Delivery,Medium,Chat,4,61,Resolved,3.7,Yes,Standard support request
+TKT000338,C009,P003,2026-03-03,Payment,Payment Failed,High,Phone,7,71,Open,4.4,Yes,Standard support request
+TKT000339,C010,P004,2026-03-08,Account,Login Issue,Medium,Web,10,81,Resolved,3.0,Yes,Standard support request
+TKT000340,C011,P005,2026-03-13,Product Information,Wrong Specification,Medium,Email,13,19,Resolved,3.7,No,Standard support request
+TKT000341,C012,P006,2026-03-18,Refund,Refund Pending,High,Chat,16,29,Resolved,4.4,No,Standard support request
+TKT000342,C013,P007,2026-03-23,Technical,App Error,High,Phone,1,21,Resolved,3.0,No,Standard support request
+TKT000343,C014,P008,2026-03-28,Order,Order Cancellation,Low,Web,4,31,Resolved,3.7,No,Standard support request
+TKT000344,C015,P009,2026-04-02,Product Quality,Defective Product,High,Email,7,41,Resolved,4.4,No,Standard support request
+TKT000345,C001,P010,2026-04-07,Delivery,Late Delivery,Medium,Chat,10,51,Resolved,3.0,Yes,Standard support request
+TKT000346,C002,P011,2026-04-12,Payment,Payment Failed,High,Phone,13,61,Resolved,3.7,Yes,Standard support request
+TKT000347,C003,P012,2026-04-17,Account,Login Issue,Medium,Web,16,71,Resolved,4.4,Yes,Standard support request
+TKT000348,C004,P001,2026-04-22,Product Information,Wrong Specification,Medium,Email,1,111,Resolved,1.8,Yes,Customer reported repeated issue
+TKT000349,C005,P002,2026-04-27,Refund,Refund Pending,High,Chat,4,73,Resolved,3.7,Yes,Standard support request
+TKT000350,C006,P003,2026-05-02,Technical,App Error,High,Phone,7,11,Resolved,4.4,No,Standard support request
+TKT000351,C007,P004,2026-05-07,Order,Order Cancellation,Low,Web,10,21,Open,3.0,No,Standard support request
+TKT000352,C008,P005,2026-05-12,Product Quality,Defective Product,High,Email,13,31,Resolved,3.7,No,Standard support request
+TKT000353,C009,P006,2026-05-17,Delivery,Late Delivery,Medium,Chat,16,41,Resolved,4.4,No,Standard support request
+TKT000354,C010,P007,2026-05-22,Payment,Payment Failed,High,Phone,1,33,Resolved,3.0,No,Standard support request
+TKT000355,C011,P008,2026-05-27,Account,Login Issue,Medium,Web,4,43,Resolved,3.7,No,Standard support request
+TKT000356,C012,P009,2026-06-01,Product Information,Wrong Specification,Medium,Email,7,53,Resolved,4.4,Yes,Standard support request
+TKT000357,C013,P010,2026-06-06,Refund,Refund Pending,High,Chat,10,63,Resolved,3.0,Yes,Standard support request
+TKT000358,C014,P011,2026-06-11,Technical,App Error,High,Phone,13,73,Resolved,3.7,Yes,Standard support request
+TKT000359,C015,P012,2026-06-16,Order,Order Cancellation,Low,Web,16,83,Resolved,4.4,Yes,Standard support request
+TKT000360,C001,P001,2026-06-21,Product Quality,Defective Product,High,Email,1,3,Resolved,3.0,No,Standard support request
+TKT000361,C002,P002,2026-06-26,Delivery,Late Delivery,Medium,Chat,4,13,Resolved,3.7,No,Standard support request
+TKT000362,C003,P003,2026-01-01,Payment,Payment Failed,High,Phone,7,23,Resolved,4.4,No,Standard support request
+TKT000363,C004,P004,2026-01-06,Account,Login Issue,Medium,Web,10,33,Resolved,3.0,No,Standard support request
+TKT000364,C005,P005,2026-01-11,Product Information,Wrong Specification,Medium,Email,13,43,Open,3.7,No,Standard support request
+TKT000365,C006,P006,2026-01-16,Refund,Refund Pending,High,Chat,16,53,Resolved,4.4,Yes,Standard support request
+TKT000366,C007,P007,2026-01-21,Technical,App Error,High,Phone,1,45,Resolved,3.0,No,Standard support request
+TKT000367,C008,P008,2026-01-26,Order,Order Cancellation,Low,Web,4,55,Resolved,3.7,Yes,Standard support request
+TKT000368,C009,P009,2026-01-31,Product Quality,Defective Product,High,Email,7,65,Resolved,4.4,Yes,Standard support request
+TKT000369,C010,P010,2026-02-05,Delivery,Late Delivery,Medium,Chat,10,75,Resolved,3.0,Yes,Standard support request
+TKT000370,C011,P011,2026-02-10,Payment,Payment Failed,High,Phone,13,85,Resolved,3.7,Yes,Standard support request
+TKT000371,C012,P012,2026-02-15,Account,Login Issue,Medium,Web,16,23,Resolved,4.4,No,Standard support request
+TKT000372,C013,P001,2026-02-20,Product Information,Wrong Specification,Medium,Email,1,15,Resolved,3.0,No,Standard support request
+TKT000373,C014,P002,2026-02-25,Refund,Refund Pending,High,Chat,4,25,Resolved,3.7,No,Standard support request
+TKT000374,C015,P003,2026-03-02,Technical,App Error,High,Phone,7,35,Resolved,4.4,No,Standard support request
+TKT000375,C001,P004,2026-03-07,Order,Order Cancellation,Low,Web,10,45,Resolved,3.0,No,Standard support request
+TKT000376,C002,P005,2026-03-12,Product Quality,Defective Product,High,Email,13,55,Resolved,3.7,Yes,Standard support request
+TKT000377,C003,P006,2026-03-17,Delivery,Late Delivery,Medium,Chat,16,113,Open,3.2,Yes,Customer reported repeated issue
+TKT000378,C004,P007,2026-03-22,Payment,Payment Failed,High,Phone,1,57,Resolved,3.0,Yes,Standard support request
+TKT000379,C005,P008,2026-03-27,Account,Login Issue,Medium,Web,4,67,Resolved,3.7,Yes,Standard support request
+TKT000380,C006,P009,2026-04-01,Product Information,Wrong Specification,Medium,Email,7,77,Resolved,4.4,Yes,Standard support request
+TKT000381,C007,P010,2026-04-06,Refund,Refund Pending,High,Chat,10,15,Resolved,3.0,No,Standard support request
+TKT000382,C008,P011,2026-04-11,Technical,App Error,High,Phone,13,25,Resolved,3.7,No,Standard support request
+TKT000383,C009,P012,2026-04-16,Order,Order Cancellation,Low,Web,16,35,Resolved,4.4,No,Standard support request
+TKT000384,C010,P001,2026-04-21,Product Quality,Defective Product,High,Email,1,27,Resolved,3.0,No,Standard support request
+TKT000385,C011,P002,2026-04-26,Delivery,Late Delivery,Medium,Chat,4,37,Resolved,3.7,No,Standard support request
+TKT000386,C012,P003,2026-05-01,Payment,Payment Failed,High,Phone,7,47,Resolved,4.4,No,Standard support request
+TKT000387,C013,P004,2026-05-06,Account,Login Issue,Medium,Web,10,57,Resolved,3.0,Yes,Standard support request
+TKT000388,C014,P005,2026-05-11,Product Information,Wrong Specification,Medium,Email,13,67,Resolved,3.7,Yes,Standard support request
+TKT000389,C015,P006,2026-05-16,Refund,Refund Pending,High,Chat,16,77,Resolved,4.4,Yes,Standard support request
+TKT000390,C001,P007,2026-05-21,Technical,App Error,High,Phone,1,69,Open,3.0,Yes,Standard support request
+TKT000391,C002,P008,2026-05-26,Order,Order Cancellation,Low,Web,4,7,Resolved,3.7,No,Standard support request
+TKT000392,C003,P009,2026-05-31,Product Quality,Defective Product,High,Email,7,17,Resolved,4.4,No,Standard support request
+TKT000393,C004,P010,2026-06-05,Delivery,Late Delivery,Medium,Chat,10,27,Resolved,3.0,No,Standard support request
+TKT000394,C005,P011,2026-06-10,Payment,Payment Failed,High,Phone,13,37,Resolved,3.7,No,Standard support request
+TKT000395,C006,P012,2026-06-15,Account,Login Issue,Medium,Web,16,47,Resolved,4.4,No,Standard support request
+TKT000396,C007,P001,2026-06-20,Product Information,Wrong Specification,Medium,Email,1,39,Resolved,3.0,No,Standard support request
+TKT000397,C008,P002,2026-06-25,Refund,Refund Pending,High,Chat,4,49,Resolved,3.7,Yes,Standard support request
+TKT000398,C009,P003,2026-06-30,Technical,App Error,High,Phone,7,59,Resolved,4.4,Yes,Standard support request
+TKT000399,C010,P004,2026-01-05,Order,Order Cancellation,Low,Web,10,69,Resolved,3.0,Yes,Standard support request
+TKT000400,C011,P005,2026-01-10,Product Quality,Defective Product,High,Email,13,79,Resolved,3.7,Yes,Standard support request
+TKT000401,C012,P006,2026-01-15,Delivery,Late Delivery,Medium,Chat,16,89,Resolved,4.4,Yes,Standard support request
+TKT000402,C013,P007,2026-01-20,Payment,Payment Failed,High,Phone,1,9,Resolved,3.0,No,Standard support request
+TKT000403,C014,P008,2026-01-25,Account,Login Issue,Medium,Web,4,19,Open,3.7,No,Standard support request
+TKT000404,C015,P009,2026-01-30,Product Information,Wrong Specification,Medium,Email,7,29,Resolved,4.4,No,Standard support request
+TKT000405,C001,P010,2026-02-04,Refund,Refund Pending,High,Chat,10,39,Resolved,3.0,No,Standard support request
+TKT000406,C002,P011,2026-02-09,Technical,App Error,High,Phone,13,97,Resolved,2.5,Yes,Customer reported repeated issue
+TKT000407,C003,P012,2026-02-14,Order,Order Cancellation,Low,Web,16,59,Resolved,4.4,Yes,Standard support request
+TKT000408,C004,P001,2026-02-19,Product Quality,Defective Product,High,Email,1,51,Resolved,3.0,Yes,Standard support request
+TKT000409,C005,P002,2026-02-24,Delivery,Late Delivery,Medium,Chat,4,61,Resolved,3.7,Yes,Standard support request
+TKT000410,C006,P003,2026-03-01,Payment,Payment Failed,High,Phone,7,71,Resolved,4.4,Yes,Standard support request
+TKT000411,C007,P004,2026-03-06,Account,Login Issue,Medium,Web,10,81,Resolved,3.0,Yes,Standard support request
+TKT000412,C008,P005,2026-03-11,Product Information,Wrong Specification,Medium,Email,13,19,Resolved,3.7,No,Standard support request
+TKT000413,C009,P006,2026-03-16,Refund,Refund Pending,High,Chat,16,29,Resolved,4.4,No,Standard support request
+TKT000414,C010,P007,2026-03-21,Technical,App Error,High,Phone,1,21,Resolved,3.0,No,Standard support request
+TKT000415,C011,P008,2026-03-26,Order,Order Cancellation,Low,Web,4,31,Resolved,3.7,No,Standard support request
+TKT000416,C012,P009,2026-03-31,Product Quality,Defective Product,High,Email,7,41,Open,4.4,No,Standard support request
+TKT000417,C013,P010,2026-04-05,Delivery,Late Delivery,Medium,Chat,10,51,Resolved,3.0,Yes,Standard support request
+TKT000418,C014,P011,2026-04-10,Payment,Payment Failed,High,Phone,13,61,Resolved,3.7,Yes,Standard support request
+TKT000419,C015,P012,2026-04-15,Account,Login Issue,Medium,Web,16,71,Resolved,4.4,Yes,Standard support request
+TKT000420,C001,P001,2026-04-20,Product Information,Wrong Specification,Medium,Email,1,63,Resolved,3.0,Yes,Standard support request
+TKT000421,C002,P002,2026-04-25,Refund,Refund Pending,High,Chat,4,73,Resolved,3.7,Yes,Standard support request
+TKT000422,C003,P003,2026-04-30,Technical,App Error,High,Phone,7,11,Resolved,4.4,No,Standard support request
+TKT000423,C004,P004,2026-05-05,Order,Order Cancellation,Low,Web,10,21,Resolved,3.0,No,Standard support request
+TKT000424,C005,P005,2026-05-10,Product Quality,Defective Product,High,Email,13,31,Resolved,3.7,No,Standard support request
+TKT000425,C006,P006,2026-05-15,Delivery,Late Delivery,Medium,Chat,16,41,Resolved,4.4,No,Standard support request
+TKT000426,C007,P007,2026-05-20,Payment,Payment Failed,High,Phone,1,33,Resolved,3.0,No,Standard support request
+TKT000427,C008,P008,2026-05-25,Account,Login Issue,Medium,Web,4,43,Resolved,3.7,No,Standard support request
+TKT000428,C009,P009,2026-05-30,Product Information,Wrong Specification,Medium,Email,7,53,Resolved,4.4,Yes,Standard support request
+TKT000429,C010,P010,2026-06-04,Refund,Refund Pending,High,Chat,10,63,Open,3.0,Yes,Standard support request
+TKT000430,C011,P011,2026-06-09,Technical,App Error,High,Phone,13,73,Resolved,3.7,Yes,Standard support request
+TKT000431,C012,P012,2026-06-14,Order,Order Cancellation,Low,Web,16,83,Resolved,4.4,Yes,Standard support request
+TKT000432,C013,P001,2026-06-19,Product Quality,Defective Product,High,Email,1,3,Resolved,3.0,No,Standard support request
+TKT000433,C014,P002,2026-06-24,Delivery,Late Delivery,Medium,Chat,4,13,Resolved,3.7,No,Standard support request
+TKT000434,C015,P003,2026-06-29,Payment,Payment Failed,High,Phone,7,23,Resolved,4.4,No,Standard support request
+TKT000435,C001,P004,2026-01-04,Account,Login Issue,Medium,Web,10,81,Resolved,1.8,Yes,Customer reported repeated issue
+TKT000436,C002,P005,2026-01-09,Product Information,Wrong Specification,Medium,Email,13,43,Resolved,3.7,No,Standard support request
+TKT000437,C003,P006,2026-01-14,Refund,Refund Pending,High,Chat,16,53,Resolved,4.4,Yes,Standard support request
+TKT000438,C004,P007,2026-01-19,Technical,App Error,High,Phone,1,45,Resolved,3.0,No,Standard support request
+TKT000439,C005,P008,2026-01-24,Order,Order Cancellation,Low,Web,4,55,Resolved,3.7,Yes,Standard support request
+TKT000440,C006,P009,2026-01-29,Product Quality,Defective Product,High,Email,7,65,Resolved,4.4,Yes,Standard support request
+TKT000441,C007,P010,2026-02-03,Delivery,Late Delivery,Medium,Chat,10,75,Resolved,3.0,Yes,Standard support request
+TKT000442,C008,P011,2026-02-08,Payment,Payment Failed,High,Phone,13,85,Open,3.7,Yes,Standard support request
+TKT000443,C009,P012,2026-02-13,Account,Login Issue,Medium,Web,16,23,Resolved,4.4,No,Standard support request
+TKT000444,C010,P001,2026-02-18,Product Information,Wrong Specification,Medium,Email,1,15,Resolved,3.0,No,Standard support request
+TKT000445,C011,P002,2026-02-23,Refund,Refund Pending,High,Chat,4,25,Resolved,3.7,No,Standard support request
+TKT000446,C012,P003,2026-02-28,Technical,App Error,High,Phone,7,35,Resolved,4.4,No,Standard support request
+TKT000447,C013,P004,2026-03-05,Order,Order Cancellation,Low,Web,10,45,Resolved,3.0,No,Standard support request
+TKT000448,C014,P005,2026-03-10,Product Quality,Defective Product,High,Email,13,55,Resolved,3.7,Yes,Standard support request
+TKT000449,C015,P006,2026-03-15,Delivery,Late Delivery,Medium,Chat,16,65,Resolved,4.4,Yes,Standard support request
+TKT000450,C001,P007,2026-03-20,Payment,Payment Failed,High,Phone,1,57,Resolved,3.0,Yes,Standard support request
+TKT000451,C002,P008,2026-03-25,Account,Login Issue,Medium,Web,4,67,Resolved,3.7,Yes,Standard support request
+TKT000452,C003,P009,2026-03-30,Product Information,Wrong Specification,Medium,Email,7,77,Resolved,4.4,Yes,Standard support request
+TKT000453,C004,P010,2026-04-04,Refund,Refund Pending,High,Chat,10,15,Resolved,3.0,No,Standard support request
+TKT000454,C005,P011,2026-04-09,Technical,App Error,High,Phone,13,25,Resolved,3.7,No,Standard support request
+TKT000455,C006,P012,2026-04-14,Order,Order Cancellation,Low,Web,16,35,Open,4.4,No,Standard support request
+TKT000456,C007,P001,2026-04-19,Product Quality,Defective Product,High,Email,1,27,Resolved,3.0,No,Standard support request
+TKT000457,C008,P002,2026-04-24,Delivery,Late Delivery,Medium,Chat,4,37,Resolved,3.7,No,Standard support request
+TKT000458,C009,P003,2026-04-29,Payment,Payment Failed,High,Phone,7,47,Resolved,4.4,No,Standard support request
+TKT000459,C010,P004,2026-05-04,Account,Login Issue,Medium,Web,10,57,Resolved,3.0,Yes,Standard support request
+TKT000460,C011,P005,2026-05-09,Product Information,Wrong Specification,Medium,Email,13,67,Resolved,3.7,Yes,Standard support request
+TKT000461,C012,P006,2026-05-14,Refund,Refund Pending,High,Chat,16,77,Resolved,4.4,Yes,Standard support request
+TKT000462,C013,P007,2026-05-19,Technical,App Error,High,Phone,1,69,Resolved,3.0,Yes,Standard support request
+TKT000463,C014,P008,2026-05-24,Order,Order Cancellation,Low,Web,4,7,Resolved,3.7,No,Standard support request
+TKT000464,C015,P009,2026-05-29,Product Quality,Defective Product,High,Email,7,65,Resolved,3.2,Yes,Customer reported repeated issue
+TKT000465,C001,P010,2026-06-03,Delivery,Late Delivery,Medium,Chat,10,27,Resolved,3.0,No,Standard support request
+TKT000466,C002,P011,2026-06-08,Payment,Payment Failed,High,Phone,13,37,Resolved,3.7,No,Standard support request
+TKT000467,C003,P012,2026-06-13,Account,Login Issue,Medium,Web,16,47,Resolved,4.4,No,Standard support request
+TKT000468,C004,P001,2026-06-18,Product Information,Wrong Specification,Medium,Email,1,39,Open,3.0,No,Standard support request
+TKT000469,C005,P002,2026-06-23,Refund,Refund Pending,High,Chat,4,49,Resolved,3.7,Yes,Standard support request
+TKT000470,C006,P003,2026-06-28,Technical,App Error,High,Phone,7,59,Resolved,4.4,Yes,Standard support request
+TKT000471,C007,P004,2026-01-03,Order,Order Cancellation,Low,Web,10,69,Resolved,3.0,Yes,Standard support request
+TKT000472,C008,P005,2026-01-08,Product Quality,Defective Product,High,Email,13,79,Resolved,3.7,Yes,Standard support request
+TKT000473,C009,P006,2026-01-13,Delivery,Late Delivery,Medium,Chat,16,89,Resolved,4.4,Yes,Standard support request
+TKT000474,C010,P007,2026-01-18,Payment,Payment Failed,High,Phone,1,9,Resolved,3.0,No,Standard support request
+TKT000475,C011,P008,2026-01-23,Account,Login Issue,Medium,Web,4,19,Resolved,3.7,No,Standard support request
+TKT000476,C012,P009,2026-01-28,Product Information,Wrong Specification,Medium,Email,7,29,Resolved,4.4,No,Standard support request
+TKT000477,C013,P010,2026-02-02,Refund,Refund Pending,High,Chat,10,39,Resolved,3.0,No,Standard support request
+TKT000478,C014,P011,2026-02-07,Technical,App Error,High,Phone,13,49,Resolved,3.7,Yes,Standard support request
+TKT000479,C015,P012,2026-02-12,Order,Order Cancellation,Low,Web,16,59,Resolved,4.4,Yes,Standard support request
+TKT000480,C001,P001,2026-02-17,Product Quality,Defective Product,High,Email,1,51,Resolved,3.0,Yes,Standard support request
+TKT000481,C002,P002,2026-02-22,Delivery,Late Delivery,Medium,Chat,4,61,Open,3.7,Yes,Standard support request
+TKT000482,C003,P003,2026-02-27,Payment,Payment Failed,High,Phone,7,71,Resolved,4.4,Yes,Standard support request
+TKT000483,C004,P004,2026-03-04,Account,Login Issue,Medium,Web,10,81,Resolved,3.0,Yes,Standard support request
+TKT000484,C005,P005,2026-03-09,Product Information,Wrong Specification,Medium,Email,13,19,Resolved,3.7,No,Standard support request
+TKT000485,C006,P006,2026-03-14,Refund,Refund Pending,High,Chat,16,29,Resolved,4.4,No,Standard support request
+TKT000486,C007,P007,2026-03-19,Technical,App Error,High,Phone,1,21,Resolved,3.0,No,Standard support request
+TKT000487,C008,P008,2026-03-24,Order,Order Cancellation,Low,Web,4,31,Resolved,3.7,No,Standard support request
+TKT000488,C009,P009,2026-03-29,Product Quality,Defective Product,High,Email,7,41,Resolved,4.4,No,Standard support request
+TKT000489,C010,P010,2026-04-03,Delivery,Late Delivery,Medium,Chat,10,51,Resolved,3.0,Yes,Standard support request
+TKT000490,C011,P011,2026-04-08,Payment,Payment Failed,High,Phone,13,61,Resolved,3.7,Yes,Standard support request
+TKT000491,C012,P012,2026-04-13,Account,Login Issue,Medium,Web,16,71,Resolved,4.4,Yes,Standard support request
+TKT000492,C013,P001,2026-04-18,Product Information,Wrong Specification,Medium,Email,1,63,Resolved,3.0,Yes,Standard support request
+TKT000493,C014,P002,2026-04-23,Refund,Refund Pending,High,Chat,4,121,Resolved,2.5,Yes,Customer reported repeated issue
+TKT000494,C015,P003,2026-04-28,Technical,App Error,High,Phone,7,11,Open,4.4,No,Standard support request
+TKT000495,C001,P004,2026-05-03,Order,Order Cancellation,Low,Web,10,21,Resolved,3.0,No,Standard support request
+TKT000496,C002,P005,2026-05-08,Product Quality,Defective Product,High,Email,13,31,Resolved,3.7,No,Standard support request
+TKT000497,C003,P006,2026-05-13,Delivery,Late Delivery,Medium,Chat,16,41,Resolved,4.4,No,Standard support request
+TKT000498,C004,P007,2026-05-18,Payment,Payment Failed,High,Phone,1,33,Resolved,3.0,No,Standard support request
+TKT000499,C005,P008,2026-05-23,Account,Login Issue,Medium,Web,4,43,Resolved,3.7,No,Standard support request
+TKT000500,C006,P009,2026-05-28,Product Information,Wrong Specification,Medium,Email,7,53,Resolved,4.4,Yes,Standard support request
+TKT000501,C007,P010,2026-06-02,Refund,Refund Pending,High,Chat,10,63,Resolved,3.0,Yes,Standard support request
+TKT000502,C008,P011,2026-06-07,Technical,App Error,High,Phone,13,73,Resolved,3.7,Yes,Standard support request
+TKT000503,C009,P012,2026-06-12,Order,Order Cancellation,Low,Web,16,83,Resolved,4.4,Yes,Standard support request
+TKT000504,C010,P001,2026-06-17,Product Quality,Defective Product,High,Email,1,3,Resolved,3.0,No,Standard support request
+TKT000505,C011,P002,2026-06-22,Delivery,Late Delivery,Medium,Chat,4,13,Resolved,3.7,No,Standard support request
+TKT000506,C012,P003,2026-06-27,Payment,Payment Failed,High,Phone,7,23,Resolved,4.4,No,Standard support request
+TKT000507,C013,P004,2026-01-02,Account,Login Issue,Medium,Web,10,33,Open,3.0,No,Standard support request
+TKT000508,C014,P005,2026-01-07,Product Information,Wrong Specification,Medium,Email,13,43,Resolved,3.7,No,Standard support request
+TKT000509,C015,P006,2026-01-12,Refund,Refund Pending,High,Chat,16,53,Resolved,4.4,Yes,Standard support request
+TKT000510,C001,P007,2026-01-17,Technical,App Error,High,Phone,1,45,Resolved,3.0,No,Standard support request
+TKT000511,C002,P008,2026-01-22,Order,Order Cancellation,Low,Web,4,55,Resolved,3.7,Yes,Standard support request
+TKT000512,C003,P009,2026-01-27,Product Quality,Defective Product,High,Email,7,65,Resolved,4.4,Yes,Standard support request
+TKT000513,C004,P010,2026-02-01,Delivery,Late Delivery,Medium,Chat,10,75,Resolved,3.0,Yes,Standard support request
+TKT000514,C005,P011,2026-02-06,Payment,Payment Failed,High,Phone,13,85,Resolved,3.7,Yes,Standard support request
+TKT000515,C006,P012,2026-02-11,Account,Login Issue,Medium,Web,16,23,Resolved,4.4,No,Standard support request
+TKT000516,C007,P001,2026-02-16,Product Information,Wrong Specification,Medium,Email,1,15,Resolved,3.0,No,Standard support request
+TKT000517,C008,P002,2026-02-21,Refund,Refund Pending,High,Chat,4,25,Resolved,3.7,No,Standard support request
+TKT000518,C009,P003,2026-02-26,Technical,App Error,High,Phone,7,35,Resolved,4.4,No,Standard support request
+TKT000519,C010,P004,2026-03-03,Order,Order Cancellation,Low,Web,10,45,Resolved,3.0,No,Standard support request
+TKT000520,C011,P005,2026-03-08,Product Quality,Defective Product,High,Email,13,55,Open,3.7,Yes,Standard support request
+TKT000521,C012,P006,2026-03-13,Delivery,Late Delivery,Medium,Chat,16,65,Resolved,4.4,Yes,Standard support request
+TKT000522,C013,P007,2026-03-18,Payment,Payment Failed,High,Phone,1,105,Resolved,1.8,Yes,Customer reported repeated issue
+TKT000523,C014,P008,2026-03-23,Account,Login Issue,Medium,Web,4,67,Resolved,3.7,Yes,Standard support request
+TKT000524,C015,P009,2026-03-28,Product Information,Wrong Specification,Medium,Email,7,77,Resolved,4.4,Yes,Standard support request
+TKT000525,C001,P010,2026-04-02,Refund,Refund Pending,High,Chat,10,15,Resolved,3.0,No,Standard support request
+TKT000526,C002,P011,2026-04-07,Technical,App Error,High,Phone,13,25,Resolved,3.7,No,Standard support request
+TKT000527,C003,P012,2026-04-12,Order,Order Cancellation,Low,Web,16,35,Resolved,4.4,No,Standard support request
+TKT000528,C004,P001,2026-04-17,Product Quality,Defective Product,High,Email,1,27,Resolved,3.0,No,Standard support request
+TKT000529,C005,P002,2026-04-22,Delivery,Late Delivery,Medium,Chat,4,37,Resolved,3.7,No,Standard support request
+TKT000530,C006,P003,2026-04-27,Payment,Payment Failed,High,Phone,7,47,Resolved,4.4,No,Standard support request
+TKT000531,C007,P004,2026-05-02,Account,Login Issue,Medium,Web,10,57,Resolved,3.0,Yes,Standard support request
+TKT000532,C008,P005,2026-05-07,Product Information,Wrong Specification,Medium,Email,13,67,Resolved,3.7,Yes,Standard support request
+TKT000533,C009,P006,2026-05-12,Refund,Refund Pending,High,Chat,16,77,Open,4.4,Yes,Standard support request
+TKT000534,C010,P007,2026-05-17,Technical,App Error,High,Phone,1,69,Resolved,3.0,Yes,Standard support request
+TKT000535,C011,P008,2026-05-22,Order,Order Cancellation,Low,Web,4,7,Resolved,3.7,No,Standard support request
+TKT000536,C012,P009,2026-05-27,Product Quality,Defective Product,High,Email,7,17,Resolved,4.4,No,Standard support request
+TKT000537,C013,P010,2026-06-01,Delivery,Late Delivery,Medium,Chat,10,27,Resolved,3.0,No,Standard support request
+TKT000538,C014,P011,2026-06-06,Payment,Payment Failed,High,Phone,13,37,Resolved,3.7,No,Standard support request
+TKT000539,C015,P012,2026-06-11,Account,Login Issue,Medium,Web,16,47,Resolved,4.4,No,Standard support request
+TKT000540,C001,P001,2026-06-16,Product Information,Wrong Specification,Medium,Email,1,39,Resolved,3.0,No,Standard support request
+TKT000541,C002,P002,2026-06-21,Refund,Refund Pending,High,Chat,4,49,Resolved,3.7,Yes,Standard support request
+TKT000542,C003,P003,2026-06-26,Technical,App Error,High,Phone,7,59,Resolved,4.4,Yes,Standard support request
+TKT000543,C004,P004,2026-01-01,Order,Order Cancellation,Low,Web,10,69,Resolved,3.0,Yes,Standard support request
+TKT000544,C005,P005,2026-01-06,Product Quality,Defective Product,High,Email,13,79,Resolved,3.7,Yes,Standard support request
+TKT000545,C006,P006,2026-01-11,Delivery,Late Delivery,Medium,Chat,16,89,Resolved,4.4,Yes,Standard support request
+TKT000546,C007,P007,2026-01-16,Payment,Payment Failed,High,Phone,1,9,Open,3.0,No,Standard support request
+TKT000547,C008,P008,2026-01-21,Account,Login Issue,Medium,Web,4,19,Resolved,3.7,No,Standard support request
+TKT000548,C009,P009,2026-01-26,Product Information,Wrong Specification,Medium,Email,7,29,Resolved,4.4,No,Standard support request
+TKT000549,C010,P010,2026-01-31,Refund,Refund Pending,High,Chat,10,39,Resolved,3.0,No,Standard support request
+TKT000550,C011,P011,2026-02-05,Technical,App Error,High,Phone,13,49,Resolved,3.7,Yes,Standard support request
+TKT000551,C012,P012,2026-02-10,Order,Order Cancellation,Low,Web,16,107,Resolved,3.2,Yes,Customer reported repeated issue
+TKT000552,C013,P001,2026-02-15,Product Quality,Defective Product,High,Email,1,51,Resolved,3.0,Yes,Standard support request
+TKT000553,C014,P002,2026-02-20,Delivery,Late Delivery,Medium,Chat,4,61,Resolved,3.7,Yes,Standard support request
+TKT000554,C015,P003,2026-02-25,Payment,Payment Failed,High,Phone,7,71,Resolved,4.4,Yes,Standard support request
+TKT000555,C001,P004,2026-03-02,Account,Login Issue,Medium,Web,10,81,Resolved,3.0,Yes,Standard support request
+TKT000556,C002,P005,2026-03-07,Product Information,Wrong Specification,Medium,Email,13,19,Resolved,3.7,No,Standard support request
+TKT000557,C003,P006,2026-03-12,Refund,Refund Pending,High,Chat,16,29,Resolved,4.4,No,Standard support request
+TKT000558,C004,P007,2026-03-17,Technical,App Error,High,Phone,1,21,Resolved,3.0,No,Standard support request
+TKT000559,C005,P008,2026-03-22,Order,Order Cancellation,Low,Web,4,31,Open,3.7,No,Standard support request
+TKT000560,C006,P009,2026-03-27,Product Quality,Defective Product,High,Email,7,41,Resolved,4.4,No,Standard support request
+TKT000561,C007,P010,2026-04-01,Delivery,Late Delivery,Medium,Chat,10,51,Resolved,3.0,Yes,Standard support request
+TKT000562,C008,P011,2026-04-06,Payment,Payment Failed,High,Phone,13,61,Resolved,3.7,Yes,Standard support request
+TKT000563,C009,P012,2026-04-11,Account,Login Issue,Medium,Web,16,71,Resolved,4.4,Yes,Standard support request
+TKT000564,C010,P001,2026-04-16,Product Information,Wrong Specification,Medium,Email,1,63,Resolved,3.0,Yes,Standard support request
+TKT000565,C011,P002,2026-04-21,Refund,Refund Pending,High,Chat,4,73,Resolved,3.7,Yes,Standard support request
+TKT000566,C012,P003,2026-04-26,Technical,App Error,High,Phone,7,11,Resolved,4.4,No,Standard support request
+TKT000567,C013,P004,2026-05-01,Order,Order Cancellation,Low,Web,10,21,Resolved,3.0,No,Standard support request
+TKT000568,C014,P005,2026-05-06,Product Quality,Defective Product,High,Email,13,31,Resolved,3.7,No,Standard support request
+TKT000569,C015,P006,2026-05-11,Delivery,Late Delivery,Medium,Chat,16,41,Resolved,4.4,No,Standard support request
+TKT000570,C001,P007,2026-05-16,Payment,Payment Failed,High,Phone,1,33,Resolved,3.0,No,Standard support request
+TKT000571,C002,P008,2026-05-21,Account,Login Issue,Medium,Web,4,43,Resolved,3.7,No,Standard support request
+TKT000572,C003,P009,2026-05-26,Product Information,Wrong Specification,Medium,Email,7,53,Open,4.4,Yes,Standard support request
+TKT000573,C004,P010,2026-05-31,Refund,Refund Pending,High,Chat,10,63,Resolved,3.0,Yes,Standard support request
+TKT000574,C005,P011,2026-06-05,Technical,App Error,High,Phone,13,73,Resolved,3.7,Yes,Standard support request
+TKT000575,C006,P012,2026-06-10,Order,Order Cancellation,Low,Web,16,83,Resolved,4.4,Yes,Standard support request
+TKT000576,C007,P001,2026-06-15,Product Quality,Defective Product,High,Email,1,3,Resolved,3.0,No,Standard support request
+TKT000577,C008,P002,2026-06-20,Delivery,Late Delivery,Medium,Chat,4,13,Resolved,3.7,No,Standard support request
+TKT000578,C009,P003,2026-06-25,Payment,Payment Failed,High,Phone,7,23,Resolved,4.4,No,Standard support request
+TKT000579,C010,P004,2026-06-30,Account,Login Issue,Medium,Web,10,33,Resolved,3.0,No,Standard support request
+TKT000580,C011,P005,2026-01-05,Product Information,Wrong Specification,Medium,Email,13,91,Resolved,2.5,Yes,Customer reported repeated issue
+TKT000581,C012,P006,2026-01-10,Refund,Refund Pending,High,Chat,16,53,Resolved,4.4,Yes,Standard support request
+TKT000582,C013,P007,2026-01-15,Technical,App Error,High,Phone,1,45,Resolved,3.0,No,Standard support request
+TKT000583,C014,P008,2026-01-20,Order,Order Cancellation,Low,Web,4,55,Resolved,3.7,Yes,Standard support request
+TKT000584,C015,P009,2026-01-25,Product Quality,Defective Product,High,Email,7,65,Resolved,4.4,Yes,Standard support request
+TKT000585,C001,P010,2026-01-30,Delivery,Late Delivery,Medium,Chat,10,75,Open,3.0,Yes,Standard support request
+TKT000586,C002,P011,2026-02-04,Payment,Payment Failed,High,Phone,13,85,Resolved,3.7,Yes,Standard support request
+TKT000587,C003,P012,2026-02-09,Account,Login Issue,Medium,Web,16,23,Resolved,4.4,No,Standard support request
+TKT000588,C004,P001,2026-02-14,Product Information,Wrong Specification,Medium,Email,1,15,Resolved,3.0,No,Standard support request
+TKT000589,C005,P002,2026-02-19,Refund,Refund Pending,High,Chat,4,25,Resolved,3.7,No,Standard support request
+TKT000590,C006,P003,2026-02-24,Technical,App Error,High,Phone,7,35,Resolved,4.4,No,Standard support request
+TKT000591,C007,P004,2026-03-01,Order,Order Cancellation,Low,Web,10,45,Resolved,3.0,No,Standard support request
+TKT000592,C008,P005,2026-03-06,Product Quality,Defective Product,High,Email,13,55,Resolved,3.7,Yes,Standard support request
+TKT000593,C009,P006,2026-03-11,Delivery,Late Delivery,Medium,Chat,16,65,Resolved,4.4,Yes,Standard support request
+TKT000594,C010,P007,2026-03-16,Payment,Payment Failed,High,Phone,1,57,Resolved,3.0,Yes,Standard support request
+TKT000595,C011,P008,2026-03-21,Account,Login Issue,Medium,Web,4,67,Resolved,3.7,Yes,Standard support request
+TKT000596,C012,P009,2026-03-26,Product Information,Wrong Specification,Medium,Email,7,77,Resolved,4.4,Yes,Standard support request
+TKT000597,C013,P010,2026-03-31,Refund,Refund Pending,High,Chat,10,15,Resolved,3.0,No,Standard support request
+TKT000598,C014,P011,2026-04-05,Technical,App Error,High,Phone,13,25,Open,3.7,No,Standard support request
+TKT000599,C015,P012,2026-04-10,Order,Order Cancellation,Low,Web,16,35,Resolved,4.4,No,Standard support request
+TKT000600,C001,P001,2026-04-15,Product Quality,Defective Product,High,Email,1,27,Resolved,3.0,No,Standard support request
+TKT000601,C002,P002,2026-04-20,Delivery,Late Delivery,Medium,Chat,4,37,Resolved,3.7,No,Standard support request
+TKT000602,C003,P003,2026-04-25,Payment,Payment Failed,High,Phone,7,47,Resolved,4.4,No,Standard support request
+TKT000603,C004,P004,2026-04-30,Account,Login Issue,Medium,Web,10,57,Resolved,3.0,Yes,Standard support request
+TKT000604,C005,P005,2026-05-05,Product Information,Wrong Specification,Medium,Email,13,67,Resolved,3.7,Yes,Standard support request
+TKT000605,C006,P006,2026-05-10,Refund,Refund Pending,High,Chat,16,77,Resolved,4.4,Yes,Standard support request
+TKT000606,C007,P007,2026-05-15,Technical,App Error,High,Phone,1,69,Resolved,3.0,Yes,Standard support request
+TKT000607,C008,P008,2026-05-20,Order,Order Cancellation,Low,Web,4,7,Resolved,3.7,No,Standard support request
+TKT000608,C009,P009,2026-05-25,Product Quality,Defective Product,High,Email,7,17,Resolved,4.4,No,Standard support request
+TKT000609,C010,P010,2026-05-30,Delivery,Late Delivery,Medium,Chat,10,75,Resolved,1.8,Yes,Customer reported repeated issue
+TKT000610,C011,P011,2026-06-04,Payment,Payment Failed,High,Phone,13,37,Resolved,3.7,No,Standard support request
+TKT000611,C012,P012,2026-06-09,Account,Login Issue,Medium,Web,16,47,Open,4.4,No,Standard support request
+TKT000612,C013,P001,2026-06-14,Product Information,Wrong Specification,Medium,Email,1,39,Resolved,3.0,No,Standard support request
+TKT000613,C014,P002,2026-06-19,Refund,Refund Pending,High,Chat,4,49,Resolved,3.7,Yes,Standard support request
+TKT000614,C015,P003,2026-06-24,Technical,App Error,High,Phone,7,59,Resolved,4.4,Yes,Standard support request
+TKT000615,C001,P004,2026-06-29,Order,Order Cancellation,Low,Web,10,69,Resolved,3.0,Yes,Standard support request
+TKT000616,C002,P005,2026-01-04,Product Quality,Defective Product,High,Email,13,79,Resolved,3.7,Yes,Standard support request
+TKT000617,C003,P006,2026-01-09,Delivery,Late Delivery,Medium,Chat,16,89,Resolved,4.4,Yes,Standard support request
+TKT000618,C004,P007,2026-01-14,Payment,Payment Failed,High,Phone,1,9,Resolved,3.0,No,Standard support request
+TKT000619,C005,P008,2026-01-19,Account,Login Issue,Medium,Web,4,19,Resolved,3.7,No,Standard support request
+TKT000620,C006,P009,2026-01-24,Product Information,Wrong Specification,Medium,Email,7,29,Resolved,4.4,No,Standard support request
+TKT000621,C007,P010,2026-01-29,Refund,Refund Pending,High,Chat,10,39,Resolved,3.0,No,Standard support request
+TKT000622,C008,P011,2026-02-03,Technical,App Error,High,Phone,13,49,Resolved,3.7,Yes,Standard support request
+TKT000623,C009,P012,2026-02-08,Order,Order Cancellation,Low,Web,16,59,Resolved,4.4,Yes,Standard support request
+TKT000624,C010,P001,2026-02-13,Product Quality,Defective Product,High,Email,1,51,Open,3.0,Yes,Standard support request
+TKT000625,C011,P002,2026-02-18,Delivery,Late Delivery,Medium,Chat,4,61,Resolved,3.7,Yes,Standard support request
+TKT000626,C012,P003,2026-02-23,Payment,Payment Failed,High,Phone,7,71,Resolved,4.4,Yes,Standard support request
+TKT000627,C013,P004,2026-02-28,Account,Login Issue,Medium,Web,10,81,Resolved,3.0,Yes,Standard support request
+TKT000628,C014,P005,2026-03-05,Product Information,Wrong Specification,Medium,Email,13,19,Resolved,3.7,No,Standard support request
+TKT000629,C015,P006,2026-03-10,Refund,Refund Pending,High,Chat,16,29,Resolved,4.4,No,Standard support request
+TKT000630,C001,P007,2026-03-15,Technical,App Error,High,Phone,1,21,Resolved,3.0,No,Standard support request
+TKT000631,C002,P008,2026-03-20,Order,Order Cancellation,Low,Web,4,31,Resolved,3.7,No,Standard support request
+TKT000632,C003,P009,2026-03-25,Product Quality,Defective Product,High,Email,7,41,Resolved,4.4,No,Standard support request
+TKT000633,C004,P010,2026-03-30,Delivery,Late Delivery,Medium,Chat,10,51,Resolved,3.0,Yes,Standard support request
+TKT000634,C005,P011,2026-04-04,Payment,Payment Failed,High,Phone,13,61,Resolved,3.7,Yes,Standard support request
+TKT000635,C006,P012,2026-04-09,Account,Login Issue,Medium,Web,16,71,Resolved,4.4,Yes,Standard support request
+TKT000636,C007,P001,2026-04-14,Product Information,Wrong Specification,Medium,Email,1,63,Resolved,3.0,Yes,Standard support request
+TKT000637,C008,P002,2026-04-19,Refund,Refund Pending,High,Chat,4,73,Open,3.7,Yes,Standard support request
+TKT000638,C009,P003,2026-04-24,Technical,App Error,High,Phone,7,59,Resolved,3.2,Yes,Customer reported repeated issue
+TKT000639,C010,P004,2026-04-29,Order,Order Cancellation,Low,Web,10,21,Resolved,3.0,No,Standard support request
+TKT000640,C011,P005,2026-05-04,Product Quality,Defective Product,High,Email,13,31,Resolved,3.7,No,Standard support request
+TKT000641,C012,P006,2026-05-09,Delivery,Late Delivery,Medium,Chat,16,41,Resolved,4.4,No,Standard support request
+TKT000642,C013,P007,2026-05-14,Payment,Payment Failed,High,Phone,1,33,Resolved,3.0,No,Standard support request
+TKT000643,C014,P008,2026-05-19,Account,Login Issue,Medium,Web,4,43,Resolved,3.7,No,Standard support request
+TKT000644,C015,P009,2026-05-24,Product Information,Wrong Specification,Medium,Email,7,53,Resolved,4.4,Yes,Standard support request
+TKT000645,C001,P010,2026-05-29,Refund,Refund Pending,High,Chat,10,63,Resolved,3.0,Yes,Standard support request
+TKT000646,C002,P011,2026-06-03,Technical,App Error,High,Phone,13,73,Resolved,3.7,Yes,Standard support request
+TKT000647,C003,P012,2026-06-08,Order,Order Cancellation,Low,Web,16,83,Resolved,4.4,Yes,Standard support request
+TKT000648,C004,P001,2026-06-13,Product Quality,Defective Product,High,Email,1,3,Resolved,3.0,No,Standard support request
+TKT000649,C005,P002,2026-06-18,Delivery,Late Delivery,Medium,Chat,4,13,Resolved,3.7,No,Standard support request
+TKT000650,C006,P003,2026-06-23,Payment,Payment Failed,High,Phone,7,23,Open,4.4,No,Standard support request
+TKT000651,C007,P004,2026-06-28,Account,Login Issue,Medium,Web,10,33,Resolved,3.0,No,Standard support request
+TKT000652,C008,P005,2026-01-03,Product Information,Wrong Specification,Medium,Email,13,43,Resolved,3.7,No,Standard support request
+TKT000653,C009,P006,2026-01-08,Refund,Refund Pending,High,Chat,16,53,Resolved,4.4,Yes,Standard support request
+TKT000654,C010,P007,2026-01-13,Technical,App Error,High,Phone,1,45,Resolved,3.0,No,Standard support request
+TKT000655,C011,P008,2026-01-18,Order,Order Cancellation,Low,Web,4,55,Resolved,3.7,Yes,Standard support request
+TKT000656,C012,P009,2026-01-23,Product Quality,Defective Product,High,Email,7,65,Resolved,4.4,Yes,Standard support request
+TKT000657,C013,P010,2026-01-28,Delivery,Late Delivery,Medium,Chat,10,75,Resolved,3.0,Yes,Standard support request
+TKT000658,C014,P011,2026-02-02,Payment,Payment Failed,High,Phone,13,85,Resolved,3.7,Yes,Standard support request
+TKT000659,C015,P012,2026-02-07,Account,Login Issue,Medium,Web,16,23,Resolved,4.4,No,Standard support request
+TKT000660,C001,P001,2026-02-12,Product Information,Wrong Specification,Medium,Email,1,15,Resolved,3.0,No,Standard support request
+TKT000661,C002,P002,2026-02-17,Refund,Refund Pending,High,Chat,4,25,Resolved,3.7,No,Standard support request
+TKT000662,C003,P003,2026-02-22,Technical,App Error,High,Phone,7,35,Resolved,4.4,No,Standard support request
+TKT000663,C004,P004,2026-02-27,Order,Order Cancellation,Low,Web,10,45,Open,3.0,No,Standard support request
+TKT000664,C005,P005,2026-03-04,Product Quality,Defective Product,High,Email,13,55,Resolved,3.7,Yes,Standard support request
+TKT000665,C006,P006,2026-03-09,Delivery,Late Delivery,Medium,Chat,16,65,Resolved,4.4,Yes,Standard support request
+TKT000666,C007,P007,2026-03-14,Payment,Payment Failed,High,Phone,1,57,Resolved,3.0,Yes,Standard support request
+TKT000667,C008,P008,2026-03-19,Account,Login Issue,Medium,Web,4,115,Resolved,2.5,Yes,Customer reported repeated issue
+TKT000668,C009,P009,2026-03-24,Product Information,Wrong Specification,Medium,Email,7,77,Resolved,4.4,Yes,Standard support request
+TKT000669,C010,P010,2026-03-29,Refund,Refund Pending,High,Chat,10,15,Resolved,3.0,No,Standard support request
+TKT000670,C011,P011,2026-04-03,Technical,App Error,High,Phone,13,25,Resolved,3.7,No,Standard support request
+TKT000671,C012,P012,2026-04-08,Order,Order Cancellation,Low,Web,16,35,Resolved,4.4,No,Standard support request
+TKT000672,C013,P001,2026-04-13,Product Quality,Defective Product,High,Email,1,27,Resolved,3.0,No,Standard support request
+TKT000673,C014,P002,2026-04-18,Delivery,Late Delivery,Medium,Chat,4,37,Resolved,3.7,No,Standard support request
+TKT000674,C015,P003,2026-04-23,Payment,Payment Failed,High,Phone,7,47,Resolved,4.4,No,Standard support request
+TKT000675,C001,P004,2026-04-28,Account,Login Issue,Medium,Web,10,57,Resolved,3.0,Yes,Standard support request
+TKT000676,C002,P005,2026-05-03,Product Information,Wrong Specification,Medium,Email,13,67,Open,3.7,Yes,Standard support request
+TKT000677,C003,P006,2026-05-08,Refund,Refund Pending,High,Chat,16,77,Resolved,4.4,Yes,Standard support request
+TKT000678,C004,P007,2026-05-13,Technical,App Error,High,Phone,1,69,Resolved,3.0,Yes,Standard support request
+TKT000679,C005,P008,2026-05-18,Order,Order Cancellation,Low,Web,4,7,Resolved,3.7,No,Standard support request
+TKT000680,C006,P009,2026-05-23,Product Quality,Defective Product,High,Email,7,17,Resolved,4.4,No,Standard support request
+TKT000681,C007,P010,2026-05-28,Delivery,Late Delivery,Medium,Chat,10,27,Resolved,3.0,No,Standard support request
+TKT000682,C008,P011,2026-06-02,Payment,Payment Failed,High,Phone,13,37,Resolved,3.7,No,Standard support request
+TKT000683,C009,P012,2026-06-07,Account,Login Issue,Medium,Web,16,47,Resolved,4.4,No,Standard support request
+TKT000684,C010,P001,2026-06-12,Product Information,Wrong Specification,Medium,Email,1,39,Resolved,3.0,No,Standard support request
+TKT000685,C011,P002,2026-06-17,Refund,Refund Pending,High,Chat,4,49,Resolved,3.7,Yes,Standard support request
+TKT000686,C012,P003,2026-06-22,Technical,App Error,High,Phone,7,59,Resolved,4.4,Yes,Standard support request
+TKT000687,C013,P004,2026-06-27,Order,Order Cancellation,Low,Web,10,69,Resolved,3.0,Yes,Standard support request
+TKT000688,C014,P005,2026-01-02,Product Quality,Defective Product,High,Email,13,79,Resolved,3.7,Yes,Standard support request
+TKT000689,C015,P006,2026-01-07,Delivery,Late Delivery,Medium,Chat,16,89,Open,4.4,Yes,Standard support request
+TKT000690,C001,P007,2026-01-12,Payment,Payment Failed,High,Phone,1,9,Resolved,3.0,No,Standard support request
+TKT000691,C002,P008,2026-01-17,Account,Login Issue,Medium,Web,4,19,Resolved,3.7,No,Standard support request
+TKT000692,C003,P009,2026-01-22,Product Information,Wrong Specification,Medium,Email,7,29,Resolved,4.4,No,Standard support request
+TKT000693,C004,P010,2026-01-27,Refund,Refund Pending,High,Chat,10,39,Resolved,3.0,No,Standard support request
+TKT000694,C005,P011,2026-02-01,Technical,App Error,High,Phone,13,49,Resolved,3.7,Yes,Standard support request
+TKT000695,C006,P012,2026-02-06,Order,Order Cancellation,Low,Web,16,59,Resolved,4.4,Yes,Standard support request
+TKT000696,C007,P001,2026-02-11,Product Quality,Defective Product,High,Email,1,99,Resolved,1.8,Yes,Customer reported repeated issue
+TKT000697,C008,P002,2026-02-16,Delivery,Late Delivery,Medium,Chat,4,61,Resolved,3.7,Yes,Standard support request
+TKT000698,C009,P003,2026-02-21,Payment,Payment Failed,High,Phone,7,71,Resolved,4.4,Yes,Standard support request
+TKT000699,C010,P004,2026-02-26,Account,Login Issue,Medium,Web,10,81,Resolved,3.0,Yes,Standard support request
+TKT000700,C011,P005,2026-03-03,Product Information,Wrong Specification,Medium,Email,13,19,Resolved,3.7,No,Standard support request
+TKT000701,C012,P006,2026-03-08,Refund,Refund Pending,High,Chat,16,29,Resolved,4.4,No,Standard support request
+TKT000702,C013,P007,2026-03-13,Technical,App Error,High,Phone,1,21,Open,3.0,No,Standard support request
+TKT000703,C014,P008,2026-03-18,Order,Order Cancellation,Low,Web,4,31,Resolved,3.7,No,Standard support request
+TKT000704,C015,P009,2026-03-23,Product Quality,Defective Product,High,Email,7,41,Resolved,4.4,No,Standard support request
+TKT000705,C001,P010,2026-03-28,Delivery,Late Delivery,Medium,Chat,10,51,Resolved,3.0,Yes,Standard support request
+TKT000706,C002,P011,2026-04-02,Payment,Payment Failed,High,Phone,13,61,Resolved,3.7,Yes,Standard support request
+TKT000707,C003,P012,2026-04-07,Account,Login Issue,Medium,Web,16,71,Resolved,4.4,Yes,Standard support request
+TKT000708,C004,P001,2026-04-12,Product Information,Wrong Specification,Medium,Email,1,63,Resolved,3.0,Yes,Standard support request
+TKT000709,C005,P002,2026-04-17,Refund,Refund Pending,High,Chat,4,73,Resolved,3.7,Yes,Standard support request
+TKT000710,C006,P003,2026-04-22,Technical,App Error,High,Phone,7,11,Resolved,4.4,No,Standard support request
+TKT000711,C007,P004,2026-04-27,Order,Order Cancellation,Low,Web,10,21,Resolved,3.0,No,Standard support request
+TKT000712,C008,P005,2026-05-02,Product Quality,Defective Product,High,Email,13,31,Resolved,3.7,No,Standard support request
+TKT000713,C009,P006,2026-05-07,Delivery,Late Delivery,Medium,Chat,16,41,Resolved,4.4,No,Standard support request
+TKT000714,C010,P007,2026-05-12,Payment,Payment Failed,High,Phone,1,33,Resolved,3.0,No,Standard support request
+TKT000715,C011,P008,2026-05-17,Account,Login Issue,Medium,Web,4,43,Open,3.7,No,Standard support request
+TKT000716,C012,P009,2026-05-22,Product Information,Wrong Specification,Medium,Email,7,53,Resolved,4.4,Yes,Standard support request
+TKT000717,C013,P010,2026-05-27,Refund,Refund Pending,High,Chat,10,63,Resolved,3.0,Yes,Standard support request
+TKT000718,C014,P011,2026-06-01,Technical,App Error,High,Phone,13,73,Resolved,3.7,Yes,Standard support request
+TKT000719,C015,P012,2026-06-06,Order,Order Cancellation,Low,Web,16,83,Resolved,4.4,Yes,Standard support request
+TKT000720,C001,P001,2026-06-11,Product Quality,Defective Product,High,Email,1,3,Resolved,3.0,No,Standard support request
+TKT000721,C002,P002,2026-06-16,Delivery,Late Delivery,Medium,Chat,4,13,Resolved,3.7,No,Standard support request
+TKT000722,C003,P003,2026-06-21,Payment,Payment Failed,High,Phone,7,23,Resolved,4.4,No,Standard support request
+TKT000723,C004,P004,2026-06-26,Account,Login Issue,Medium,Web,10,33,Resolved,3.0,No,Standard support request
+TKT000724,C005,P005,2026-01-01,Product Information,Wrong Specification,Medium,Email,13,43,Resolved,3.7,No,Standard support request
+TKT000725,C006,P006,2026-01-06,Refund,Refund Pending,High,Chat,16,101,Resolved,3.2,Yes,Customer reported repeated issue
+TKT000726,C007,P007,2026-01-11,Technical,App Error,High,Phone,1,45,Resolved,3.0,No,Standard support request
+TKT000727,C008,P008,2026-01-16,Order,Order Cancellation,Low,Web,4,55,Resolved,3.7,Yes,Standard support request
+TKT000728,C009,P009,2026-01-21,Product Quality,Defective Product,High,Email,7,65,Open,4.4,Yes,Standard support request
+TKT000729,C010,P010,2026-01-26,Delivery,Late Delivery,Medium,Chat,10,75,Resolved,3.0,Yes,Standard support request
+TKT000730,C011,P011,2026-01-31,Payment,Payment Failed,High,Phone,13,85,Resolved,3.7,Yes,Standard support request
+TKT000731,C012,P012,2026-02-05,Account,Login Issue,Medium,Web,16,23,Resolved,4.4,No,Standard support request
+TKT000732,C013,P001,2026-02-10,Product Information,Wrong Specification,Medium,Email,1,15,Resolved,3.0,No,Standard support request
+TKT000733,C014,P002,2026-02-15,Refund,Refund Pending,High,Chat,4,25,Resolved,3.7,No,Standard support request
+TKT000734,C015,P003,2026-02-20,Technical,App Error,High,Phone,7,35,Resolved,4.4,No,Standard support request
+TKT000735,C001,P004,2026-02-25,Order,Order Cancellation,Low,Web,10,45,Resolved,3.0,No,Standard support request
+TKT000736,C002,P005,2026-03-02,Product Quality,Defective Product,High,Email,13,55,Resolved,3.7,Yes,Standard support request
+TKT000737,C003,P006,2026-03-07,Delivery,Late Delivery,Medium,Chat,16,65,Resolved,4.4,Yes,Standard support request
+TKT000738,C004,P007,2026-03-12,Payment,Payment Failed,High,Phone,1,57,Resolved,3.0,Yes,Standard support request
+TKT000739,C005,P008,2026-03-17,Account,Login Issue,Medium,Web,4,67,Resolved,3.7,Yes,Standard support request
+TKT000740,C006,P009,2026-03-22,Product Information,Wrong Specification,Medium,Email,7,77,Resolved,4.4,Yes,Standard support request
+TKT000741,C007,P010,2026-03-27,Refund,Refund Pending,High,Chat,10,15,Open,3.0,No,Standard support request
+TKT000742,C008,P011,2026-04-01,Technical,App Error,High,Phone,13,25,Resolved,3.7,No,Standard support request
+TKT000743,C009,P012,2026-04-06,Order,Order Cancellation,Low,Web,16,35,Resolved,4.4,No,Standard support request
+TKT000744,C010,P001,2026-04-11,Product Quality,Defective Product,High,Email,1,27,Resolved,3.0,No,Standard support request
+TKT000745,C011,P002,2026-04-16,Delivery,Late Delivery,Medium,Chat,4,37,Resolved,3.7,No,Standard support request
+TKT000746,C012,P003,2026-04-21,Payment,Payment Failed,High,Phone,7,47,Resolved,4.4,No,Standard support request
+TKT000747,C013,P004,2026-04-26,Account,Login Issue,Medium,Web,10,57,Resolved,3.0,Yes,Standard support request
+TKT000748,C014,P005,2026-05-01,Product Information,Wrong Specification,Medium,Email,13,67,Resolved,3.7,Yes,Standard support request
+TKT000749,C015,P006,2026-05-06,Refund,Refund Pending,High,Chat,16,77,Resolved,4.4,Yes,Standard support request
+TKT000750,C001,P007,2026-05-11,Technical,App Error,High,Phone,1,69,Resolved,3.0,Yes,Standard support request
+TKT000751,C002,P008,2026-05-16,Order,Order Cancellation,Low,Web,4,7,Resolved,3.7,No,Standard support request
+TKT000752,C003,P009,2026-05-21,Product Quality,Defective Product,High,Email,7,17,Resolved,4.4,No,Standard support request
+TKT000753,C004,P010,2026-05-26,Delivery,Late Delivery,Medium,Chat,10,27,Resolved,3.0,No,Standard support request
+TKT000754,C005,P011,2026-05-31,Payment,Payment Failed,High,Phone,13,85,Open,2.5,Yes,Customer reported repeated issue
+TKT000755,C006,P012,2026-06-05,Account,Login Issue,Medium,Web,16,47,Resolved,4.4,No,Standard support request
+TKT000756,C007,P001,2026-06-10,Product Information,Wrong Specification,Medium,Email,1,39,Resolved,3.0,No,Standard support request
+TKT000757,C008,P002,2026-06-15,Refund,Refund Pending,High,Chat,4,49,Resolved,3.7,Yes,Standard support request
+TKT000758,C009,P003,2026-06-20,Technical,App Error,High,Phone,7,59,Resolved,4.4,Yes,Standard support request
+TKT000759,C010,P004,2026-06-25,Order,Order Cancellation,Low,Web,10,69,Resolved,3.0,Yes,Standard support request
+TKT000760,C011,P005,2026-06-30,Product Quality,Defective Product,High,Email,13,79,Resolved,3.7,Yes,Standard support request
+TKT000761,C012,P006,2026-01-05,Delivery,Late Delivery,Medium,Chat,16,89,Resolved,4.4,Yes,Standard support request
+TKT000762,C013,P007,2026-01-10,Payment,Payment Failed,High,Phone,1,9,Resolved,3.0,No,Standard support request
+TKT000763,C014,P008,2026-01-15,Account,Login Issue,Medium,Web,4,19,Resolved,3.7,No,Standard support request
+TKT000764,C015,P009,2026-01-20,Product Information,Wrong Specification,Medium,Email,7,29,Resolved,4.4,No,Standard support request
+TKT000765,C001,P010,2026-01-25,Refund,Refund Pending,High,Chat,10,39,Resolved,3.0,No,Standard support request
+TKT000766,C002,P011,2026-01-30,Technical,App Error,High,Phone,13,49,Resolved,3.7,Yes,Standard support request
+TKT000767,C003,P012,2026-02-04,Order,Order Cancellation,Low,Web,16,59,Open,4.4,Yes,Standard support request
+TKT000768,C004,P001,2026-02-09,Product Quality,Defective Product,High,Email,1,51,Resolved,3.0,Yes,Standard support request
+TKT000769,C005,P002,2026-02-14,Delivery,Late Delivery,Medium,Chat,4,61,Resolved,3.7,Yes,Standard support request
+TKT000770,C006,P003,2026-02-19,Payment,Payment Failed,High,Phone,7,71,Resolved,4.4,Yes,Standard support request
+TKT000771,C007,P004,2026-02-24,Account,Login Issue,Medium,Web,10,81,Resolved,3.0,Yes,Standard support request
+TKT000772,C008,P005,2026-03-01,Product Information,Wrong Specification,Medium,Email,13,19,Resolved,3.7,No,Standard support request
+TKT000773,C009,P006,2026-03-06,Refund,Refund Pending,High,Chat,16,29,Resolved,4.4,No,Standard support request
+TKT000774,C010,P007,2026-03-11,Technical,App Error,High,Phone,1,21,Resolved,3.0,No,Standard support request
+TKT000775,C011,P008,2026-03-16,Order,Order Cancellation,Low,Web,4,31,Resolved,3.7,No,Standard support request
+TKT000776,C012,P009,2026-03-21,Product Quality,Defective Product,High,Email,7,41,Resolved,4.4,No,Standard support request
+TKT000777,C013,P010,2026-03-26,Delivery,Late Delivery,Medium,Chat,10,51,Resolved,3.0,Yes,Standard support request
+TKT000778,C014,P011,2026-03-31,Payment,Payment Failed,High,Phone,13,61,Resolved,3.7,Yes,Standard support request
+TKT000779,C015,P012,2026-04-05,Account,Login Issue,Medium,Web,16,71,Resolved,4.4,Yes,Standard support request
+TKT000780,C001,P001,2026-04-10,Product Information,Wrong Specification,Medium,Email,1,63,Open,3.0,Yes,Standard support request
+TKT000781,C002,P002,2026-04-15,Refund,Refund Pending,High,Chat,4,73,Resolved,3.7,Yes,Standard support request
+TKT000782,C003,P003,2026-04-20,Technical,App Error,High,Phone,7,11,Resolved,4.4,No,Standard support request
+TKT000783,C004,P004,2026-04-25,Order,Order Cancellation,Low,Web,10,69,Resolved,1.8,Yes,Customer reported repeated issue
+TKT000784,C005,P005,2026-04-30,Product Quality,Defective Product,High,Email,13,31,Resolved,3.7,No,Standard support request
+TKT000785,C006,P006,2026-05-05,Delivery,Late Delivery,Medium,Chat,16,41,Resolved,4.4,No,Standard support request
+TKT000786,C007,P007,2026-05-10,Payment,Payment Failed,High,Phone,1,33,Resolved,3.0,No,Standard support request
+TKT000787,C008,P008,2026-05-15,Account,Login Issue,Medium,Web,4,43,Resolved,3.7,No,Standard support request
+TKT000788,C009,P009,2026-05-20,Product Information,Wrong Specification,Medium,Email,7,53,Resolved,4.4,Yes,Standard support request
+TKT000789,C010,P010,2026-05-25,Refund,Refund Pending,High,Chat,10,63,Resolved,3.0,Yes,Standard support request
+TKT000790,C011,P011,2026-05-30,Technical,App Error,High,Phone,13,73,Resolved,3.7,Yes,Standard support request
+TKT000791,C012,P012,2026-06-04,Order,Order Cancellation,Low,Web,16,83,Resolved,4.4,Yes,Standard support request
+TKT000792,C013,P001,2026-06-09,Product Quality,Defective Product,High,Email,1,3,Resolved,3.0,No,Standard support request
+TKT000793,C014,P002,2026-06-14,Delivery,Late Delivery,Medium,Chat,4,13,Open,3.7,No,Standard support request
+TKT000794,C015,P003,2026-06-19,Payment,Payment Failed,High,Phone,7,23,Resolved,4.4,No,Standard support request
+TKT000795,C001,P004,2026-06-24,Account,Login Issue,Medium,Web,10,33,Resolved,3.0,No,Standard support request
+TKT000796,C002,P005,2026-06-29,Product Information,Wrong Specification,Medium,Email,13,43,Resolved,3.7,No,Standard support request
+TKT000797,C003,P006,2026-01-04,Refund,Refund Pending,High,Chat,16,53,Resolved,4.4,Yes,Standard support request
+TKT000798,C004,P007,2026-01-09,Technical,App Error,High,Phone,1,45,Resolved,3.0,No,Standard support request
+TKT000799,C005,P008,2026-01-14,Order,Order Cancellation,Low,Web,4,55,Resolved,3.7,Yes,Standard support request
+TKT000800,C006,P009,2026-01-19,Product Quality,Defective Product,High,Email,7,65,Resolved,4.4,Yes,Standard support request

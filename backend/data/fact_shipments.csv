@@ -1,0 +1,1001 @@
+shipment_id,order_id,product_key,customer_key,ship_date,destination_region,carrier,distance_km,promised_days,actual_days,delay_days,shipment_status,shipping_cost,shipping_priority,delay_reason
+SHP000001,ORD000001,2,2,2026-01-04,North,BlueDart,39,3,3,0,Delivered,63,Standard,On Time
+SHP000002,ORD000002,3,3,2026-01-07,South,Ecom Express,68,4,4,0,Delivered,76,Standard,On Time
+SHP000003,ORD000003,4,4,2026-01-10,East,DTDC,97,2,2,0,Delivered,89,Standard,On Time
+SHP000004,ORD000004,5,5,2026-01-13,Central,XpressBees,126,3,3,0,Delivered,102,Express,On Time
+SHP000005,ORD000005,6,6,2026-01-16,West,Delhivery,155,4,4,0,Delivered,115,Standard,On Time
+SHP000006,ORD000006,7,7,2026-01-19,North,BlueDart,184,2,2,0,Delivered,128,Standard,On Time
+SHP000007,ORD000007,8,8,2026-01-22,South,Ecom Express,213,3,5,2,Delayed,141,Standard,Carrier Delay
+SHP000008,ORD000008,9,9,2026-01-25,East,DTDC,242,4,4,0,Delivered,154,Express,On Time
+SHP000009,ORD000009,10,10,2026-01-28,Central,XpressBees,271,2,2,0,Delivered,167,Standard,On Time
+SHP000010,ORD000010,11,11,2026-01-31,West,Delhivery,300,3,3,0,Delivered,180,Standard,On Time
+SHP000011,ORD000011,12,12,2026-02-03,North,BlueDart,329,4,4,0,Delivered,193,Standard,On Time
+SHP000012,ORD000012,1,13,2026-02-06,South,Ecom Express,358,2,2,0,Delivered,206,Express,On Time
+SHP000013,ORD000013,2,14,2026-02-09,East,DTDC,387,3,3,0,Delivered,219,Standard,On Time
+SHP000014,ORD000014,3,15,2026-02-12,Central,XpressBees,416,4,6,2,Delayed,52,Standard,Carrier Delay
+SHP000015,ORD000015,4,1,2026-02-15,West,Delhivery,445,2,2,0,Delivered,65,Standard,On Time
+SHP000016,ORD000016,5,2,2026-02-18,North,BlueDart,474,3,3,0,Delivered,78,Express,On Time
+SHP000017,ORD000017,6,3,2026-02-21,South,Ecom Express,503,4,8,4,Delayed,91,Standard,Warehouse Delay
+SHP000018,ORD000018,7,4,2026-02-24,East,DTDC,532,2,2,0,Delivered,104,Standard,On Time
+SHP000019,ORD000019,8,5,2026-02-27,Central,XpressBees,561,3,3,0,Delivered,117,Standard,On Time
+SHP000020,ORD000020,9,6,2026-03-02,West,Delhivery,590,4,4,0,Delivered,130,Express,On Time
+SHP000021,ORD000021,10,7,2026-03-05,North,BlueDart,619,2,4,2,Delayed,143,Standard,Carrier Delay
+SHP000022,ORD000022,11,8,2026-03-08,South,Ecom Express,648,3,3,0,Delivered,156,Standard,On Time
+SHP000023,ORD000023,12,9,2026-03-11,East,DTDC,677,4,4,0,Delivered,169,Standard,On Time
+SHP000024,ORD000024,1,10,2026-03-14,Central,XpressBees,706,2,2,0,Delivered,182,Express,On Time
+SHP000025,ORD000025,2,11,2026-03-17,West,Delhivery,735,3,3,0,Delivered,195,Standard,On Time
+SHP000026,ORD000026,3,12,2026-03-20,North,BlueDart,764,4,4,0,Delivered,208,Standard,On Time
+SHP000027,ORD000027,4,13,2026-03-23,South,Ecom Express,793,2,2,0,Delivered,221,Standard,On Time
+SHP000028,ORD000028,5,14,2026-03-26,East,DTDC,822,3,5,2,Delayed,54,Express,Carrier Delay
+SHP000029,ORD000029,6,15,2026-03-29,Central,XpressBees,851,4,4,0,Delivered,67,Standard,On Time
+SHP000030,ORD000030,7,1,2026-04-01,West,Delhivery,880,2,2,0,Delivered,80,Standard,On Time
+SHP000031,ORD000031,8,2,2026-04-04,North,BlueDart,909,3,3,0,Returned,93,Standard,On Time
+SHP000032,ORD000032,9,3,2026-04-07,South,Ecom Express,938,4,4,0,Delivered,106,Express,On Time
+SHP000033,ORD000033,10,4,2026-04-10,East,DTDC,967,2,2,0,Delivered,119,Standard,On Time
+SHP000034,ORD000034,11,5,2026-04-13,Central,XpressBees,996,3,7,4,Delayed,132,Standard,Warehouse Delay
+SHP000035,ORD000035,12,6,2026-04-16,West,Delhivery,1025,4,6,2,Delayed,145,Standard,Carrier Delay
+SHP000036,ORD000036,1,7,2026-04-19,North,BlueDart,1054,2,2,0,Delivered,158,Express,On Time
+SHP000037,ORD000037,2,8,2026-04-22,South,Ecom Express,1083,3,3,0,Delivered,171,Standard,On Time
+SHP000038,ORD000038,3,9,2026-04-25,East,DTDC,1112,4,4,0,Delivered,184,Standard,On Time
+SHP000039,ORD000039,4,10,2026-04-28,Central,XpressBees,1141,2,2,0,Delivered,197,Standard,On Time
+SHP000040,ORD000040,5,11,2026-05-01,West,Delhivery,1170,3,3,0,Delivered,210,Express,On Time
+SHP000041,ORD000041,6,12,2026-05-04,North,BlueDart,1199,4,4,0,Delivered,223,Standard,On Time
+SHP000042,ORD000042,7,13,2026-05-07,South,Ecom Express,1228,2,4,2,Delayed,56,Standard,Carrier Delay
+SHP000043,ORD000043,8,14,2026-05-10,East,DTDC,1257,3,3,0,Delivered,69,Standard,On Time
+SHP000044,ORD000044,9,15,2026-05-13,Central,XpressBees,1286,4,4,0,Delivered,82,Express,On Time
+SHP000045,ORD000045,10,1,2026-05-16,West,Delhivery,1315,2,2,0,Delivered,95,Standard,On Time
+SHP000046,ORD000046,11,2,2026-05-19,North,BlueDart,1344,3,3,0,Delivered,108,Standard,On Time
+SHP000047,ORD000047,12,3,2026-05-22,South,Ecom Express,1373,4,4,0,Delivered,121,Standard,Weather
+SHP000048,ORD000048,1,4,2026-05-25,East,DTDC,1402,2,2,0,Delivered,134,Express,On Time
+SHP000049,ORD000049,2,5,2026-05-28,Central,XpressBees,31,3,5,2,Delayed,147,Standard,Carrier Delay
+SHP000050,ORD000050,3,6,2026-05-31,West,Delhivery,60,4,4,0,Delivered,160,Standard,On Time
+SHP000051,ORD000051,4,7,2026-06-03,North,BlueDart,89,2,6,4,Delayed,173,Standard,Warehouse Delay
+SHP000052,ORD000052,5,8,2026-06-06,South,Ecom Express,118,3,3,0,Delivered,186,Express,On Time
+SHP000053,ORD000053,6,9,2026-06-09,East,DTDC,147,4,4,0,Delivered,199,Standard,On Time
+SHP000054,ORD000054,7,10,2026-06-12,Central,XpressBees,176,2,2,0,Delivered,212,Standard,On Time
+SHP000055,ORD000055,8,11,2026-06-15,West,Delhivery,205,3,3,0,Delivered,225,Standard,On Time
+SHP000056,ORD000056,9,12,2026-06-18,North,BlueDart,234,4,6,2,Delayed,58,Express,Carrier Delay
+SHP000057,ORD000057,10,13,2026-06-21,South,Ecom Express,263,2,2,0,Delivered,71,Standard,On Time
+SHP000058,ORD000058,11,14,2026-06-24,East,DTDC,292,3,3,0,Delivered,84,Standard,On Time
+SHP000059,ORD000059,12,15,2026-06-27,Central,XpressBees,321,4,4,0,Delivered,97,Standard,On Time
+SHP000060,ORD000060,1,1,2026-06-30,West,Delhivery,350,2,2,0,Delivered,110,Express,On Time
+SHP000061,ORD000061,2,2,2026-01-03,North,BlueDart,379,3,3,0,Delivered,123,Standard,On Time
+SHP000062,ORD000062,3,3,2026-01-06,South,Ecom Express,408,4,4,0,Returned,136,Standard,On Time
+SHP000063,ORD000063,4,4,2026-01-09,East,DTDC,437,2,4,2,Delayed,149,Standard,Carrier Delay
+SHP000064,ORD000064,5,5,2026-01-12,Central,XpressBees,466,3,3,0,Delivered,162,Express,On Time
+SHP000065,ORD000065,6,6,2026-01-15,West,Delhivery,495,4,4,0,Delivered,175,Standard,On Time
+SHP000066,ORD000066,7,7,2026-01-18,North,BlueDart,524,2,2,0,Delivered,188,Standard,On Time
+SHP000067,ORD000067,8,8,2026-01-21,South,Ecom Express,553,3,3,0,Delivered,201,Standard,On Time
+SHP000068,ORD000068,9,9,2026-01-24,East,DTDC,582,4,8,4,Delayed,214,Express,Warehouse Delay
+SHP000069,ORD000069,10,10,2026-01-27,Central,XpressBees,611,2,2,0,Delivered,227,Standard,On Time
+SHP000070,ORD000070,11,11,2026-01-30,West,Delhivery,640,3,5,2,Delayed,60,Standard,Carrier Delay
+SHP000071,ORD000071,12,12,2026-02-02,North,BlueDart,669,4,4,0,Delivered,73,Standard,On Time
+SHP000072,ORD000072,1,13,2026-02-05,South,Ecom Express,698,2,2,0,Delivered,86,Express,On Time
+SHP000073,ORD000073,2,14,2026-02-08,East,DTDC,727,3,3,0,Delivered,99,Standard,On Time
+SHP000074,ORD000074,3,15,2026-02-11,Central,XpressBees,756,4,4,0,Delivered,112,Standard,On Time
+SHP000075,ORD000075,4,1,2026-02-14,West,Delhivery,785,2,2,0,Delivered,125,Standard,On Time
+SHP000076,ORD000076,5,2,2026-02-17,North,BlueDart,814,3,3,0,Delivered,138,Express,On Time
+SHP000077,ORD000077,6,3,2026-02-20,South,Ecom Express,843,4,6,2,Delayed,151,Standard,Carrier Delay
+SHP000078,ORD000078,7,4,2026-02-23,East,DTDC,872,2,2,0,Delivered,164,Standard,On Time
+SHP000079,ORD000079,8,5,2026-02-26,Central,XpressBees,901,3,3,0,Delivered,177,Standard,On Time
+SHP000080,ORD000080,9,6,2026-03-01,West,Delhivery,930,4,4,0,Delivered,190,Express,On Time
+SHP000081,ORD000081,10,7,2026-03-04,North,BlueDart,959,2,2,0,Delivered,203,Standard,On Time
+SHP000082,ORD000082,11,8,2026-03-07,South,Ecom Express,988,3,3,0,Delivered,216,Standard,On Time
+SHP000083,ORD000083,12,9,2026-03-10,East,DTDC,1017,4,4,0,Delivered,229,Standard,On Time
+SHP000084,ORD000084,1,10,2026-03-13,Central,XpressBees,1046,2,4,2,Delayed,62,Express,Carrier Delay
+SHP000085,ORD000085,2,11,2026-03-16,West,Delhivery,1075,3,7,4,Delayed,75,Standard,Warehouse Delay
+SHP000086,ORD000086,3,12,2026-03-19,North,BlueDart,1104,4,4,0,Delivered,88,Standard,On Time
+SHP000087,ORD000087,4,13,2026-03-22,South,Ecom Express,1133,2,2,0,Delivered,101,Standard,On Time
+SHP000088,ORD000088,5,14,2026-03-25,East,DTDC,1162,3,3,0,Delivered,114,Express,On Time
+SHP000089,ORD000089,6,15,2026-03-28,Central,XpressBees,1191,4,4,0,Delivered,127,Standard,On Time
+SHP000090,ORD000090,7,1,2026-03-31,West,Delhivery,1220,2,2,0,Delivered,140,Standard,On Time
+SHP000091,ORD000091,8,2,2026-04-03,North,BlueDart,1249,3,5,2,Delayed,153,Standard,Carrier Delay
+SHP000092,ORD000092,9,3,2026-04-06,South,Ecom Express,1278,4,4,0,Delivered,166,Express,On Time
+SHP000093,ORD000093,10,4,2026-04-09,East,DTDC,1307,2,2,0,Returned,179,Standard,On Time
+SHP000094,ORD000094,11,5,2026-04-12,Central,XpressBees,1336,3,3,0,Delivered,192,Standard,Weather
+SHP000095,ORD000095,12,6,2026-04-15,West,Delhivery,1365,4,4,0,Delivered,205,Standard,On Time
+SHP000096,ORD000096,1,7,2026-04-18,North,BlueDart,1394,2,2,0,Delivered,218,Express,On Time
+SHP000097,ORD000097,2,8,2026-04-21,South,Ecom Express,23,3,3,0,Delivered,51,Standard,On Time
+SHP000098,ORD000098,3,9,2026-04-24,East,DTDC,52,4,6,2,Delayed,64,Standard,Carrier Delay
+SHP000099,ORD000099,4,10,2026-04-27,Central,XpressBees,81,2,2,0,Delivered,77,Standard,On Time
+SHP000100,ORD000100,5,11,2026-04-30,West,Delhivery,110,3,3,0,Delivered,90,Express,On Time
+SHP000101,ORD000101,6,12,2026-05-03,North,BlueDart,139,4,4,0,Delivered,103,Standard,On Time
+SHP000102,ORD000102,7,13,2026-05-06,South,Ecom Express,168,2,6,4,Delayed,116,Standard,Warehouse Delay
+SHP000103,ORD000103,8,14,2026-05-09,East,DTDC,197,3,3,0,Delivered,129,Standard,On Time
+SHP000104,ORD000104,9,15,2026-05-12,Central,XpressBees,226,4,4,0,Delivered,142,Express,On Time
+SHP000105,ORD000105,10,1,2026-05-15,West,Delhivery,255,2,4,2,Delayed,155,Standard,Carrier Delay
+SHP000106,ORD000106,11,2,2026-05-18,North,BlueDart,284,3,3,0,Delivered,168,Standard,On Time
+SHP000107,ORD000107,12,3,2026-05-21,South,Ecom Express,313,4,4,0,Delivered,181,Standard,On Time
+SHP000108,ORD000108,1,4,2026-05-24,East,DTDC,342,2,2,0,Delivered,194,Express,On Time
+SHP000109,ORD000109,2,5,2026-05-27,Central,XpressBees,371,3,3,0,Delivered,207,Standard,On Time
+SHP000110,ORD000110,3,6,2026-05-30,West,Delhivery,400,4,4,0,Delivered,220,Standard,On Time
+SHP000111,ORD000111,4,7,2026-06-02,North,BlueDart,429,2,2,0,Delivered,53,Standard,On Time
+SHP000112,ORD000112,5,8,2026-06-05,South,Ecom Express,458,3,5,2,Delayed,66,Express,Carrier Delay
+SHP000113,ORD000113,6,9,2026-06-08,East,DTDC,487,4,4,0,Delivered,79,Standard,On Time
+SHP000114,ORD000114,7,10,2026-06-11,Central,XpressBees,516,2,2,0,Delivered,92,Standard,On Time
+SHP000115,ORD000115,8,11,2026-06-14,West,Delhivery,545,3,3,0,Delivered,105,Standard,On Time
+SHP000116,ORD000116,9,12,2026-06-17,North,BlueDart,574,4,4,0,Delivered,118,Express,On Time
+SHP000117,ORD000117,10,13,2026-06-20,South,Ecom Express,603,2,2,0,Delivered,131,Standard,On Time
+SHP000118,ORD000118,11,14,2026-06-23,East,DTDC,632,3,3,0,Delivered,144,Standard,On Time
+SHP000119,ORD000119,12,15,2026-06-26,Central,XpressBees,661,4,8,4,Delayed,157,Standard,Warehouse Delay
+SHP000120,ORD000120,1,1,2026-06-29,West,Delhivery,690,2,2,0,Delivered,170,Express,On Time
+SHP000121,ORD000121,2,2,2026-01-02,North,BlueDart,719,3,3,0,Delivered,183,Standard,On Time
+SHP000122,ORD000122,3,3,2026-01-05,South,Ecom Express,748,4,4,0,Delivered,196,Standard,On Time
+SHP000123,ORD000123,4,4,2026-01-08,East,DTDC,777,2,2,0,Delivered,209,Standard,On Time
+SHP000124,ORD000124,5,5,2026-01-11,Central,XpressBees,806,3,3,0,Returned,222,Express,On Time
+SHP000125,ORD000125,6,6,2026-01-14,West,Delhivery,835,4,4,0,Delivered,55,Standard,On Time
+SHP000126,ORD000126,7,7,2026-01-17,North,BlueDart,864,2,4,2,Delayed,68,Standard,Carrier Delay
+SHP000127,ORD000127,8,8,2026-01-20,South,Ecom Express,893,3,3,0,Delivered,81,Standard,On Time
+SHP000128,ORD000128,9,9,2026-01-23,East,DTDC,922,4,4,0,Delivered,94,Express,On Time
+SHP000129,ORD000129,10,10,2026-01-26,Central,XpressBees,951,2,2,0,Delivered,107,Standard,On Time
+SHP000130,ORD000130,11,11,2026-01-29,West,Delhivery,980,3,3,0,Delivered,120,Standard,On Time
+SHP000131,ORD000131,12,12,2026-02-01,North,BlueDart,1009,4,4,0,Delivered,133,Standard,On Time
+SHP000132,ORD000132,1,13,2026-02-04,South,Ecom Express,1038,2,2,0,Delivered,146,Express,On Time
+SHP000133,ORD000133,2,14,2026-02-07,East,DTDC,1067,3,5,2,Delayed,159,Standard,Carrier Delay
+SHP000134,ORD000134,3,15,2026-02-10,Central,XpressBees,1096,4,4,0,Delivered,172,Standard,On Time
+SHP000135,ORD000135,4,1,2026-02-13,West,Delhivery,1125,2,2,0,Delivered,185,Standard,On Time
+SHP000136,ORD000136,5,2,2026-02-16,North,BlueDart,1154,3,7,4,Delayed,198,Express,Warehouse Delay
+SHP000137,ORD000137,6,3,2026-02-19,South,Ecom Express,1183,4,4,0,Delivered,211,Standard,On Time
+SHP000138,ORD000138,7,4,2026-02-22,East,DTDC,1212,2,2,0,Delivered,224,Standard,On Time
+SHP000139,ORD000139,8,5,2026-02-25,Central,XpressBees,1241,3,3,0,Delivered,57,Standard,On Time
+SHP000140,ORD000140,9,6,2026-02-28,West,Delhivery,1270,4,6,2,Delayed,70,Express,Carrier Delay
+SHP000141,ORD000141,10,7,2026-03-03,North,BlueDart,1299,2,2,0,Delivered,83,Standard,Weather
+SHP000142,ORD000142,11,8,2026-03-06,South,Ecom Express,1328,3,3,0,Delivered,96,Standard,On Time
+SHP000143,ORD000143,12,9,2026-03-09,East,DTDC,1357,4,4,0,Delivered,109,Standard,On Time
+SHP000144,ORD000144,1,10,2026-03-12,Central,XpressBees,1386,2,2,0,Delivered,122,Express,On Time
+SHP000145,ORD000145,2,11,2026-03-15,West,Delhivery,15,3,3,0,Delivered,135,Standard,On Time
+SHP000146,ORD000146,3,12,2026-03-18,North,BlueDart,44,4,4,0,Delivered,148,Standard,On Time
+SHP000147,ORD000147,4,13,2026-03-21,South,Ecom Express,73,2,4,2,Delayed,161,Standard,Carrier Delay
+SHP000148,ORD000148,5,14,2026-03-24,East,DTDC,102,3,3,0,Delivered,174,Express,On Time
+SHP000149,ORD000149,6,15,2026-03-27,Central,XpressBees,131,4,4,0,Delivered,187,Standard,On Time
+SHP000150,ORD000150,7,1,2026-03-30,West,Delhivery,160,2,2,0,Delivered,200,Standard,On Time
+SHP000151,ORD000151,8,2,2026-04-02,North,BlueDart,189,3,3,0,Delivered,213,Standard,On Time
+SHP000152,ORD000152,9,3,2026-04-05,South,Ecom Express,218,4,4,0,Delivered,226,Express,On Time
+SHP000153,ORD000153,10,4,2026-04-08,East,DTDC,247,2,6,4,Delayed,59,Standard,Warehouse Delay
+SHP000154,ORD000154,11,5,2026-04-11,Central,XpressBees,276,3,5,2,Delayed,72,Standard,Carrier Delay
+SHP000155,ORD000155,12,6,2026-04-14,West,Delhivery,305,4,4,0,Returned,85,Standard,On Time
+SHP000156,ORD000156,1,7,2026-04-17,North,BlueDart,334,2,2,0,Delivered,98,Express,On Time
+SHP000157,ORD000157,2,8,2026-04-20,South,Ecom Express,363,3,3,0,Delivered,111,Standard,On Time
+SHP000158,ORD000158,3,9,2026-04-23,East,DTDC,392,4,4,0,Delivered,124,Standard,On Time
+SHP000159,ORD000159,4,10,2026-04-26,Central,XpressBees,421,2,2,0,Delivered,137,Standard,On Time
+SHP000160,ORD000160,5,11,2026-04-29,West,Delhivery,450,3,3,0,Delivered,150,Express,On Time
+SHP000161,ORD000161,6,12,2026-05-02,North,BlueDart,479,4,6,2,Delayed,163,Standard,Carrier Delay
+SHP000162,ORD000162,7,13,2026-05-05,South,Ecom Express,508,2,2,0,Delivered,176,Standard,On Time
+SHP000163,ORD000163,8,14,2026-05-08,East,DTDC,537,3,3,0,Delivered,189,Standard,On Time
+SHP000164,ORD000164,9,15,2026-05-11,Central,XpressBees,566,4,4,0,Delivered,202,Express,On Time
+SHP000165,ORD000165,10,1,2026-05-14,West,Delhivery,595,2,2,0,Delivered,215,Standard,On Time
+SHP000166,ORD000166,11,2,2026-05-17,North,BlueDart,624,3,3,0,Delivered,228,Standard,On Time
+SHP000167,ORD000167,12,3,2026-05-20,South,Ecom Express,653,4,4,0,Delivered,61,Standard,On Time
+SHP000168,ORD000168,1,4,2026-05-23,East,DTDC,682,2,4,2,Delayed,74,Express,Carrier Delay
+SHP000169,ORD000169,2,5,2026-05-26,Central,XpressBees,711,3,3,0,Delivered,87,Standard,On Time
+SHP000170,ORD000170,3,6,2026-05-29,West,Delhivery,740,4,8,4,Delayed,100,Standard,Warehouse Delay
+SHP000171,ORD000171,4,7,2026-06-01,North,BlueDart,769,2,2,0,Delivered,113,Standard,On Time
+SHP000172,ORD000172,5,8,2026-06-04,South,Ecom Express,798,3,3,0,Delivered,126,Express,On Time
+SHP000173,ORD000173,6,9,2026-06-07,East,DTDC,827,4,4,0,Delivered,139,Standard,On Time
+SHP000174,ORD000174,7,10,2026-06-10,Central,XpressBees,856,2,2,0,Delivered,152,Standard,On Time
+SHP000175,ORD000175,8,11,2026-06-13,West,Delhivery,885,3,5,2,Delayed,165,Standard,Carrier Delay
+SHP000176,ORD000176,9,12,2026-06-16,North,BlueDart,914,4,4,0,Delivered,178,Express,On Time
+SHP000177,ORD000177,10,13,2026-06-19,South,Ecom Express,943,2,2,0,Delivered,191,Standard,On Time
+SHP000178,ORD000178,11,14,2026-06-22,East,DTDC,972,3,3,0,Delivered,204,Standard,On Time
+SHP000179,ORD000179,12,15,2026-06-25,Central,XpressBees,1001,4,4,0,Delivered,217,Standard,On Time
+SHP000180,ORD000180,1,1,2026-06-28,West,Delhivery,1030,2,2,0,Delivered,50,Express,On Time
+SHP000181,ORD000181,2,2,2026-01-01,North,BlueDart,1059,3,3,0,Delivered,63,Standard,On Time
+SHP000182,ORD000182,3,3,2026-01-04,South,Ecom Express,1088,4,6,2,Delayed,76,Standard,Carrier Delay
+SHP000183,ORD000183,4,4,2026-01-07,East,DTDC,1117,2,2,0,Delivered,89,Standard,On Time
+SHP000184,ORD000184,5,5,2026-01-10,Central,XpressBees,1146,3,3,0,Delivered,102,Express,On Time
+SHP000185,ORD000185,6,6,2026-01-13,West,Delhivery,1175,4,4,0,Delivered,115,Standard,On Time
+SHP000186,ORD000186,7,7,2026-01-16,North,BlueDart,1204,2,2,0,Returned,128,Standard,On Time
+SHP000187,ORD000187,8,8,2026-01-19,South,Ecom Express,1233,3,7,4,Delayed,141,Standard,Warehouse Delay
+SHP000188,ORD000188,9,9,2026-01-22,East,DTDC,1262,4,4,0,Delivered,154,Express,Weather
+SHP000189,ORD000189,10,10,2026-01-25,Central,XpressBees,1291,2,4,2,Delayed,167,Standard,Carrier Delay
+SHP000190,ORD000190,11,11,2026-01-28,West,Delhivery,1320,3,3,0,Delivered,180,Standard,On Time
+SHP000191,ORD000191,12,12,2026-01-31,North,BlueDart,1349,4,4,0,Delivered,193,Standard,On Time
+SHP000192,ORD000192,1,13,2026-02-03,South,Ecom Express,1378,2,2,0,Delivered,206,Express,On Time
+SHP000193,ORD000193,2,14,2026-02-06,East,DTDC,1407,3,3,0,Delivered,219,Standard,On Time
+SHP000194,ORD000194,3,15,2026-02-09,Central,XpressBees,36,4,4,0,Delivered,52,Standard,On Time
+SHP000195,ORD000195,4,1,2026-02-12,West,Delhivery,65,2,2,0,Delivered,65,Standard,On Time
+SHP000196,ORD000196,5,2,2026-02-15,North,BlueDart,94,3,5,2,Delayed,78,Express,Carrier Delay
+SHP000197,ORD000197,6,3,2026-02-18,South,Ecom Express,123,4,4,0,Delivered,91,Standard,On Time
+SHP000198,ORD000198,7,4,2026-02-21,East,DTDC,152,2,2,0,Delivered,104,Standard,On Time
+SHP000199,ORD000199,8,5,2026-02-24,Central,XpressBees,181,3,3,0,Delivered,117,Standard,On Time
+SHP000200,ORD000200,9,6,2026-02-27,West,Delhivery,210,4,4,0,Delivered,130,Express,On Time
+SHP000201,ORD000201,10,7,2026-03-02,North,BlueDart,239,2,2,0,Delivered,143,Standard,On Time
+SHP000202,ORD000202,11,8,2026-03-05,South,Ecom Express,268,3,3,0,Delivered,156,Standard,On Time
+SHP000203,ORD000203,12,9,2026-03-08,East,DTDC,297,4,6,2,Delayed,169,Standard,Carrier Delay
+SHP000204,ORD000204,1,10,2026-03-11,Central,XpressBees,326,2,6,4,Delayed,182,Express,Warehouse Delay
+SHP000205,ORD000205,2,11,2026-03-14,West,Delhivery,355,3,3,0,Delivered,195,Standard,On Time
+SHP000206,ORD000206,3,12,2026-03-17,North,BlueDart,384,4,4,0,Delivered,208,Standard,On Time
+SHP000207,ORD000207,4,13,2026-03-20,South,Ecom Express,413,2,2,0,Delivered,221,Standard,On Time
+SHP000208,ORD000208,5,14,2026-03-23,East,DTDC,442,3,3,0,Delivered,54,Express,On Time
+SHP000209,ORD000209,6,15,2026-03-26,Central,XpressBees,471,4,4,0,Delivered,67,Standard,On Time
+SHP000210,ORD000210,7,1,2026-03-29,West,Delhivery,500,2,4,2,Delayed,80,Standard,Carrier Delay
+SHP000211,ORD000211,8,2,2026-04-01,North,BlueDart,529,3,3,0,Delivered,93,Standard,On Time
+SHP000212,ORD000212,9,3,2026-04-04,South,Ecom Express,558,4,4,0,Delivered,106,Express,On Time
+SHP000213,ORD000213,10,4,2026-04-07,East,DTDC,587,2,2,0,Delivered,119,Standard,On Time
+SHP000214,ORD000214,11,5,2026-04-10,Central,XpressBees,616,3,3,0,Delivered,132,Standard,On Time
+SHP000215,ORD000215,12,6,2026-04-13,West,Delhivery,645,4,4,0,Delivered,145,Standard,On Time
+SHP000216,ORD000216,1,7,2026-04-16,North,BlueDart,674,2,2,0,Delivered,158,Express,On Time
+SHP000217,ORD000217,2,8,2026-04-19,South,Ecom Express,703,3,5,2,Returned,171,Standard,Carrier Delay
+SHP000218,ORD000218,3,9,2026-04-22,East,DTDC,732,4,4,0,Delivered,184,Standard,On Time
+SHP000219,ORD000219,4,10,2026-04-25,Central,XpressBees,761,2,2,0,Delivered,197,Standard,On Time
+SHP000220,ORD000220,5,11,2026-04-28,West,Delhivery,790,3,3,0,Delivered,210,Express,On Time
+SHP000221,ORD000221,6,12,2026-05-01,North,BlueDart,819,4,8,4,Delayed,223,Standard,Warehouse Delay
+SHP000222,ORD000222,7,13,2026-05-04,South,Ecom Express,848,2,2,0,Delivered,56,Standard,On Time
+SHP000223,ORD000223,8,14,2026-05-07,East,DTDC,877,3,3,0,Delivered,69,Standard,On Time
+SHP000224,ORD000224,9,15,2026-05-10,Central,XpressBees,906,4,6,2,Delayed,82,Express,Carrier Delay
+SHP000225,ORD000225,10,1,2026-05-13,West,Delhivery,935,2,2,0,Delivered,95,Standard,On Time
+SHP000226,ORD000226,11,2,2026-05-16,North,BlueDart,964,3,3,0,Delivered,108,Standard,On Time
+SHP000227,ORD000227,12,3,2026-05-19,South,Ecom Express,993,4,4,0,Delivered,121,Standard,On Time
+SHP000228,ORD000228,1,4,2026-05-22,East,DTDC,1022,2,2,0,Delivered,134,Express,On Time
+SHP000229,ORD000229,2,5,2026-05-25,Central,XpressBees,1051,3,3,0,Delivered,147,Standard,On Time
+SHP000230,ORD000230,3,6,2026-05-28,West,Delhivery,1080,4,4,0,Delivered,160,Standard,On Time
+SHP000231,ORD000231,4,7,2026-05-31,North,BlueDart,1109,2,4,2,Delayed,173,Standard,Carrier Delay
+SHP000232,ORD000232,5,8,2026-06-03,South,Ecom Express,1138,3,3,0,Delivered,186,Express,On Time
+SHP000233,ORD000233,6,9,2026-06-06,East,DTDC,1167,4,4,0,Delivered,199,Standard,On Time
+SHP000234,ORD000234,7,10,2026-06-09,Central,XpressBees,1196,2,2,0,Delivered,212,Standard,On Time
+SHP000235,ORD000235,8,11,2026-06-12,West,Delhivery,1225,3,3,0,Delivered,225,Standard,Weather
+SHP000236,ORD000236,9,12,2026-06-15,North,BlueDart,1254,4,4,0,Delivered,58,Express,On Time
+SHP000237,ORD000237,10,13,2026-06-18,South,Ecom Express,1283,2,2,0,Delivered,71,Standard,On Time
+SHP000238,ORD000238,11,14,2026-06-21,East,DTDC,1312,3,7,4,Delayed,84,Standard,Warehouse Delay
+SHP000239,ORD000239,12,15,2026-06-24,Central,XpressBees,1341,4,4,0,Delivered,97,Standard,On Time
+SHP000240,ORD000240,1,1,2026-06-27,West,Delhivery,1370,2,2,0,Delivered,110,Express,On Time
+SHP000241,ORD000241,2,2,2026-06-30,North,BlueDart,1399,3,3,0,Delivered,123,Standard,On Time
+SHP000242,ORD000242,3,3,2026-01-03,South,Ecom Express,28,4,4,0,Delivered,136,Standard,On Time
+SHP000243,ORD000243,4,4,2026-01-06,East,DTDC,57,2,2,0,Delivered,149,Standard,On Time
+SHP000244,ORD000244,5,5,2026-01-09,Central,XpressBees,86,3,3,0,Delivered,162,Express,On Time
+SHP000245,ORD000245,6,6,2026-01-12,West,Delhivery,115,4,6,2,Delayed,175,Standard,Carrier Delay
+SHP000246,ORD000246,7,7,2026-01-15,North,BlueDart,144,2,2,0,Delivered,188,Standard,On Time
+SHP000247,ORD000247,8,8,2026-01-18,South,Ecom Express,173,3,3,0,Delivered,201,Standard,On Time
+SHP000248,ORD000248,9,9,2026-01-21,East,DTDC,202,4,4,0,Returned,214,Express,On Time
+SHP000249,ORD000249,10,10,2026-01-24,Central,XpressBees,231,2,2,0,Delivered,227,Standard,On Time
+SHP000250,ORD000250,11,11,2026-01-27,West,Delhivery,260,3,3,0,Delivered,60,Standard,On Time
+SHP000251,ORD000251,12,12,2026-01-30,North,BlueDart,289,4,4,0,Delivered,73,Standard,On Time
+SHP000252,ORD000252,1,13,2026-02-02,South,Ecom Express,318,2,4,2,Delayed,86,Express,Carrier Delay
+SHP000253,ORD000253,2,14,2026-02-05,East,DTDC,347,3,3,0,Delivered,99,Standard,On Time
+SHP000254,ORD000254,3,15,2026-02-08,Central,XpressBees,376,4,4,0,Delivered,112,Standard,On Time
+SHP000255,ORD000255,4,1,2026-02-11,West,Delhivery,405,2,6,4,Delayed,125,Standard,Warehouse Delay
+SHP000256,ORD000256,5,2,2026-02-14,North,BlueDart,434,3,3,0,Delivered,138,Express,On Time
+SHP000257,ORD000257,6,3,2026-02-17,South,Ecom Express,463,4,4,0,Delivered,151,Standard,On Time
+SHP000258,ORD000258,7,4,2026-02-20,East,DTDC,492,2,2,0,Delivered,164,Standard,On Time
+SHP000259,ORD000259,8,5,2026-02-23,Central,XpressBees,521,3,5,2,Delayed,177,Standard,Carrier Delay
+SHP000260,ORD000260,9,6,2026-02-26,West,Delhivery,550,4,4,0,Delivered,190,Express,On Time
+SHP000261,ORD000261,10,7,2026-03-01,North,BlueDart,579,2,2,0,Delivered,203,Standard,On Time
+SHP000262,ORD000262,11,8,2026-03-04,South,Ecom Express,608,3,3,0,Delivered,216,Standard,On Time
+SHP000263,ORD000263,12,9,2026-03-07,East,DTDC,637,4,4,0,Delivered,229,Standard,On Time
+SHP000264,ORD000264,1,10,2026-03-10,Central,XpressBees,666,2,2,0,Delivered,62,Express,On Time
+SHP000265,ORD000265,2,11,2026-03-13,West,Delhivery,695,3,3,0,Delivered,75,Standard,On Time
+SHP000266,ORD000266,3,12,2026-03-16,North,BlueDart,724,4,6,2,Delayed,88,Standard,Carrier Delay
+SHP000267,ORD000267,4,13,2026-03-19,South,Ecom Express,753,2,2,0,Delivered,101,Standard,On Time
+SHP000268,ORD000268,5,14,2026-03-22,East,DTDC,782,3,3,0,Delivered,114,Express,On Time
+SHP000269,ORD000269,6,15,2026-03-25,Central,XpressBees,811,4,4,0,Delivered,127,Standard,On Time
+SHP000270,ORD000270,7,1,2026-03-28,West,Delhivery,840,2,2,0,Delivered,140,Standard,On Time
+SHP000271,ORD000271,8,2,2026-03-31,North,BlueDart,869,3,3,0,Delivered,153,Standard,On Time
+SHP000272,ORD000272,9,3,2026-04-03,South,Ecom Express,898,4,8,4,Delayed,166,Express,Warehouse Delay
+SHP000273,ORD000273,10,4,2026-04-06,East,DTDC,927,2,4,2,Delayed,179,Standard,Carrier Delay
+SHP000274,ORD000274,11,5,2026-04-09,Central,XpressBees,956,3,3,0,Delivered,192,Standard,On Time
+SHP000275,ORD000275,12,6,2026-04-12,West,Delhivery,985,4,4,0,Delivered,205,Standard,On Time
+SHP000276,ORD000276,1,7,2026-04-15,North,BlueDart,1014,2,2,0,Delivered,218,Express,On Time
+SHP000277,ORD000277,2,8,2026-04-18,South,Ecom Express,1043,3,3,0,Delivered,51,Standard,On Time
+SHP000278,ORD000278,3,9,2026-04-21,East,DTDC,1072,4,4,0,Delivered,64,Standard,On Time
+SHP000279,ORD000279,4,10,2026-04-24,Central,XpressBees,1101,2,2,0,Returned,77,Standard,On Time
+SHP000280,ORD000280,5,11,2026-04-27,West,Delhivery,1130,3,5,2,Delayed,90,Express,Carrier Delay
+SHP000281,ORD000281,6,12,2026-04-30,North,BlueDart,1159,4,4,0,Delivered,103,Standard,On Time
+SHP000282,ORD000282,7,13,2026-05-03,South,Ecom Express,1188,2,2,0,Delivered,116,Standard,Weather
+SHP000283,ORD000283,8,14,2026-05-06,East,DTDC,1217,3,3,0,Delivered,129,Standard,On Time
+SHP000284,ORD000284,9,15,2026-05-09,Central,XpressBees,1246,4,4,0,Delivered,142,Express,On Time
+SHP000285,ORD000285,10,1,2026-05-12,West,Delhivery,1275,2,2,0,Delivered,155,Standard,On Time
+SHP000286,ORD000286,11,2,2026-05-15,North,BlueDart,1304,3,3,0,Delivered,168,Standard,On Time
+SHP000287,ORD000287,12,3,2026-05-18,South,Ecom Express,1333,4,6,2,Delayed,181,Standard,Carrier Delay
+SHP000288,ORD000288,1,4,2026-05-21,East,DTDC,1362,2,2,0,Delivered,194,Express,On Time
+SHP000289,ORD000289,2,5,2026-05-24,Central,XpressBees,1391,3,7,4,Delayed,207,Standard,Warehouse Delay
+SHP000290,ORD000290,3,6,2026-05-27,West,Delhivery,20,4,4,0,Delivered,220,Standard,On Time
+SHP000291,ORD000291,4,7,2026-05-30,North,BlueDart,49,2,2,0,Delivered,53,Standard,On Time
+SHP000292,ORD000292,5,8,2026-06-02,South,Ecom Express,78,3,3,0,Delivered,66,Express,On Time
+SHP000293,ORD000293,6,9,2026-06-05,East,DTDC,107,4,4,0,Delivered,79,Standard,On Time
+SHP000294,ORD000294,7,10,2026-06-08,Central,XpressBees,136,2,4,2,Delayed,92,Standard,Carrier Delay
+SHP000295,ORD000295,8,11,2026-06-11,West,Delhivery,165,3,3,0,Delivered,105,Standard,On Time
+SHP000296,ORD000296,9,12,2026-06-14,North,BlueDart,194,4,4,0,Delivered,118,Express,On Time
+SHP000297,ORD000297,10,13,2026-06-17,South,Ecom Express,223,2,2,0,Delivered,131,Standard,On Time
+SHP000298,ORD000298,11,14,2026-06-20,East,DTDC,252,3,3,0,Delivered,144,Standard,On Time
+SHP000299,ORD000299,12,15,2026-06-23,Central,XpressBees,281,4,4,0,Delivered,157,Standard,On Time
+SHP000300,ORD000300,1,1,2026-06-26,West,Delhivery,310,2,2,0,Delivered,170,Express,On Time
+SHP000301,ORD000301,2,2,2026-06-29,North,BlueDart,339,3,5,2,Delayed,183,Standard,Carrier Delay
+SHP000302,ORD000302,3,3,2026-01-02,South,Ecom Express,368,4,4,0,Delivered,196,Standard,On Time
+SHP000303,ORD000303,4,4,2026-01-05,East,DTDC,397,2,2,0,Delivered,209,Standard,On Time
+SHP000304,ORD000304,5,5,2026-01-08,Central,XpressBees,426,3,3,0,Delivered,222,Express,On Time
+SHP000305,ORD000305,6,6,2026-01-11,West,Delhivery,455,4,4,0,Delivered,55,Standard,On Time
+SHP000306,ORD000306,7,7,2026-01-14,North,BlueDart,484,2,6,4,Delayed,68,Standard,Warehouse Delay
+SHP000307,ORD000307,8,8,2026-01-17,South,Ecom Express,513,3,3,0,Delivered,81,Standard,On Time
+SHP000308,ORD000308,9,9,2026-01-20,East,DTDC,542,4,6,2,Delayed,94,Express,Carrier Delay
+SHP000309,ORD000309,10,10,2026-01-23,Central,XpressBees,571,2,2,0,Delivered,107,Standard,On Time
+SHP000310,ORD000310,11,11,2026-01-26,West,Delhivery,600,3,3,0,Returned,120,Standard,On Time
+SHP000311,ORD000311,12,12,2026-01-29,North,BlueDart,629,4,4,0,Delivered,133,Standard,On Time
+SHP000312,ORD000312,1,13,2026-02-01,South,Ecom Express,658,2,2,0,Delivered,146,Express,On Time
+SHP000313,ORD000313,2,14,2026-02-04,East,DTDC,687,3,3,0,Delivered,159,Standard,On Time
+SHP000314,ORD000314,3,15,2026-02-07,Central,XpressBees,716,4,4,0,Delivered,172,Standard,On Time
+SHP000315,ORD000315,4,1,2026-02-10,West,Delhivery,745,2,4,2,Delayed,185,Standard,Carrier Delay
+SHP000316,ORD000316,5,2,2026-02-13,North,BlueDart,774,3,3,0,Delivered,198,Express,On Time
+SHP000317,ORD000317,6,3,2026-02-16,South,Ecom Express,803,4,4,0,Delivered,211,Standard,On Time
+SHP000318,ORD000318,7,4,2026-02-19,East,DTDC,832,2,2,0,Delivered,224,Standard,On Time
+SHP000319,ORD000319,8,5,2026-02-22,Central,XpressBees,861,3,3,0,Delivered,57,Standard,On Time
+SHP000320,ORD000320,9,6,2026-02-25,West,Delhivery,890,4,4,0,Delivered,70,Express,On Time
+SHP000321,ORD000321,10,7,2026-02-28,North,BlueDart,919,2,2,0,Delivered,83,Standard,On Time
+SHP000322,ORD000322,11,8,2026-03-03,South,Ecom Express,948,3,5,2,Delayed,96,Standard,Carrier Delay
+SHP000323,ORD000323,12,9,2026-03-06,East,DTDC,977,4,8,4,Delayed,109,Standard,Warehouse Delay
+SHP000324,ORD000324,1,10,2026-03-09,Central,XpressBees,1006,2,2,0,Delivered,122,Express,On Time
+SHP000325,ORD000325,2,11,2026-03-12,West,Delhivery,1035,3,3,0,Delivered,135,Standard,On Time
+SHP000326,ORD000326,3,12,2026-03-15,North,BlueDart,1064,4,4,0,Delivered,148,Standard,On Time
+SHP000327,ORD000327,4,13,2026-03-18,South,Ecom Express,1093,2,2,0,Delivered,161,Standard,On Time
+SHP000328,ORD000328,5,14,2026-03-21,East,DTDC,1122,3,3,0,Delivered,174,Express,On Time
+SHP000329,ORD000329,6,15,2026-03-24,Central,XpressBees,1151,4,6,2,Delayed,187,Standard,Weather
+SHP000330,ORD000330,7,1,2026-03-27,West,Delhivery,1180,2,2,0,Delivered,200,Standard,On Time
+SHP000331,ORD000331,8,2,2026-03-30,North,BlueDart,1209,3,3,0,Delivered,213,Standard,On Time
+SHP000332,ORD000332,9,3,2026-04-02,South,Ecom Express,1238,4,4,0,Delivered,226,Express,On Time
+SHP000333,ORD000333,10,4,2026-04-05,East,DTDC,1267,2,2,0,Delivered,59,Standard,On Time
+SHP000334,ORD000334,11,5,2026-04-08,Central,XpressBees,1296,3,3,0,Delivered,72,Standard,On Time
+SHP000335,ORD000335,12,6,2026-04-11,West,Delhivery,1325,4,4,0,Delivered,85,Standard,On Time
+SHP000336,ORD000336,1,7,2026-04-14,North,BlueDart,1354,2,4,2,Delayed,98,Express,Carrier Delay
+SHP000337,ORD000337,2,8,2026-04-17,South,Ecom Express,1383,3,3,0,Delivered,111,Standard,On Time
+SHP000338,ORD000338,3,9,2026-04-20,East,DTDC,12,4,4,0,Delivered,124,Standard,On Time
+SHP000339,ORD000339,4,10,2026-04-23,Central,XpressBees,41,2,2,0,Delivered,137,Standard,On Time
+SHP000340,ORD000340,5,11,2026-04-26,West,Delhivery,70,3,7,4,Delayed,150,Express,Warehouse Delay
+SHP000341,ORD000341,6,12,2026-04-29,North,BlueDart,99,4,4,0,Returned,163,Standard,On Time
+SHP000342,ORD000342,7,13,2026-05-02,South,Ecom Express,128,2,2,0,Delivered,176,Standard,On Time
+SHP000343,ORD000343,8,14,2026-05-05,East,DTDC,157,3,5,2,Delayed,189,Standard,Carrier Delay
+SHP000344,ORD000344,9,15,2026-05-08,Central,XpressBees,186,4,4,0,Delivered,202,Express,On Time
+SHP000345,ORD000345,10,1,2026-05-11,West,Delhivery,215,2,2,0,Delivered,215,Standard,On Time
+SHP000346,ORD000346,11,2,2026-05-14,North,BlueDart,244,3,3,0,Delivered,228,Standard,On Time
+SHP000347,ORD000347,12,3,2026-05-17,South,Ecom Express,273,4,4,0,Delivered,61,Standard,On Time
+SHP000348,ORD000348,1,4,2026-05-20,East,DTDC,302,2,2,0,Delivered,74,Express,On Time
+SHP000349,ORD000349,2,5,2026-05-23,Central,XpressBees,331,3,3,0,Delivered,87,Standard,On Time
+SHP000350,ORD000350,3,6,2026-05-26,West,Delhivery,360,4,6,2,Delayed,100,Standard,Carrier Delay
+SHP000351,ORD000351,4,7,2026-05-29,North,BlueDart,389,2,2,0,Delivered,113,Standard,On Time
+SHP000352,ORD000352,5,8,2026-06-01,South,Ecom Express,418,3,3,0,Delivered,126,Express,On Time
+SHP000353,ORD000353,6,9,2026-06-04,East,DTDC,447,4,4,0,Delivered,139,Standard,On Time
+SHP000354,ORD000354,7,10,2026-06-07,Central,XpressBees,476,2,2,0,Delivered,152,Standard,On Time
+SHP000355,ORD000355,8,11,2026-06-10,West,Delhivery,505,3,3,0,Delivered,165,Standard,On Time
+SHP000356,ORD000356,9,12,2026-06-13,North,BlueDart,534,4,4,0,Delivered,178,Express,On Time
+SHP000357,ORD000357,10,13,2026-06-16,South,Ecom Express,563,2,6,4,Delayed,191,Standard,Warehouse Delay
+SHP000358,ORD000358,11,14,2026-06-19,East,DTDC,592,3,3,0,Delivered,204,Standard,On Time
+SHP000359,ORD000359,12,15,2026-06-22,Central,XpressBees,621,4,4,0,Delivered,217,Standard,On Time
+SHP000360,ORD000360,1,1,2026-06-25,West,Delhivery,650,2,2,0,Delivered,50,Express,On Time
+SHP000361,ORD000361,2,2,2026-06-28,North,BlueDart,679,3,3,0,Delivered,63,Standard,On Time
+SHP000362,ORD000362,3,3,2026-01-01,South,Ecom Express,708,4,4,0,Delivered,76,Standard,On Time
+SHP000363,ORD000363,4,4,2026-01-04,East,DTDC,737,2,2,0,Delivered,89,Standard,On Time
+SHP000364,ORD000364,5,5,2026-01-07,Central,XpressBees,766,3,5,2,Delayed,102,Express,Carrier Delay
+SHP000365,ORD000365,6,6,2026-01-10,West,Delhivery,795,4,4,0,Delivered,115,Standard,On Time
+SHP000366,ORD000366,7,7,2026-01-13,North,BlueDart,824,2,2,0,Delivered,128,Standard,On Time
+SHP000367,ORD000367,8,8,2026-01-16,South,Ecom Express,853,3,3,0,Delivered,141,Standard,On Time
+SHP000368,ORD000368,9,9,2026-01-19,East,DTDC,882,4,4,0,Delivered,154,Express,On Time
+SHP000369,ORD000369,10,10,2026-01-22,Central,XpressBees,911,2,2,0,Delivered,167,Standard,On Time
+SHP000370,ORD000370,11,11,2026-01-25,West,Delhivery,940,3,3,0,Delivered,180,Standard,On Time
+SHP000371,ORD000371,12,12,2026-01-28,North,BlueDart,969,4,6,2,Delayed,193,Standard,Carrier Delay
+SHP000372,ORD000372,1,13,2026-01-31,South,Ecom Express,998,2,2,0,Returned,206,Express,On Time
+SHP000373,ORD000373,2,14,2026-02-03,East,DTDC,1027,3,3,0,Delivered,219,Standard,On Time
+SHP000374,ORD000374,3,15,2026-02-06,Central,XpressBees,1056,4,8,4,Delayed,52,Standard,Warehouse Delay
+SHP000375,ORD000375,4,1,2026-02-09,West,Delhivery,1085,2,2,0,Delivered,65,Standard,On Time
+SHP000376,ORD000376,5,2,2026-02-12,North,BlueDart,1114,3,3,0,Delivered,78,Express,Weather
+SHP000377,ORD000377,6,3,2026-02-15,South,Ecom Express,1143,4,4,0,Delivered,91,Standard,On Time
+SHP000378,ORD000378,7,4,2026-02-18,East,DTDC,1172,2,4,2,Delayed,104,Standard,Carrier Delay
+SHP000379,ORD000379,8,5,2026-02-21,Central,XpressBees,1201,3,3,0,Delivered,117,Standard,On Time
+SHP000380,ORD000380,9,6,2026-02-24,West,Delhivery,1230,4,4,0,Delivered,130,Express,On Time
+SHP000381,ORD000381,10,7,2026-02-27,North,BlueDart,1259,2,2,0,Delivered,143,Standard,On Time
+SHP000382,ORD000382,11,8,2026-03-02,South,Ecom Express,1288,3,3,0,Delivered,156,Standard,On Time
+SHP000383,ORD000383,12,9,2026-03-05,East,DTDC,1317,4,4,0,Delivered,169,Standard,On Time
+SHP000384,ORD000384,1,10,2026-03-08,Central,XpressBees,1346,2,2,0,Delivered,182,Express,On Time
+SHP000385,ORD000385,2,11,2026-03-11,West,Delhivery,1375,3,5,2,Delayed,195,Standard,Carrier Delay
+SHP000386,ORD000386,3,12,2026-03-14,North,BlueDart,1404,4,4,0,Delivered,208,Standard,On Time
+SHP000387,ORD000387,4,13,2026-03-17,South,Ecom Express,33,2,2,0,Delivered,221,Standard,On Time
+SHP000388,ORD000388,5,14,2026-03-20,East,DTDC,62,3,3,0,Delivered,54,Express,On Time
+SHP000389,ORD000389,6,15,2026-03-23,Central,XpressBees,91,4,4,0,Delivered,67,Standard,On Time
+SHP000390,ORD000390,7,1,2026-03-26,West,Delhivery,120,2,2,0,Delivered,80,Standard,On Time
+SHP000391,ORD000391,8,2,2026-03-29,North,BlueDart,149,3,7,4,Delayed,93,Standard,Warehouse Delay
+SHP000392,ORD000392,9,3,2026-04-01,South,Ecom Express,178,4,6,2,Delayed,106,Express,Carrier Delay
+SHP000393,ORD000393,10,4,2026-04-04,East,DTDC,207,2,2,0,Delivered,119,Standard,On Time
+SHP000394,ORD000394,11,5,2026-04-07,Central,XpressBees,236,3,3,0,Delivered,132,Standard,On Time
+SHP000395,ORD000395,12,6,2026-04-10,West,Delhivery,265,4,4,0,Delivered,145,Standard,On Time
+SHP000396,ORD000396,1,7,2026-04-13,North,BlueDart,294,2,2,0,Delivered,158,Express,On Time
+SHP000397,ORD000397,2,8,2026-04-16,South,Ecom Express,323,3,3,0,Delivered,171,Standard,On Time
+SHP000398,ORD000398,3,9,2026-04-19,East,DTDC,352,4,4,0,Delivered,184,Standard,On Time
+SHP000399,ORD000399,4,10,2026-04-22,Central,XpressBees,381,2,4,2,Delayed,197,Standard,Carrier Delay
+SHP000400,ORD000400,5,11,2026-04-25,West,Delhivery,410,3,3,0,Delivered,210,Express,On Time
+SHP000401,ORD000401,6,12,2026-04-28,North,BlueDart,439,4,4,0,Delivered,223,Standard,On Time
+SHP000402,ORD000402,7,13,2026-05-01,South,Ecom Express,468,2,2,0,Delivered,56,Standard,On Time
+SHP000403,ORD000403,8,14,2026-05-04,East,DTDC,497,3,3,0,Returned,69,Standard,On Time
+SHP000404,ORD000404,9,15,2026-05-07,Central,XpressBees,526,4,4,0,Delivered,82,Express,On Time
+SHP000405,ORD000405,10,1,2026-05-10,West,Delhivery,555,2,2,0,Delivered,95,Standard,On Time
+SHP000406,ORD000406,11,2,2026-05-13,North,BlueDart,584,3,5,2,Delayed,108,Standard,Carrier Delay
+SHP000407,ORD000407,12,3,2026-05-16,South,Ecom Express,613,4,4,0,Delivered,121,Standard,On Time
+SHP000408,ORD000408,1,4,2026-05-19,East,DTDC,642,2,6,4,Delayed,134,Express,Warehouse Delay
+SHP000409,ORD000409,2,5,2026-05-22,Central,XpressBees,671,3,3,0,Delivered,147,Standard,On Time
+SHP000410,ORD000410,3,6,2026-05-25,West,Delhivery,700,4,4,0,Delivered,160,Standard,On Time
+SHP000411,ORD000411,4,7,2026-05-28,North,BlueDart,729,2,2,0,Delivered,173,Standard,On Time
+SHP000412,ORD000412,5,8,2026-05-31,South,Ecom Express,758,3,3,0,Delivered,186,Express,On Time
+SHP000413,ORD000413,6,9,2026-06-03,East,DTDC,787,4,6,2,Delayed,199,Standard,Carrier Delay
+SHP000414,ORD000414,7,10,2026-06-06,Central,XpressBees,816,2,2,0,Delivered,212,Standard,On Time
+SHP000415,ORD000415,8,11,2026-06-09,West,Delhivery,845,3,3,0,Delivered,225,Standard,On Time
+SHP000416,ORD000416,9,12,2026-06-12,North,BlueDart,874,4,4,0,Delivered,58,Express,On Time
+SHP000417,ORD000417,10,13,2026-06-15,South,Ecom Express,903,2,2,0,Delivered,71,Standard,On Time
+SHP000418,ORD000418,11,14,2026-06-18,East,DTDC,932,3,3,0,Delivered,84,Standard,On Time
+SHP000419,ORD000419,12,15,2026-06-21,Central,XpressBees,961,4,4,0,Delivered,97,Standard,On Time
+SHP000420,ORD000420,1,1,2026-06-24,West,Delhivery,990,2,4,2,Delayed,110,Express,Carrier Delay
+SHP000421,ORD000421,2,2,2026-06-27,North,BlueDart,1019,3,3,0,Delivered,123,Standard,On Time
+SHP000422,ORD000422,3,3,2026-06-30,South,Ecom Express,1048,4,4,0,Delivered,136,Standard,On Time
+SHP000423,ORD000423,4,4,2026-01-03,East,DTDC,1077,2,2,0,Delivered,149,Standard,Weather
+SHP000424,ORD000424,5,5,2026-01-06,Central,XpressBees,1106,3,3,0,Delivered,162,Express,On Time
+SHP000425,ORD000425,6,6,2026-01-09,West,Delhivery,1135,4,8,4,Delayed,175,Standard,Warehouse Delay
+SHP000426,ORD000426,7,7,2026-01-12,North,BlueDart,1164,2,2,0,Delivered,188,Standard,On Time
+SHP000427,ORD000427,8,8,2026-01-15,South,Ecom Express,1193,3,5,2,Delayed,201,Standard,Carrier Delay
+SHP000428,ORD000428,9,9,2026-01-18,East,DTDC,1222,4,4,0,Delivered,214,Express,On Time
+SHP000429,ORD000429,10,10,2026-01-21,Central,XpressBees,1251,2,2,0,Delivered,227,Standard,On Time
+SHP000430,ORD000430,11,11,2026-01-24,West,Delhivery,1280,3,3,0,Delivered,60,Standard,On Time
+SHP000431,ORD000431,12,12,2026-01-27,North,BlueDart,1309,4,4,0,Delivered,73,Standard,On Time
+SHP000432,ORD000432,1,13,2026-01-30,South,Ecom Express,1338,2,2,0,Delivered,86,Express,On Time
+SHP000433,ORD000433,2,14,2026-02-02,East,DTDC,1367,3,3,0,Delivered,99,Standard,On Time
+SHP000434,ORD000434,3,15,2026-02-05,Central,XpressBees,1396,4,6,2,Returned,112,Standard,Carrier Delay
+SHP000435,ORD000435,4,1,2026-02-08,West,Delhivery,25,2,2,0,Delivered,125,Standard,On Time
+SHP000436,ORD000436,5,2,2026-02-11,North,BlueDart,54,3,3,0,Delivered,138,Express,On Time
+SHP000437,ORD000437,6,3,2026-02-14,South,Ecom Express,83,4,4,0,Delivered,151,Standard,On Time
+SHP000438,ORD000438,7,4,2026-02-17,East,DTDC,112,2,2,0,Delivered,164,Standard,On Time
+SHP000439,ORD000439,8,5,2026-02-20,Central,XpressBees,141,3,3,0,Delivered,177,Standard,On Time
+SHP000440,ORD000440,9,6,2026-02-23,West,Delhivery,170,4,4,0,Delivered,190,Express,On Time
+SHP000441,ORD000441,10,7,2026-02-26,North,BlueDart,199,2,4,2,Delayed,203,Standard,Carrier Delay
+SHP000442,ORD000442,11,8,2026-03-01,South,Ecom Express,228,3,7,4,Delayed,216,Standard,Warehouse Delay
+SHP000443,ORD000443,12,9,2026-03-04,East,DTDC,257,4,4,0,Delivered,229,Standard,On Time
+SHP000444,ORD000444,1,10,2026-03-07,Central,XpressBees,286,2,2,0,Delivered,62,Express,On Time
+SHP000445,ORD000445,2,11,2026-03-10,West,Delhivery,315,3,3,0,Delivered,75,Standard,On Time
+SHP000446,ORD000446,3,12,2026-03-13,North,BlueDart,344,4,4,0,Delivered,88,Standard,On Time
+SHP000447,ORD000447,4,13,2026-03-16,South,Ecom Express,373,2,2,0,Delivered,101,Standard,On Time
+SHP000448,ORD000448,5,14,2026-03-19,East,DTDC,402,3,5,2,Delayed,114,Express,Carrier Delay
+SHP000449,ORD000449,6,15,2026-03-22,Central,XpressBees,431,4,4,0,Delivered,127,Standard,On Time
+SHP000450,ORD000450,7,1,2026-03-25,West,Delhivery,460,2,2,0,Delivered,140,Standard,On Time
+SHP000451,ORD000451,8,2,2026-03-28,North,BlueDart,489,3,3,0,Delivered,153,Standard,On Time
+SHP000452,ORD000452,9,3,2026-03-31,South,Ecom Express,518,4,4,0,Delivered,166,Express,On Time
+SHP000453,ORD000453,10,4,2026-04-03,East,DTDC,547,2,2,0,Delivered,179,Standard,On Time
+SHP000454,ORD000454,11,5,2026-04-06,Central,XpressBees,576,3,3,0,Delivered,192,Standard,On Time
+SHP000455,ORD000455,12,6,2026-04-09,West,Delhivery,605,4,6,2,Delayed,205,Standard,Carrier Delay
+SHP000456,ORD000456,1,7,2026-04-12,North,BlueDart,634,2,2,0,Delivered,218,Express,On Time
+SHP000457,ORD000457,2,8,2026-04-15,South,Ecom Express,663,3,3,0,Delivered,51,Standard,On Time
+SHP000458,ORD000458,3,9,2026-04-18,East,DTDC,692,4,4,0,Delivered,64,Standard,On Time
+SHP000459,ORD000459,4,10,2026-04-21,Central,XpressBees,721,2,6,4,Delayed,77,Standard,Warehouse Delay
+SHP000460,ORD000460,5,11,2026-04-24,West,Delhivery,750,3,3,0,Delivered,90,Express,On Time
+SHP000461,ORD000461,6,12,2026-04-27,North,BlueDart,779,4,4,0,Delivered,103,Standard,On Time
+SHP000462,ORD000462,7,13,2026-04-30,South,Ecom Express,808,2,4,2,Delayed,116,Standard,Carrier Delay
+SHP000463,ORD000463,8,14,2026-05-03,East,DTDC,837,3,3,0,Delivered,129,Standard,On Time
+SHP000464,ORD000464,9,15,2026-05-06,Central,XpressBees,866,4,4,0,Delivered,142,Express,On Time
+SHP000465,ORD000465,10,1,2026-05-09,West,Delhivery,895,2,2,0,Returned,155,Standard,On Time
+SHP000466,ORD000466,11,2,2026-05-12,North,BlueDart,924,3,3,0,Delivered,168,Standard,On Time
+SHP000467,ORD000467,12,3,2026-05-15,South,Ecom Express,953,4,4,0,Delivered,181,Standard,On Time
+SHP000468,ORD000468,1,4,2026-05-18,East,DTDC,982,2,2,0,Delivered,194,Express,On Time
+SHP000469,ORD000469,2,5,2026-05-21,Central,XpressBees,1011,3,5,2,Delayed,207,Standard,Carrier Delay
+SHP000470,ORD000470,3,6,2026-05-24,West,Delhivery,1040,4,4,0,Delivered,220,Standard,Weather
+SHP000471,ORD000471,4,7,2026-05-27,North,BlueDart,1069,2,2,0,Delivered,53,Standard,On Time
+SHP000472,ORD000472,5,8,2026-05-30,South,Ecom Express,1098,3,3,0,Delivered,66,Express,On Time
+SHP000473,ORD000473,6,9,2026-06-02,East,DTDC,1127,4,4,0,Delivered,79,Standard,On Time
+SHP000474,ORD000474,7,10,2026-06-05,Central,XpressBees,1156,2,2,0,Delivered,92,Standard,On Time
+SHP000475,ORD000475,8,11,2026-06-08,West,Delhivery,1185,3,3,0,Delivered,105,Standard,On Time
+SHP000476,ORD000476,9,12,2026-06-11,North,BlueDart,1214,4,8,4,Delayed,118,Express,Warehouse Delay
+SHP000477,ORD000477,10,13,2026-06-14,South,Ecom Express,1243,2,2,0,Delivered,131,Standard,On Time
+SHP000478,ORD000478,11,14,2026-06-17,East,DTDC,1272,3,3,0,Delivered,144,Standard,On Time
+SHP000479,ORD000479,12,15,2026-06-20,Central,XpressBees,1301,4,4,0,Delivered,157,Standard,On Time
+SHP000480,ORD000480,1,1,2026-06-23,West,Delhivery,1330,2,2,0,Delivered,170,Express,On Time
+SHP000481,ORD000481,2,2,2026-06-26,North,BlueDart,1359,3,3,0,Delivered,183,Standard,On Time
+SHP000482,ORD000482,3,3,2026-06-29,South,Ecom Express,1388,4,4,0,Delivered,196,Standard,On Time
+SHP000483,ORD000483,4,4,2026-01-02,East,DTDC,17,2,4,2,Delayed,209,Standard,Carrier Delay
+SHP000484,ORD000484,5,5,2026-01-05,Central,XpressBees,46,3,3,0,Delivered,222,Express,On Time
+SHP000485,ORD000485,6,6,2026-01-08,West,Delhivery,75,4,4,0,Delivered,55,Standard,On Time
+SHP000486,ORD000486,7,7,2026-01-11,North,BlueDart,104,2,2,0,Delivered,68,Standard,On Time
+SHP000487,ORD000487,8,8,2026-01-14,South,Ecom Express,133,3,3,0,Delivered,81,Standard,On Time
+SHP000488,ORD000488,9,9,2026-01-17,East,DTDC,162,4,4,0,Delivered,94,Express,On Time
+SHP000489,ORD000489,10,10,2026-01-20,Central,XpressBees,191,2,2,0,Delivered,107,Standard,On Time
+SHP000490,ORD000490,11,11,2026-01-23,West,Delhivery,220,3,5,2,Delayed,120,Standard,Carrier Delay
+SHP000491,ORD000491,12,12,2026-01-26,North,BlueDart,249,4,4,0,Delivered,133,Standard,On Time
+SHP000492,ORD000492,1,13,2026-01-29,South,Ecom Express,278,2,2,0,Delivered,146,Express,On Time
+SHP000493,ORD000493,2,14,2026-02-01,East,DTDC,307,3,7,4,Delayed,159,Standard,Warehouse Delay
+SHP000494,ORD000494,3,15,2026-02-04,Central,XpressBees,336,4,4,0,Delivered,172,Standard,On Time
+SHP000495,ORD000495,4,1,2026-02-07,West,Delhivery,365,2,2,0,Delivered,185,Standard,On Time
+SHP000496,ORD000496,5,2,2026-02-10,North,BlueDart,394,3,3,0,Returned,198,Express,On Time
+SHP000497,ORD000497,6,3,2026-02-13,South,Ecom Express,423,4,6,2,Delayed,211,Standard,Carrier Delay
+SHP000498,ORD000498,7,4,2026-02-16,East,DTDC,452,2,2,0,Delivered,224,Standard,On Time
+SHP000499,ORD000499,8,5,2026-02-19,Central,XpressBees,481,3,3,0,Delivered,57,Standard,On Time
+SHP000500,ORD000500,9,6,2026-02-22,West,Delhivery,510,4,4,0,Delivered,70,Express,On Time
+SHP000501,ORD000501,10,7,2026-02-25,North,BlueDart,539,2,2,0,Delivered,83,Standard,On Time
+SHP000502,ORD000502,11,8,2026-02-28,South,Ecom Express,568,3,3,0,Delivered,96,Standard,On Time
+SHP000503,ORD000503,12,9,2026-03-03,East,DTDC,597,4,4,0,Delivered,109,Standard,On Time
+SHP000504,ORD000504,1,10,2026-03-06,Central,XpressBees,626,2,4,2,Delayed,122,Express,Carrier Delay
+SHP000505,ORD000505,2,11,2026-03-09,West,Delhivery,655,3,3,0,Delivered,135,Standard,On Time
+SHP000506,ORD000506,3,12,2026-03-12,North,BlueDart,684,4,4,0,Delivered,148,Standard,On Time
+SHP000507,ORD000507,4,13,2026-03-15,South,Ecom Express,713,2,2,0,Delivered,161,Standard,On Time
+SHP000508,ORD000508,5,14,2026-03-18,East,DTDC,742,3,3,0,Delivered,174,Express,On Time
+SHP000509,ORD000509,6,15,2026-03-21,Central,XpressBees,771,4,4,0,Delivered,187,Standard,On Time
+SHP000510,ORD000510,7,1,2026-03-24,West,Delhivery,800,2,6,4,Delayed,200,Standard,Warehouse Delay
+SHP000511,ORD000511,8,2,2026-03-27,North,BlueDart,829,3,5,2,Delayed,213,Standard,Carrier Delay
+SHP000512,ORD000512,9,3,2026-03-30,South,Ecom Express,858,4,4,0,Delivered,226,Express,On Time
+SHP000513,ORD000513,10,4,2026-04-02,East,DTDC,887,2,2,0,Delivered,59,Standard,On Time
+SHP000514,ORD000514,11,5,2026-04-05,Central,XpressBees,916,3,3,0,Delivered,72,Standard,On Time
+SHP000515,ORD000515,12,6,2026-04-08,West,Delhivery,945,4,4,0,Delivered,85,Standard,On Time
+SHP000516,ORD000516,1,7,2026-04-11,North,BlueDart,974,2,2,0,Delivered,98,Express,On Time
+SHP000517,ORD000517,2,8,2026-04-14,South,Ecom Express,1003,3,3,0,Delivered,111,Standard,Weather
+SHP000518,ORD000518,3,9,2026-04-17,East,DTDC,1032,4,6,2,Delayed,124,Standard,Carrier Delay
+SHP000519,ORD000519,4,10,2026-04-20,Central,XpressBees,1061,2,2,0,Delivered,137,Standard,On Time
+SHP000520,ORD000520,5,11,2026-04-23,West,Delhivery,1090,3,3,0,Delivered,150,Express,On Time
+SHP000521,ORD000521,6,12,2026-04-26,North,BlueDart,1119,4,4,0,Delivered,163,Standard,On Time
+SHP000522,ORD000522,7,13,2026-04-29,South,Ecom Express,1148,2,2,0,Delivered,176,Standard,On Time
+SHP000523,ORD000523,8,14,2026-05-02,East,DTDC,1177,3,3,0,Delivered,189,Standard,On Time
+SHP000524,ORD000524,9,15,2026-05-05,Central,XpressBees,1206,4,4,0,Delivered,202,Express,On Time
+SHP000525,ORD000525,10,1,2026-05-08,West,Delhivery,1235,2,4,2,Delayed,215,Standard,Carrier Delay
+SHP000526,ORD000526,11,2,2026-05-11,North,BlueDart,1264,3,3,0,Delivered,228,Standard,On Time
+SHP000527,ORD000527,12,3,2026-05-14,South,Ecom Express,1293,4,8,4,Returned,61,Standard,Warehouse Delay
+SHP000528,ORD000528,1,4,2026-05-17,East,DTDC,1322,2,2,0,Delivered,74,Express,On Time
+SHP000529,ORD000529,2,5,2026-05-20,Central,XpressBees,1351,3,3,0,Delivered,87,Standard,On Time
+SHP000530,ORD000530,3,6,2026-05-23,West,Delhivery,1380,4,4,0,Delivered,100,Standard,On Time
+SHP000531,ORD000531,4,7,2026-05-26,North,BlueDart,1409,2,2,0,Delivered,113,Standard,On Time
+SHP000532,ORD000532,5,8,2026-05-29,South,Ecom Express,38,3,5,2,Delayed,126,Express,Carrier Delay
+SHP000533,ORD000533,6,9,2026-06-01,East,DTDC,67,4,4,0,Delivered,139,Standard,On Time
+SHP000534,ORD000534,7,10,2026-06-04,Central,XpressBees,96,2,2,0,Delivered,152,Standard,On Time
+SHP000535,ORD000535,8,11,2026-06-07,West,Delhivery,125,3,3,0,Delivered,165,Standard,On Time
+SHP000536,ORD000536,9,12,2026-06-10,North,BlueDart,154,4,4,0,Delivered,178,Express,On Time
+SHP000537,ORD000537,10,13,2026-06-13,South,Ecom Express,183,2,2,0,Delivered,191,Standard,On Time
+SHP000538,ORD000538,11,14,2026-06-16,East,DTDC,212,3,3,0,Delivered,204,Standard,On Time
+SHP000539,ORD000539,12,15,2026-06-19,Central,XpressBees,241,4,6,2,Delayed,217,Standard,Carrier Delay
+SHP000540,ORD000540,1,1,2026-06-22,West,Delhivery,270,2,2,0,Delivered,50,Express,On Time
+SHP000541,ORD000541,2,2,2026-06-25,North,BlueDart,299,3,3,0,Delivered,63,Standard,On Time
+SHP000542,ORD000542,3,3,2026-06-28,South,Ecom Express,328,4,4,0,Delivered,76,Standard,On Time
+SHP000543,ORD000543,4,4,2026-01-01,East,DTDC,357,2,2,0,Delivered,89,Standard,On Time
+SHP000544,ORD000544,5,5,2026-01-04,Central,XpressBees,386,3,7,4,Delayed,102,Express,Warehouse Delay
+SHP000545,ORD000545,6,6,2026-01-07,West,Delhivery,415,4,4,0,Delivered,115,Standard,On Time
+SHP000546,ORD000546,7,7,2026-01-10,North,BlueDart,444,2,4,2,Delayed,128,Standard,Carrier Delay
+SHP000547,ORD000547,8,8,2026-01-13,South,Ecom Express,473,3,3,0,Delivered,141,Standard,On Time
+SHP000548,ORD000548,9,9,2026-01-16,East,DTDC,502,4,4,0,Delivered,154,Express,On Time
+SHP000549,ORD000549,10,10,2026-01-19,Central,XpressBees,531,2,2,0,Delivered,167,Standard,On Time
+SHP000550,ORD000550,11,11,2026-01-22,West,Delhivery,560,3,3,0,Delivered,180,Standard,On Time
+SHP000551,ORD000551,12,12,2026-01-25,North,BlueDart,589,4,4,0,Delivered,193,Standard,On Time
+SHP000552,ORD000552,1,13,2026-01-28,South,Ecom Express,618,2,2,0,Delivered,206,Express,On Time
+SHP000553,ORD000553,2,14,2026-01-31,East,DTDC,647,3,5,2,Delayed,219,Standard,Carrier Delay
+SHP000554,ORD000554,3,15,2026-02-03,Central,XpressBees,676,4,4,0,Delivered,52,Standard,On Time
+SHP000555,ORD000555,4,1,2026-02-06,West,Delhivery,705,2,2,0,Delivered,65,Standard,On Time
+SHP000556,ORD000556,5,2,2026-02-09,North,BlueDart,734,3,3,0,Delivered,78,Express,On Time
+SHP000557,ORD000557,6,3,2026-02-12,South,Ecom Express,763,4,4,0,Delivered,91,Standard,On Time
+SHP000558,ORD000558,7,4,2026-02-15,East,DTDC,792,2,2,0,Returned,104,Standard,On Time
+SHP000559,ORD000559,8,5,2026-02-18,Central,XpressBees,821,3,3,0,Delivered,117,Standard,On Time
+SHP000560,ORD000560,9,6,2026-02-21,West,Delhivery,850,4,6,2,Delayed,130,Express,Carrier Delay
+SHP000561,ORD000561,10,7,2026-02-24,North,BlueDart,879,2,6,4,Delayed,143,Standard,Warehouse Delay
+SHP000562,ORD000562,11,8,2026-02-27,South,Ecom Express,908,3,3,0,Delivered,156,Standard,On Time
+SHP000563,ORD000563,12,9,2026-03-02,East,DTDC,937,4,4,0,Delivered,169,Standard,On Time
+SHP000564,ORD000564,1,10,2026-03-05,Central,XpressBees,966,2,2,0,Delivered,182,Express,Weather
+SHP000565,ORD000565,2,11,2026-03-08,West,Delhivery,995,3,3,0,Delivered,195,Standard,On Time
+SHP000566,ORD000566,3,12,2026-03-11,North,BlueDart,1024,4,4,0,Delivered,208,Standard,On Time
+SHP000567,ORD000567,4,13,2026-03-14,South,Ecom Express,1053,2,4,2,Delayed,221,Standard,Carrier Delay
+SHP000568,ORD000568,5,14,2026-03-17,East,DTDC,1082,3,3,0,Delivered,54,Express,On Time
+SHP000569,ORD000569,6,15,2026-03-20,Central,XpressBees,1111,4,4,0,Delivered,67,Standard,On Time
+SHP000570,ORD000570,7,1,2026-03-23,West,Delhivery,1140,2,2,0,Delivered,80,Standard,On Time
+SHP000571,ORD000571,8,2,2026-03-26,North,BlueDart,1169,3,3,0,Delivered,93,Standard,On Time
+SHP000572,ORD000572,9,3,2026-03-29,South,Ecom Express,1198,4,4,0,Delivered,106,Express,On Time
+SHP000573,ORD000573,10,4,2026-04-01,East,DTDC,1227,2,2,0,Delivered,119,Standard,On Time
+SHP000574,ORD000574,11,5,2026-04-04,Central,XpressBees,1256,3,5,2,Delayed,132,Standard,Carrier Delay
+SHP000575,ORD000575,12,6,2026-04-07,West,Delhivery,1285,4,4,0,Delivered,145,Standard,On Time
+SHP000576,ORD000576,1,7,2026-04-10,North,BlueDart,1314,2,2,0,Delivered,158,Express,On Time
+SHP000577,ORD000577,2,8,2026-04-13,South,Ecom Express,1343,3,3,0,Delivered,171,Standard,On Time
+SHP000578,ORD000578,3,9,2026-04-16,East,DTDC,1372,4,8,4,Delayed,184,Standard,Warehouse Delay
+SHP000579,ORD000579,4,10,2026-04-19,Central,XpressBees,1401,2,2,0,Delivered,197,Standard,On Time
+SHP000580,ORD000580,5,11,2026-04-22,West,Delhivery,30,3,3,0,Delivered,210,Express,On Time
+SHP000581,ORD000581,6,12,2026-04-25,North,BlueDart,59,4,6,2,Delayed,223,Standard,Carrier Delay
+SHP000582,ORD000582,7,13,2026-04-28,South,Ecom Express,88,2,2,0,Delivered,56,Standard,On Time
+SHP000583,ORD000583,8,14,2026-05-01,East,DTDC,117,3,3,0,Delivered,69,Standard,On Time
+SHP000584,ORD000584,9,15,2026-05-04,Central,XpressBees,146,4,4,0,Delivered,82,Express,On Time
+SHP000585,ORD000585,10,1,2026-05-07,West,Delhivery,175,2,2,0,Delivered,95,Standard,On Time
+SHP000586,ORD000586,11,2,2026-05-10,North,BlueDart,204,3,3,0,Delivered,108,Standard,On Time
+SHP000587,ORD000587,12,3,2026-05-13,South,Ecom Express,233,4,4,0,Delivered,121,Standard,On Time
+SHP000588,ORD000588,1,4,2026-05-16,East,DTDC,262,2,4,2,Delayed,134,Express,Carrier Delay
+SHP000589,ORD000589,2,5,2026-05-19,Central,XpressBees,291,3,3,0,Returned,147,Standard,On Time
+SHP000590,ORD000590,3,6,2026-05-22,West,Delhivery,320,4,4,0,Delivered,160,Standard,On Time
+SHP000591,ORD000591,4,7,2026-05-25,North,BlueDart,349,2,2,0,Delivered,173,Standard,On Time
+SHP000592,ORD000592,5,8,2026-05-28,South,Ecom Express,378,3,3,0,Delivered,186,Express,On Time
+SHP000593,ORD000593,6,9,2026-05-31,East,DTDC,407,4,4,0,Delivered,199,Standard,On Time
+SHP000594,ORD000594,7,10,2026-06-03,Central,XpressBees,436,2,2,0,Delivered,212,Standard,On Time
+SHP000595,ORD000595,8,11,2026-06-06,West,Delhivery,465,3,7,4,Delayed,225,Standard,Warehouse Delay
+SHP000596,ORD000596,9,12,2026-06-09,North,BlueDart,494,4,4,0,Delivered,58,Express,On Time
+SHP000597,ORD000597,10,13,2026-06-12,South,Ecom Express,523,2,2,0,Delivered,71,Standard,On Time
+SHP000598,ORD000598,11,14,2026-06-15,East,DTDC,552,3,3,0,Delivered,84,Standard,On Time
+SHP000599,ORD000599,12,15,2026-06-18,Central,XpressBees,581,4,4,0,Delivered,97,Standard,On Time
+SHP000600,ORD000600,1,1,2026-06-21,West,Delhivery,610,2,2,0,Delivered,110,Express,On Time
+SHP000601,ORD000601,2,2,2026-06-24,North,BlueDart,639,3,3,0,Delivered,123,Standard,On Time
+SHP000602,ORD000602,3,3,2026-06-27,South,Ecom Express,668,4,6,2,Delayed,136,Standard,Carrier Delay
+SHP000603,ORD000603,4,4,2026-06-30,East,DTDC,697,2,2,0,Delivered,149,Standard,On Time
+SHP000604,ORD000604,5,5,2026-01-03,Central,XpressBees,726,3,3,0,Delivered,162,Express,On Time
+SHP000605,ORD000605,6,6,2026-01-06,West,Delhivery,755,4,4,0,Delivered,175,Standard,On Time
+SHP000606,ORD000606,7,7,2026-01-09,North,BlueDart,784,2,2,0,Delivered,188,Standard,On Time
+SHP000607,ORD000607,8,8,2026-01-12,South,Ecom Express,813,3,3,0,Delivered,201,Standard,On Time
+SHP000608,ORD000608,9,9,2026-01-15,East,DTDC,842,4,4,0,Delivered,214,Express,On Time
+SHP000609,ORD000609,10,10,2026-01-18,Central,XpressBees,871,2,4,2,Delayed,227,Standard,Carrier Delay
+SHP000610,ORD000610,11,11,2026-01-21,West,Delhivery,900,3,3,0,Delivered,60,Standard,On Time
+SHP000611,ORD000611,12,12,2026-01-24,North,BlueDart,929,4,4,0,Delivered,73,Standard,Weather
+SHP000612,ORD000612,1,13,2026-01-27,South,Ecom Express,958,2,6,4,Delayed,86,Express,Warehouse Delay
+SHP000613,ORD000613,2,14,2026-01-30,East,DTDC,987,3,3,0,Delivered,99,Standard,On Time
+SHP000614,ORD000614,3,15,2026-02-02,Central,XpressBees,1016,4,4,0,Delivered,112,Standard,On Time
+SHP000615,ORD000615,4,1,2026-02-05,West,Delhivery,1045,2,2,0,Delivered,125,Standard,On Time
+SHP000616,ORD000616,5,2,2026-02-08,North,BlueDart,1074,3,5,2,Delayed,138,Express,Carrier Delay
+SHP000617,ORD000617,6,3,2026-02-11,South,Ecom Express,1103,4,4,0,Delivered,151,Standard,On Time
+SHP000618,ORD000618,7,4,2026-02-14,East,DTDC,1132,2,2,0,Delivered,164,Standard,On Time
+SHP000619,ORD000619,8,5,2026-02-17,Central,XpressBees,1161,3,3,0,Delivered,177,Standard,On Time
+SHP000620,ORD000620,9,6,2026-02-20,West,Delhivery,1190,4,4,0,Returned,190,Express,On Time
+SHP000621,ORD000621,10,7,2026-02-23,North,BlueDart,1219,2,2,0,Delivered,203,Standard,On Time
+SHP000622,ORD000622,11,8,2026-02-26,South,Ecom Express,1248,3,3,0,Delivered,216,Standard,On Time
+SHP000623,ORD000623,12,9,2026-03-01,East,DTDC,1277,4,6,2,Delayed,229,Standard,Carrier Delay
+SHP000624,ORD000624,1,10,2026-03-04,Central,XpressBees,1306,2,2,0,Delivered,62,Express,On Time
+SHP000625,ORD000625,2,11,2026-03-07,West,Delhivery,1335,3,3,0,Delivered,75,Standard,On Time
+SHP000626,ORD000626,3,12,2026-03-10,North,BlueDart,1364,4,4,0,Delivered,88,Standard,On Time
+SHP000627,ORD000627,4,13,2026-03-13,South,Ecom Express,1393,2,2,0,Delivered,101,Standard,On Time
+SHP000628,ORD000628,5,14,2026-03-16,East,DTDC,22,3,3,0,Delivered,114,Express,On Time
+SHP000629,ORD000629,6,15,2026-03-19,Central,XpressBees,51,4,8,4,Delayed,127,Standard,Warehouse Delay
+SHP000630,ORD000630,7,1,2026-03-22,West,Delhivery,80,2,4,2,Delayed,140,Standard,Carrier Delay
+SHP000631,ORD000631,8,2,2026-03-25,North,BlueDart,109,3,3,0,Delivered,153,Standard,On Time
+SHP000632,ORD000632,9,3,2026-03-28,South,Ecom Express,138,4,4,0,Delivered,166,Express,On Time
+SHP000633,ORD000633,10,4,2026-03-31,East,DTDC,167,2,2,0,Delivered,179,Standard,On Time
+SHP000634,ORD000634,11,5,2026-04-03,Central,XpressBees,196,3,3,0,Delivered,192,Standard,On Time
+SHP000635,ORD000635,12,6,2026-04-06,West,Delhivery,225,4,4,0,Delivered,205,Standard,On Time
+SHP000636,ORD000636,1,7,2026-04-09,North,BlueDart,254,2,2,0,Delivered,218,Express,On Time
+SHP000637,ORD000637,2,8,2026-04-12,South,Ecom Express,283,3,5,2,Delayed,51,Standard,Carrier Delay
+SHP000638,ORD000638,3,9,2026-04-15,East,DTDC,312,4,4,0,Delivered,64,Standard,On Time
+SHP000639,ORD000639,4,10,2026-04-18,Central,XpressBees,341,2,2,0,Delivered,77,Standard,On Time
+SHP000640,ORD000640,5,11,2026-04-21,West,Delhivery,370,3,3,0,Delivered,90,Express,On Time
+SHP000641,ORD000641,6,12,2026-04-24,North,BlueDart,399,4,4,0,Delivered,103,Standard,On Time
+SHP000642,ORD000642,7,13,2026-04-27,South,Ecom Express,428,2,2,0,Delivered,116,Standard,On Time
+SHP000643,ORD000643,8,14,2026-04-30,East,DTDC,457,3,3,0,Delivered,129,Standard,On Time
+SHP000644,ORD000644,9,15,2026-05-03,Central,XpressBees,486,4,6,2,Delayed,142,Express,Carrier Delay
+SHP000645,ORD000645,10,1,2026-05-06,West,Delhivery,515,2,2,0,Delivered,155,Standard,On Time
+SHP000646,ORD000646,11,2,2026-05-09,North,BlueDart,544,3,7,4,Delayed,168,Standard,Warehouse Delay
+SHP000647,ORD000647,12,3,2026-05-12,South,Ecom Express,573,4,4,0,Delivered,181,Standard,On Time
+SHP000648,ORD000648,1,4,2026-05-15,East,DTDC,602,2,2,0,Delivered,194,Express,On Time
+SHP000649,ORD000649,2,5,2026-05-18,Central,XpressBees,631,3,3,0,Delivered,207,Standard,On Time
+SHP000650,ORD000650,3,6,2026-05-21,West,Delhivery,660,4,4,0,Delivered,220,Standard,On Time
+SHP000651,ORD000651,4,7,2026-05-24,North,BlueDart,689,2,4,2,Returned,53,Standard,Carrier Delay
+SHP000652,ORD000652,5,8,2026-05-27,South,Ecom Express,718,3,3,0,Delivered,66,Express,On Time
+SHP000653,ORD000653,6,9,2026-05-30,East,DTDC,747,4,4,0,Delivered,79,Standard,On Time
+SHP000654,ORD000654,7,10,2026-06-02,Central,XpressBees,776,2,2,0,Delivered,92,Standard,On Time
+SHP000655,ORD000655,8,11,2026-06-05,West,Delhivery,805,3,3,0,Delivered,105,Standard,On Time
+SHP000656,ORD000656,9,12,2026-06-08,North,BlueDart,834,4,4,0,Delivered,118,Express,On Time
+SHP000657,ORD000657,10,13,2026-06-11,South,Ecom Express,863,2,2,0,Delivered,131,Standard,On Time
+SHP000658,ORD000658,11,14,2026-06-14,East,DTDC,892,3,5,2,Delayed,144,Standard,Weather
+SHP000659,ORD000659,12,15,2026-06-17,Central,XpressBees,921,4,4,0,Delivered,157,Standard,On Time
+SHP000660,ORD000660,1,1,2026-06-20,West,Delhivery,950,2,2,0,Delivered,170,Express,On Time
+SHP000661,ORD000661,2,2,2026-06-23,North,BlueDart,979,3,3,0,Delivered,183,Standard,On Time
+SHP000662,ORD000662,3,3,2026-06-26,South,Ecom Express,1008,4,4,0,Delivered,196,Standard,On Time
+SHP000663,ORD000663,4,4,2026-06-29,East,DTDC,1037,2,6,4,Delayed,209,Standard,Warehouse Delay
+SHP000664,ORD000664,5,5,2026-01-02,Central,XpressBees,1066,3,3,0,Delivered,222,Express,On Time
+SHP000665,ORD000665,6,6,2026-01-05,West,Delhivery,1095,4,6,2,Delayed,55,Standard,Carrier Delay
+SHP000666,ORD000666,7,7,2026-01-08,North,BlueDart,1124,2,2,0,Delivered,68,Standard,On Time
+SHP000667,ORD000667,8,8,2026-01-11,South,Ecom Express,1153,3,3,0,Delivered,81,Standard,On Time
+SHP000668,ORD000668,9,9,2026-01-14,East,DTDC,1182,4,4,0,Delivered,94,Express,On Time
+SHP000669,ORD000669,10,10,2026-01-17,Central,XpressBees,1211,2,2,0,Delivered,107,Standard,On Time
+SHP000670,ORD000670,11,11,2026-01-20,West,Delhivery,1240,3,3,0,Delivered,120,Standard,On Time
+SHP000671,ORD000671,12,12,2026-01-23,North,BlueDart,1269,4,4,0,Delivered,133,Standard,On Time
+SHP000672,ORD000672,1,13,2026-01-26,South,Ecom Express,1298,2,4,2,Delayed,146,Express,Carrier Delay
+SHP000673,ORD000673,2,14,2026-01-29,East,DTDC,1327,3,3,0,Delivered,159,Standard,On Time
+SHP000674,ORD000674,3,15,2026-02-01,Central,XpressBees,1356,4,4,0,Delivered,172,Standard,On Time
+SHP000675,ORD000675,4,1,2026-02-04,West,Delhivery,1385,2,2,0,Delivered,185,Standard,On Time
+SHP000676,ORD000676,5,2,2026-02-07,North,BlueDart,14,3,3,0,Delivered,198,Express,On Time
+SHP000677,ORD000677,6,3,2026-02-10,South,Ecom Express,43,4,4,0,Delivered,211,Standard,On Time
+SHP000678,ORD000678,7,4,2026-02-13,East,DTDC,72,2,2,0,Delivered,224,Standard,On Time
+SHP000679,ORD000679,8,5,2026-02-16,Central,XpressBees,101,3,5,2,Delayed,57,Standard,Carrier Delay
+SHP000680,ORD000680,9,6,2026-02-19,West,Delhivery,130,4,8,4,Delayed,70,Express,Warehouse Delay
+SHP000681,ORD000681,10,7,2026-02-22,North,BlueDart,159,2,2,0,Delivered,83,Standard,On Time
+SHP000682,ORD000682,11,8,2026-02-25,South,Ecom Express,188,3,3,0,Returned,96,Standard,On Time
+SHP000683,ORD000683,12,9,2026-02-28,East,DTDC,217,4,4,0,Delivered,109,Standard,On Time
+SHP000684,ORD000684,1,10,2026-03-03,Central,XpressBees,246,2,2,0,Delivered,122,Express,On Time
+SHP000685,ORD000685,2,11,2026-03-06,West,Delhivery,275,3,3,0,Delivered,135,Standard,On Time
+SHP000686,ORD000686,3,12,2026-03-09,North,BlueDart,304,4,6,2,Delayed,148,Standard,Carrier Delay
+SHP000687,ORD000687,4,13,2026-03-12,South,Ecom Express,333,2,2,0,Delivered,161,Standard,On Time
+SHP000688,ORD000688,5,14,2026-03-15,East,DTDC,362,3,3,0,Delivered,174,Express,On Time
+SHP000689,ORD000689,6,15,2026-03-18,Central,XpressBees,391,4,4,0,Delivered,187,Standard,On Time
+SHP000690,ORD000690,7,1,2026-03-21,West,Delhivery,420,2,2,0,Delivered,200,Standard,On Time
+SHP000691,ORD000691,8,2,2026-03-24,North,BlueDart,449,3,3,0,Delivered,213,Standard,On Time
+SHP000692,ORD000692,9,3,2026-03-27,South,Ecom Express,478,4,4,0,Delivered,226,Express,On Time
+SHP000693,ORD000693,10,4,2026-03-30,East,DTDC,507,2,4,2,Delayed,59,Standard,Carrier Delay
+SHP000694,ORD000694,11,5,2026-04-02,Central,XpressBees,536,3,3,0,Delivered,72,Standard,On Time
+SHP000695,ORD000695,12,6,2026-04-05,West,Delhivery,565,4,4,0,Delivered,85,Standard,On Time
+SHP000696,ORD000696,1,7,2026-04-08,North,BlueDart,594,2,2,0,Delivered,98,Express,On Time
+SHP000697,ORD000697,2,8,2026-04-11,South,Ecom Express,623,3,7,4,Delayed,111,Standard,Warehouse Delay
+SHP000698,ORD000698,3,9,2026-04-14,East,DTDC,652,4,4,0,Delivered,124,Standard,On Time
+SHP000699,ORD000699,4,10,2026-04-17,Central,XpressBees,681,2,2,0,Delivered,137,Standard,On Time
+SHP000700,ORD000700,5,11,2026-04-20,West,Delhivery,710,3,5,2,Delayed,150,Express,Carrier Delay
+SHP000701,ORD000701,6,12,2026-04-23,North,BlueDart,739,4,4,0,Delivered,163,Standard,On Time
+SHP000702,ORD000702,7,13,2026-04-26,South,Ecom Express,768,2,2,0,Delivered,176,Standard,On Time
+SHP000703,ORD000703,8,14,2026-04-29,East,DTDC,797,3,3,0,Delivered,189,Standard,On Time
+SHP000704,ORD000704,9,15,2026-05-02,Central,XpressBees,826,4,4,0,Delivered,202,Express,On Time
+SHP000705,ORD000705,10,1,2026-05-05,West,Delhivery,855,2,2,0,Delivered,215,Standard,Weather
+SHP000706,ORD000706,11,2,2026-05-08,North,BlueDart,884,3,3,0,Delivered,228,Standard,On Time
+SHP000707,ORD000707,12,3,2026-05-11,South,Ecom Express,913,4,6,2,Delayed,61,Standard,Carrier Delay
+SHP000708,ORD000708,1,4,2026-05-14,East,DTDC,942,2,2,0,Delivered,74,Express,On Time
+SHP000709,ORD000709,2,5,2026-05-17,Central,XpressBees,971,3,3,0,Delivered,87,Standard,On Time
+SHP000710,ORD000710,3,6,2026-05-20,West,Delhivery,1000,4,4,0,Delivered,100,Standard,On Time
+SHP000711,ORD000711,4,7,2026-05-23,North,BlueDart,1029,2,2,0,Delivered,113,Standard,On Time
+SHP000712,ORD000712,5,8,2026-05-26,South,Ecom Express,1058,3,3,0,Delivered,126,Express,On Time
+SHP000713,ORD000713,6,9,2026-05-29,East,DTDC,1087,4,4,0,Returned,139,Standard,On Time
+SHP000714,ORD000714,7,10,2026-06-01,Central,XpressBees,1116,2,6,4,Delayed,152,Standard,Warehouse Delay
+SHP000715,ORD000715,8,11,2026-06-04,West,Delhivery,1145,3,3,0,Delivered,165,Standard,On Time
+SHP000716,ORD000716,9,12,2026-06-07,North,BlueDart,1174,4,4,0,Delivered,178,Express,On Time
+SHP000717,ORD000717,10,13,2026-06-10,South,Ecom Express,1203,2,2,0,Delivered,191,Standard,On Time
+SHP000718,ORD000718,11,14,2026-06-13,East,DTDC,1232,3,3,0,Delivered,204,Standard,On Time
+SHP000719,ORD000719,12,15,2026-06-16,Central,XpressBees,1261,4,4,0,Delivered,217,Standard,On Time
+SHP000720,ORD000720,1,1,2026-06-19,West,Delhivery,1290,2,2,0,Delivered,50,Express,On Time
+SHP000721,ORD000721,2,2,2026-06-22,North,BlueDart,1319,3,5,2,Delayed,63,Standard,Carrier Delay
+SHP000722,ORD000722,3,3,2026-06-25,South,Ecom Express,1348,4,4,0,Delivered,76,Standard,On Time
+SHP000723,ORD000723,4,4,2026-06-28,East,DTDC,1377,2,2,0,Delivered,89,Standard,On Time
+SHP000724,ORD000724,5,5,2026-01-01,Central,XpressBees,1406,3,3,0,Delivered,102,Express,On Time
+SHP000725,ORD000725,6,6,2026-01-04,West,Delhivery,35,4,4,0,Delivered,115,Standard,On Time
+SHP000726,ORD000726,7,7,2026-01-07,North,BlueDart,64,2,2,0,Delivered,128,Standard,On Time
+SHP000727,ORD000727,8,8,2026-01-10,South,Ecom Express,93,3,3,0,Delivered,141,Standard,On Time
+SHP000728,ORD000728,9,9,2026-01-13,East,DTDC,122,4,6,2,Delayed,154,Express,Carrier Delay
+SHP000729,ORD000729,10,10,2026-01-16,Central,XpressBees,151,2,2,0,Delivered,167,Standard,On Time
+SHP000730,ORD000730,11,11,2026-01-19,West,Delhivery,180,3,3,0,Delivered,180,Standard,On Time
+SHP000731,ORD000731,12,12,2026-01-22,North,BlueDart,209,4,8,4,Delayed,193,Standard,Warehouse Delay
+SHP000732,ORD000732,1,13,2026-01-25,South,Ecom Express,238,2,2,0,Delivered,206,Express,On Time
+SHP000733,ORD000733,2,14,2026-01-28,East,DTDC,267,3,3,0,Delivered,219,Standard,On Time
+SHP000734,ORD000734,3,15,2026-01-31,Central,XpressBees,296,4,4,0,Delivered,52,Standard,On Time
+SHP000735,ORD000735,4,1,2026-02-03,West,Delhivery,325,2,4,2,Delayed,65,Standard,Carrier Delay
+SHP000736,ORD000736,5,2,2026-02-06,North,BlueDart,354,3,3,0,Delivered,78,Express,On Time
+SHP000737,ORD000737,6,3,2026-02-09,South,Ecom Express,383,4,4,0,Delivered,91,Standard,On Time
+SHP000738,ORD000738,7,4,2026-02-12,East,DTDC,412,2,2,0,Delivered,104,Standard,On Time
+SHP000739,ORD000739,8,5,2026-02-15,Central,XpressBees,441,3,3,0,Delivered,117,Standard,On Time
+SHP000740,ORD000740,9,6,2026-02-18,West,Delhivery,470,4,4,0,Delivered,130,Express,On Time
+SHP000741,ORD000741,10,7,2026-02-21,North,BlueDart,499,2,2,0,Delivered,143,Standard,On Time
+SHP000742,ORD000742,11,8,2026-02-24,South,Ecom Express,528,3,5,2,Delayed,156,Standard,Carrier Delay
+SHP000743,ORD000743,12,9,2026-02-27,East,DTDC,557,4,4,0,Delivered,169,Standard,On Time
+SHP000744,ORD000744,1,10,2026-03-02,Central,XpressBees,586,2,2,0,Returned,182,Express,On Time
+SHP000745,ORD000745,2,11,2026-03-05,West,Delhivery,615,3,3,0,Delivered,195,Standard,On Time
+SHP000746,ORD000746,3,12,2026-03-08,North,BlueDart,644,4,4,0,Delivered,208,Standard,On Time
+SHP000747,ORD000747,4,13,2026-03-11,South,Ecom Express,673,2,2,0,Delivered,221,Standard,On Time
+SHP000748,ORD000748,5,14,2026-03-14,East,DTDC,702,3,7,4,Delayed,54,Express,Warehouse Delay
+SHP000749,ORD000749,6,15,2026-03-17,Central,XpressBees,731,4,6,2,Delayed,67,Standard,Carrier Delay
+SHP000750,ORD000750,7,1,2026-03-20,West,Delhivery,760,2,2,0,Delivered,80,Standard,On Time
+SHP000751,ORD000751,8,2,2026-03-23,North,BlueDart,789,3,3,0,Delivered,93,Standard,On Time
+SHP000752,ORD000752,9,3,2026-03-26,South,Ecom Express,818,4,4,0,Delivered,106,Express,Weather
+SHP000753,ORD000753,10,4,2026-03-29,East,DTDC,847,2,2,0,Delivered,119,Standard,On Time
+SHP000754,ORD000754,11,5,2026-04-01,Central,XpressBees,876,3,3,0,Delivered,132,Standard,On Time
+SHP000755,ORD000755,12,6,2026-04-04,West,Delhivery,905,4,4,0,Delivered,145,Standard,On Time
+SHP000756,ORD000756,1,7,2026-04-07,North,BlueDart,934,2,4,2,Delayed,158,Express,Carrier Delay
+SHP000757,ORD000757,2,8,2026-04-10,South,Ecom Express,963,3,3,0,Delivered,171,Standard,On Time
+SHP000758,ORD000758,3,9,2026-04-13,East,DTDC,992,4,4,0,Delivered,184,Standard,On Time
+SHP000759,ORD000759,4,10,2026-04-16,Central,XpressBees,1021,2,2,0,Delivered,197,Standard,On Time
+SHP000760,ORD000760,5,11,2026-04-19,West,Delhivery,1050,3,3,0,Delivered,210,Express,On Time
+SHP000761,ORD000761,6,12,2026-04-22,North,BlueDart,1079,4,4,0,Delivered,223,Standard,On Time
+SHP000762,ORD000762,7,13,2026-04-25,South,Ecom Express,1108,2,2,0,Delivered,56,Standard,On Time
+SHP000763,ORD000763,8,14,2026-04-28,East,DTDC,1137,3,5,2,Delayed,69,Standard,Carrier Delay
+SHP000764,ORD000764,9,15,2026-05-01,Central,XpressBees,1166,4,4,0,Delivered,82,Express,On Time
+SHP000765,ORD000765,10,1,2026-05-04,West,Delhivery,1195,2,6,4,Delayed,95,Standard,Warehouse Delay
+SHP000766,ORD000766,11,2,2026-05-07,North,BlueDart,1224,3,3,0,Delivered,108,Standard,On Time
+SHP000767,ORD000767,12,3,2026-05-10,South,Ecom Express,1253,4,4,0,Delivered,121,Standard,On Time
+SHP000768,ORD000768,1,4,2026-05-13,East,DTDC,1282,2,2,0,Delivered,134,Express,On Time
+SHP000769,ORD000769,2,5,2026-05-16,Central,XpressBees,1311,3,3,0,Delivered,147,Standard,On Time
+SHP000770,ORD000770,3,6,2026-05-19,West,Delhivery,1340,4,6,2,Delayed,160,Standard,Carrier Delay
+SHP000771,ORD000771,4,7,2026-05-22,North,BlueDart,1369,2,2,0,Delivered,173,Standard,On Time
+SHP000772,ORD000772,5,8,2026-05-25,South,Ecom Express,1398,3,3,0,Delivered,186,Express,On Time
+SHP000773,ORD000773,6,9,2026-05-28,East,DTDC,27,4,4,0,Delivered,199,Standard,On Time
+SHP000774,ORD000774,7,10,2026-05-31,Central,XpressBees,56,2,2,0,Delivered,212,Standard,On Time
+SHP000775,ORD000775,8,11,2026-06-03,West,Delhivery,85,3,3,0,Returned,225,Standard,On Time
+SHP000776,ORD000776,9,12,2026-06-06,North,BlueDart,114,4,4,0,Delivered,58,Express,On Time
+SHP000777,ORD000777,10,13,2026-06-09,South,Ecom Express,143,2,4,2,Delayed,71,Standard,Carrier Delay
+SHP000778,ORD000778,11,14,2026-06-12,East,DTDC,172,3,3,0,Delivered,84,Standard,On Time
+SHP000779,ORD000779,12,15,2026-06-15,Central,XpressBees,201,4,4,0,Delivered,97,Standard,On Time
+SHP000780,ORD000780,1,1,2026-06-18,West,Delhivery,230,2,2,0,Delivered,110,Express,On Time
+SHP000781,ORD000781,2,2,2026-06-21,North,BlueDart,259,3,3,0,Delivered,123,Standard,On Time
+SHP000782,ORD000782,3,3,2026-06-24,South,Ecom Express,288,4,8,4,Delayed,136,Standard,Warehouse Delay
+SHP000783,ORD000783,4,4,2026-06-27,East,DTDC,317,2,2,0,Delivered,149,Standard,On Time
+SHP000784,ORD000784,5,5,2026-06-30,Central,XpressBees,346,3,5,2,Delayed,162,Express,Carrier Delay
+SHP000785,ORD000785,6,6,2026-01-03,West,Delhivery,375,4,4,0,Delivered,175,Standard,On Time
+SHP000786,ORD000786,7,7,2026-01-06,North,BlueDart,404,2,2,0,Delivered,188,Standard,On Time
+SHP000787,ORD000787,8,8,2026-01-09,South,Ecom Express,433,3,3,0,Delivered,201,Standard,On Time
+SHP000788,ORD000788,9,9,2026-01-12,East,DTDC,462,4,4,0,Delivered,214,Express,On Time
+SHP000789,ORD000789,10,10,2026-01-15,Central,XpressBees,491,2,2,0,Delivered,227,Standard,On Time
+SHP000790,ORD000790,11,11,2026-01-18,West,Delhivery,520,3,3,0,Delivered,60,Standard,On Time
+SHP000791,ORD000791,12,12,2026-01-21,North,BlueDart,549,4,6,2,Delayed,73,Standard,Carrier Delay
+SHP000792,ORD000792,1,13,2026-01-24,South,Ecom Express,578,2,2,0,Delivered,86,Express,On Time
+SHP000793,ORD000793,2,14,2026-01-27,East,DTDC,607,3,3,0,Delivered,99,Standard,On Time
+SHP000794,ORD000794,3,15,2026-01-30,Central,XpressBees,636,4,4,0,Delivered,112,Standard,On Time
+SHP000795,ORD000795,4,1,2026-02-02,West,Delhivery,665,2,2,0,Delivered,125,Standard,On Time
+SHP000796,ORD000796,5,2,2026-02-05,North,BlueDart,694,3,3,0,Delivered,138,Express,On Time
+SHP000797,ORD000797,6,3,2026-02-08,South,Ecom Express,723,4,4,0,Delivered,151,Standard,On Time
+SHP000798,ORD000798,7,4,2026-02-11,East,DTDC,752,2,4,2,Delayed,164,Standard,Carrier Delay
+SHP000799,ORD000799,8,5,2026-02-14,Central,XpressBees,781,3,7,4,Delayed,177,Standard,Weather
+SHP000800,ORD000800,9,6,2026-02-17,West,Delhivery,810,4,4,0,Delivered,190,Express,On Time
+SHP000801,ORD000801,10,7,2026-02-20,North,BlueDart,839,2,2,0,Delivered,203,Standard,On Time
+SHP000802,ORD000802,11,8,2026-02-23,South,Ecom Express,868,3,3,0,Delivered,216,Standard,On Time
+SHP000803,ORD000803,12,9,2026-02-26,East,DTDC,897,4,4,0,Delivered,229,Standard,On Time
+SHP000804,ORD000804,1,10,2026-03-01,Central,XpressBees,926,2,2,0,Delivered,62,Express,On Time
+SHP000805,ORD000805,2,11,2026-03-04,West,Delhivery,955,3,5,2,Delayed,75,Standard,Carrier Delay
+SHP000806,ORD000806,3,12,2026-03-07,North,BlueDart,984,4,4,0,Returned,88,Standard,On Time
+SHP000807,ORD000807,4,13,2026-03-10,South,Ecom Express,1013,2,2,0,Delivered,101,Standard,On Time
+SHP000808,ORD000808,5,14,2026-03-13,East,DTDC,1042,3,3,0,Delivered,114,Express,On Time
+SHP000809,ORD000809,6,15,2026-03-16,Central,XpressBees,1071,4,4,0,Delivered,127,Standard,On Time
+SHP000810,ORD000810,7,1,2026-03-19,West,Delhivery,1100,2,2,0,Delivered,140,Standard,On Time
+SHP000811,ORD000811,8,2,2026-03-22,North,BlueDart,1129,3,3,0,Delivered,153,Standard,On Time
+SHP000812,ORD000812,9,3,2026-03-25,South,Ecom Express,1158,4,6,2,Delayed,166,Express,Carrier Delay
+SHP000813,ORD000813,10,4,2026-03-28,East,DTDC,1187,2,2,0,Delivered,179,Standard,On Time
+SHP000814,ORD000814,11,5,2026-03-31,Central,XpressBees,1216,3,3,0,Delivered,192,Standard,On Time
+SHP000815,ORD000815,12,6,2026-04-03,West,Delhivery,1245,4,4,0,Delivered,205,Standard,On Time
+SHP000816,ORD000816,1,7,2026-04-06,North,BlueDart,1274,2,6,4,Delayed,218,Express,Warehouse Delay
+SHP000817,ORD000817,2,8,2026-04-09,South,Ecom Express,1303,3,3,0,Delivered,51,Standard,On Time
+SHP000818,ORD000818,3,9,2026-04-12,East,DTDC,1332,4,4,0,Delivered,64,Standard,On Time
+SHP000819,ORD000819,4,10,2026-04-15,Central,XpressBees,1361,2,4,2,Delayed,77,Standard,Carrier Delay
+SHP000820,ORD000820,5,11,2026-04-18,West,Delhivery,1390,3,3,0,Delivered,90,Express,On Time
+SHP000821,ORD000821,6,12,2026-04-21,North,BlueDart,19,4,4,0,Delivered,103,Standard,On Time
+SHP000822,ORD000822,7,13,2026-04-24,South,Ecom Express,48,2,2,0,Delivered,116,Standard,On Time
+SHP000823,ORD000823,8,14,2026-04-27,East,DTDC,77,3,3,0,Delivered,129,Standard,On Time
+SHP000824,ORD000824,9,15,2026-04-30,Central,XpressBees,106,4,4,0,Delivered,142,Express,On Time
+SHP000825,ORD000825,10,1,2026-05-03,West,Delhivery,135,2,2,0,Delivered,155,Standard,On Time
+SHP000826,ORD000826,11,2,2026-05-06,North,BlueDart,164,3,5,2,Delayed,168,Standard,Carrier Delay
+SHP000827,ORD000827,12,3,2026-05-09,South,Ecom Express,193,4,4,0,Delivered,181,Standard,On Time
+SHP000828,ORD000828,1,4,2026-05-12,East,DTDC,222,2,2,0,Delivered,194,Express,On Time
+SHP000829,ORD000829,2,5,2026-05-15,Central,XpressBees,251,3,3,0,Delivered,207,Standard,On Time
+SHP000830,ORD000830,3,6,2026-05-18,West,Delhivery,280,4,4,0,Delivered,220,Standard,On Time
+SHP000831,ORD000831,4,7,2026-05-21,North,BlueDart,309,2,2,0,Delivered,53,Standard,On Time
+SHP000832,ORD000832,5,8,2026-05-24,South,Ecom Express,338,3,3,0,Delivered,66,Express,On Time
+SHP000833,ORD000833,6,9,2026-05-27,East,DTDC,367,4,8,4,Delayed,79,Standard,Warehouse Delay
+SHP000834,ORD000834,7,10,2026-05-30,Central,XpressBees,396,2,2,0,Delivered,92,Standard,On Time
+SHP000835,ORD000835,8,11,2026-06-02,West,Delhivery,425,3,3,0,Delivered,105,Standard,On Time
+SHP000836,ORD000836,9,12,2026-06-05,North,BlueDart,454,4,4,0,Delivered,118,Express,On Time
+SHP000837,ORD000837,10,13,2026-06-08,South,Ecom Express,483,2,2,0,Returned,131,Standard,On Time
+SHP000838,ORD000838,11,14,2026-06-11,East,DTDC,512,3,3,0,Delivered,144,Standard,On Time
+SHP000839,ORD000839,12,15,2026-06-14,Central,XpressBees,541,4,4,0,Delivered,157,Standard,On Time
+SHP000840,ORD000840,1,1,2026-06-17,West,Delhivery,570,2,4,2,Delayed,170,Express,Carrier Delay
+SHP000841,ORD000841,2,2,2026-06-20,North,BlueDart,599,3,3,0,Delivered,183,Standard,On Time
+SHP000842,ORD000842,3,3,2026-06-23,South,Ecom Express,628,4,4,0,Delivered,196,Standard,On Time
+SHP000843,ORD000843,4,4,2026-06-26,East,DTDC,657,2,2,0,Delivered,209,Standard,On Time
+SHP000844,ORD000844,5,5,2026-06-29,Central,XpressBees,686,3,3,0,Delivered,222,Express,On Time
+SHP000845,ORD000845,6,6,2026-01-02,West,Delhivery,715,4,4,0,Delivered,55,Standard,On Time
+SHP000846,ORD000846,7,7,2026-01-05,North,BlueDart,744,2,2,0,Delivered,68,Standard,Weather
+SHP000847,ORD000847,8,8,2026-01-08,South,Ecom Express,773,3,5,2,Delayed,81,Standard,Carrier Delay
+SHP000848,ORD000848,9,9,2026-01-11,East,DTDC,802,4,4,0,Delivered,94,Express,On Time
+SHP000849,ORD000849,10,10,2026-01-14,Central,XpressBees,831,2,2,0,Delivered,107,Standard,On Time
+SHP000850,ORD000850,11,11,2026-01-17,West,Delhivery,860,3,7,4,Delayed,120,Standard,Warehouse Delay
+SHP000851,ORD000851,12,12,2026-01-20,North,BlueDart,889,4,4,0,Delivered,133,Standard,On Time
+SHP000852,ORD000852,1,13,2026-01-23,South,Ecom Express,918,2,2,0,Delivered,146,Express,On Time
+SHP000853,ORD000853,2,14,2026-01-26,East,DTDC,947,3,3,0,Delivered,159,Standard,On Time
+SHP000854,ORD000854,3,15,2026-01-29,Central,XpressBees,976,4,6,2,Delayed,172,Standard,Carrier Delay
+SHP000855,ORD000855,4,1,2026-02-01,West,Delhivery,1005,2,2,0,Delivered,185,Standard,On Time
+SHP000856,ORD000856,5,2,2026-02-04,North,BlueDart,1034,3,3,0,Delivered,198,Express,On Time
+SHP000857,ORD000857,6,3,2026-02-07,South,Ecom Express,1063,4,4,0,Delivered,211,Standard,On Time
+SHP000858,ORD000858,7,4,2026-02-10,East,DTDC,1092,2,2,0,Delivered,224,Standard,On Time
+SHP000859,ORD000859,8,5,2026-02-13,Central,XpressBees,1121,3,3,0,Delivered,57,Standard,On Time
+SHP000860,ORD000860,9,6,2026-02-16,West,Delhivery,1150,4,4,0,Delivered,70,Express,On Time
+SHP000861,ORD000861,10,7,2026-02-19,North,BlueDart,1179,2,4,2,Delayed,83,Standard,Carrier Delay
+SHP000862,ORD000862,11,8,2026-02-22,South,Ecom Express,1208,3,3,0,Delivered,96,Standard,On Time
+SHP000863,ORD000863,12,9,2026-02-25,East,DTDC,1237,4,4,0,Delivered,109,Standard,On Time
+SHP000864,ORD000864,1,10,2026-02-28,Central,XpressBees,1266,2,2,0,Delivered,122,Express,On Time
+SHP000865,ORD000865,2,11,2026-03-03,West,Delhivery,1295,3,3,0,Delivered,135,Standard,On Time
+SHP000866,ORD000866,3,12,2026-03-06,North,BlueDart,1324,4,4,0,Delivered,148,Standard,On Time
+SHP000867,ORD000867,4,13,2026-03-09,South,Ecom Express,1353,2,6,4,Delayed,161,Standard,Warehouse Delay
+SHP000868,ORD000868,5,14,2026-03-12,East,DTDC,1382,3,5,2,Returned,174,Express,Carrier Delay
+SHP000869,ORD000869,6,15,2026-03-15,Central,XpressBees,11,4,4,0,Delivered,187,Standard,On Time
+SHP000870,ORD000870,7,1,2026-03-18,West,Delhivery,40,2,2,0,Delivered,200,Standard,On Time
+SHP000871,ORD000871,8,2,2026-03-21,North,BlueDart,69,3,3,0,Delivered,213,Standard,On Time
+SHP000872,ORD000872,9,3,2026-03-24,South,Ecom Express,98,4,4,0,Delivered,226,Express,On Time
+SHP000873,ORD000873,10,4,2026-03-27,East,DTDC,127,2,2,0,Delivered,59,Standard,On Time
+SHP000874,ORD000874,11,5,2026-03-30,Central,XpressBees,156,3,3,0,Delivered,72,Standard,On Time
+SHP000875,ORD000875,12,6,2026-04-02,West,Delhivery,185,4,6,2,Delayed,85,Standard,Carrier Delay
+SHP000876,ORD000876,1,7,2026-04-05,North,BlueDart,214,2,2,0,Delivered,98,Express,On Time
+SHP000877,ORD000877,2,8,2026-04-08,South,Ecom Express,243,3,3,0,Delivered,111,Standard,On Time
+SHP000878,ORD000878,3,9,2026-04-11,East,DTDC,272,4,4,0,Delivered,124,Standard,On Time
+SHP000879,ORD000879,4,10,2026-04-14,Central,XpressBees,301,2,2,0,Delivered,137,Standard,On Time
+SHP000880,ORD000880,5,11,2026-04-17,West,Delhivery,330,3,3,0,Delivered,150,Express,On Time
+SHP000881,ORD000881,6,12,2026-04-20,North,BlueDart,359,4,4,0,Delivered,163,Standard,On Time
+SHP000882,ORD000882,7,13,2026-04-23,South,Ecom Express,388,2,4,2,Delayed,176,Standard,Carrier Delay
+SHP000883,ORD000883,8,14,2026-04-26,East,DTDC,417,3,3,0,Delivered,189,Standard,On Time
+SHP000884,ORD000884,9,15,2026-04-29,Central,XpressBees,446,4,8,4,Delayed,202,Express,Warehouse Delay
+SHP000885,ORD000885,10,1,2026-05-02,West,Delhivery,475,2,2,0,Delivered,215,Standard,On Time
+SHP000886,ORD000886,11,2,2026-05-05,North,BlueDart,504,3,3,0,Delivered,228,Standard,On Time
+SHP000887,ORD000887,12,3,2026-05-08,South,Ecom Express,533,4,4,0,Delivered,61,Standard,On Time
+SHP000888,ORD000888,1,4,2026-05-11,East,DTDC,562,2,2,0,Delivered,74,Express,On Time
+SHP000889,ORD000889,2,5,2026-05-14,Central,XpressBees,591,3,5,2,Delayed,87,Standard,Carrier Delay
+SHP000890,ORD000890,3,6,2026-05-17,West,Delhivery,620,4,4,0,Delivered,100,Standard,On Time
+SHP000891,ORD000891,4,7,2026-05-20,North,BlueDart,649,2,2,0,Delivered,113,Standard,On Time
+SHP000892,ORD000892,5,8,2026-05-23,South,Ecom Express,678,3,3,0,Delivered,126,Express,On Time
+SHP000893,ORD000893,6,9,2026-05-26,East,DTDC,707,4,4,0,Delivered,139,Standard,Weather
+SHP000894,ORD000894,7,10,2026-05-29,Central,XpressBees,736,2,2,0,Delivered,152,Standard,On Time
+SHP000895,ORD000895,8,11,2026-06-01,West,Delhivery,765,3,3,0,Delivered,165,Standard,On Time
+SHP000896,ORD000896,9,12,2026-06-04,North,BlueDart,794,4,6,2,Delayed,178,Express,Carrier Delay
+SHP000897,ORD000897,10,13,2026-06-07,South,Ecom Express,823,2,2,0,Delivered,191,Standard,On Time
+SHP000898,ORD000898,11,14,2026-06-10,East,DTDC,852,3,3,0,Delivered,204,Standard,On Time
+SHP000899,ORD000899,12,15,2026-06-13,Central,XpressBees,881,4,4,0,Returned,217,Standard,On Time
+SHP000900,ORD000900,1,1,2026-06-16,West,Delhivery,910,2,2,0,Delivered,50,Express,On Time
+SHP000901,ORD000901,2,2,2026-06-19,North,BlueDart,939,3,7,4,Delayed,63,Standard,Warehouse Delay
+SHP000902,ORD000902,3,3,2026-06-22,South,Ecom Express,968,4,4,0,Delivered,76,Standard,On Time
+SHP000903,ORD000903,4,4,2026-06-25,East,DTDC,997,2,4,2,Delayed,89,Standard,Carrier Delay
+SHP000904,ORD000904,5,5,2026-06-28,Central,XpressBees,1026,3,3,0,Delivered,102,Express,On Time
+SHP000905,ORD000905,6,6,2026-01-01,West,Delhivery,1055,4,4,0,Delivered,115,Standard,On Time
+SHP000906,ORD000906,7,7,2026-01-04,North,BlueDart,1084,2,2,0,Delivered,128,Standard,On Time
+SHP000907,ORD000907,8,8,2026-01-07,South,Ecom Express,1113,3,3,0,Delivered,141,Standard,On Time
+SHP000908,ORD000908,9,9,2026-01-10,East,DTDC,1142,4,4,0,Delivered,154,Express,On Time
+SHP000909,ORD000909,10,10,2026-01-13,Central,XpressBees,1171,2,2,0,Delivered,167,Standard,On Time
+SHP000910,ORD000910,11,11,2026-01-16,West,Delhivery,1200,3,5,2,Delayed,180,Standard,Carrier Delay
+SHP000911,ORD000911,12,12,2026-01-19,North,BlueDart,1229,4,4,0,Delivered,193,Standard,On Time
+SHP000912,ORD000912,1,13,2026-01-22,South,Ecom Express,1258,2,2,0,Delivered,206,Express,On Time
+SHP000913,ORD000913,2,14,2026-01-25,East,DTDC,1287,3,3,0,Delivered,219,Standard,On Time
+SHP000914,ORD000914,3,15,2026-01-28,Central,XpressBees,1316,4,4,0,Delivered,52,Standard,On Time
+SHP000915,ORD000915,4,1,2026-01-31,West,Delhivery,1345,2,2,0,Delivered,65,Standard,On Time
+SHP000916,ORD000916,5,2,2026-02-03,North,BlueDart,1374,3,3,0,Delivered,78,Express,On Time
+SHP000917,ORD000917,6,3,2026-02-06,South,Ecom Express,1403,4,6,2,Delayed,91,Standard,Carrier Delay
+SHP000918,ORD000918,7,4,2026-02-09,East,DTDC,32,2,6,4,Delayed,104,Standard,Warehouse Delay
+SHP000919,ORD000919,8,5,2026-02-12,Central,XpressBees,61,3,3,0,Delivered,117,Standard,On Time
+SHP000920,ORD000920,9,6,2026-02-15,West,Delhivery,90,4,4,0,Delivered,130,Express,On Time
+SHP000921,ORD000921,10,7,2026-02-18,North,BlueDart,119,2,2,0,Delivered,143,Standard,On Time
+SHP000922,ORD000922,11,8,2026-02-21,South,Ecom Express,148,3,3,0,Delivered,156,Standard,On Time
+SHP000923,ORD000923,12,9,2026-02-24,East,DTDC,177,4,4,0,Delivered,169,Standard,On Time
+SHP000924,ORD000924,1,10,2026-02-27,Central,XpressBees,206,2,4,2,Delayed,182,Express,Carrier Delay
+SHP000925,ORD000925,2,11,2026-03-02,West,Delhivery,235,3,3,0,Delivered,195,Standard,On Time
+SHP000926,ORD000926,3,12,2026-03-05,North,BlueDart,264,4,4,0,Delivered,208,Standard,On Time
+SHP000927,ORD000927,4,13,2026-03-08,South,Ecom Express,293,2,2,0,Delivered,221,Standard,On Time
+SHP000928,ORD000928,5,14,2026-03-11,East,DTDC,322,3,3,0,Delivered,54,Express,On Time
+SHP000929,ORD000929,6,15,2026-03-14,Central,XpressBees,351,4,4,0,Delivered,67,Standard,On Time
+SHP000930,ORD000930,7,1,2026-03-17,West,Delhivery,380,2,2,0,Returned,80,Standard,On Time
+SHP000931,ORD000931,8,2,2026-03-20,North,BlueDart,409,3,5,2,Delayed,93,Standard,Carrier Delay
+SHP000932,ORD000932,9,3,2026-03-23,South,Ecom Express,438,4,4,0,Delivered,106,Express,On Time
+SHP000933,ORD000933,10,4,2026-03-26,East,DTDC,467,2,2,0,Delivered,119,Standard,On Time
+SHP000934,ORD000934,11,5,2026-03-29,Central,XpressBees,496,3,3,0,Delivered,132,Standard,On Time
+SHP000935,ORD000935,12,6,2026-04-01,West,Delhivery,525,4,8,4,Delayed,145,Standard,Warehouse Delay
+SHP000936,ORD000936,1,7,2026-04-04,North,BlueDart,554,2,2,0,Delivered,158,Express,On Time
+SHP000937,ORD000937,2,8,2026-04-07,South,Ecom Express,583,3,3,0,Delivered,171,Standard,On Time
+SHP000938,ORD000938,3,9,2026-04-10,East,DTDC,612,4,6,2,Delayed,184,Standard,Carrier Delay
+SHP000939,ORD000939,4,10,2026-04-13,Central,XpressBees,641,2,2,0,Delivered,197,Standard,On Time
+SHP000940,ORD000940,5,11,2026-04-16,West,Delhivery,670,3,3,0,Delivered,210,Express,Weather
+SHP000941,ORD000941,6,12,2026-04-19,North,BlueDart,699,4,4,0,Delivered,223,Standard,On Time
+SHP000942,ORD000942,7,13,2026-04-22,South,Ecom Express,728,2,2,0,Delivered,56,Standard,On Time
+SHP000943,ORD000943,8,14,2026-04-25,East,DTDC,757,3,3,0,Delivered,69,Standard,On Time
+SHP000944,ORD000944,9,15,2026-04-28,Central,XpressBees,786,4,4,0,Delivered,82,Express,On Time
+SHP000945,ORD000945,10,1,2026-05-01,West,Delhivery,815,2,4,2,Delayed,95,Standard,Carrier Delay
+SHP000946,ORD000946,11,2,2026-05-04,North,BlueDart,844,3,3,0,Delivered,108,Standard,On Time
+SHP000947,ORD000947,12,3,2026-05-07,South,Ecom Express,873,4,4,0,Delivered,121,Standard,On Time
+SHP000948,ORD000948,1,4,2026-05-10,East,DTDC,902,2,2,0,Delivered,134,Express,On Time
+SHP000949,ORD000949,2,5,2026-05-13,Central,XpressBees,931,3,3,0,Delivered,147,Standard,On Time
+SHP000950,ORD000950,3,6,2026-05-16,West,Delhivery,960,4,4,0,Delivered,160,Standard,On Time
+SHP000951,ORD000951,4,7,2026-05-19,North,BlueDart,989,2,2,0,Delivered,173,Standard,On Time
+SHP000952,ORD000952,5,8,2026-05-22,South,Ecom Express,1018,3,7,4,Delayed,186,Express,Warehouse Delay
+SHP000953,ORD000953,6,9,2026-05-25,East,DTDC,1047,4,4,0,Delivered,199,Standard,On Time
+SHP000954,ORD000954,7,10,2026-05-28,Central,XpressBees,1076,2,2,0,Delivered,212,Standard,On Time
+SHP000955,ORD000955,8,11,2026-05-31,West,Delhivery,1105,3,3,0,Delivered,225,Standard,On Time
+SHP000956,ORD000956,9,12,2026-06-03,North,BlueDart,1134,4,4,0,Delivered,58,Express,On Time
+SHP000957,ORD000957,10,13,2026-06-06,South,Ecom Express,1163,2,2,0,Delivered,71,Standard,On Time
+SHP000958,ORD000958,11,14,2026-06-09,East,DTDC,1192,3,3,0,Delivered,84,Standard,On Time
+SHP000959,ORD000959,12,15,2026-06-12,Central,XpressBees,1221,4,6,2,Delayed,97,Standard,Carrier Delay
+SHP000960,ORD000960,1,1,2026-06-15,West,Delhivery,1250,2,2,0,Delivered,110,Express,On Time
+SHP000961,ORD000961,2,2,2026-06-18,North,BlueDart,1279,3,3,0,Returned,123,Standard,On Time
+SHP000962,ORD000962,3,3,2026-06-21,South,Ecom Express,1308,4,4,0,Delivered,136,Standard,On Time
+SHP000963,ORD000963,4,4,2026-06-24,East,DTDC,1337,2,2,0,Delivered,149,Standard,On Time
+SHP000964,ORD000964,5,5,2026-06-27,Central,XpressBees,1366,3,3,0,Delivered,162,Express,On Time
+SHP000965,ORD000965,6,6,2026-06-30,West,Delhivery,1395,4,4,0,Delivered,175,Standard,On Time
+SHP000966,ORD000966,7,7,2026-01-03,North,BlueDart,24,2,4,2,Delayed,188,Standard,Carrier Delay
+SHP000967,ORD000967,8,8,2026-01-06,South,Ecom Express,53,3,3,0,Delivered,201,Standard,On Time
+SHP000968,ORD000968,9,9,2026-01-09,East,DTDC,82,4,4,0,Delivered,214,Express,On Time
+SHP000969,ORD000969,10,10,2026-01-12,Central,XpressBees,111,2,6,4,Delayed,227,Standard,Warehouse Delay
+SHP000970,ORD000970,11,11,2026-01-15,West,Delhivery,140,3,3,0,Delivered,60,Standard,On Time
+SHP000971,ORD000971,12,12,2026-01-18,North,BlueDart,169,4,4,0,Delivered,73,Standard,On Time
+SHP000972,ORD000972,1,13,2026-01-21,South,Ecom Express,198,2,2,0,Delivered,86,Express,On Time
+SHP000973,ORD000973,2,14,2026-01-24,East,DTDC,227,3,5,2,Delayed,99,Standard,Carrier Delay
+SHP000974,ORD000974,3,15,2026-01-27,Central,XpressBees,256,4,4,0,Delivered,112,Standard,On Time
+SHP000975,ORD000975,4,1,2026-01-30,West,Delhivery,285,2,2,0,Delivered,125,Standard,On Time
+SHP000976,ORD000976,5,2,2026-02-02,North,BlueDart,314,3,3,0,Delivered,138,Express,On Time
+SHP000977,ORD000977,6,3,2026-02-05,South,Ecom Express,343,4,4,0,Delivered,151,Standard,On Time
+SHP000978,ORD000978,7,4,2026-02-08,East,DTDC,372,2,2,0,Delivered,164,Standard,On Time
+SHP000979,ORD000979,8,5,2026-02-11,Central,XpressBees,401,3,3,0,Delivered,177,Standard,On Time
+SHP000980,ORD000980,9,6,2026-02-14,West,Delhivery,430,4,6,2,Delayed,190,Express,Carrier Delay
+SHP000981,ORD000981,10,7,2026-02-17,North,BlueDart,459,2,2,0,Delivered,203,Standard,On Time
+SHP000982,ORD000982,11,8,2026-02-20,South,Ecom Express,488,3,3,0,Delivered,216,Standard,On Time
+SHP000983,ORD000983,12,9,2026-02-23,East,DTDC,517,4,4,0,Delivered,229,Standard,On Time
+SHP000984,ORD000984,1,10,2026-02-26,Central,XpressBees,546,2,2,0,Delivered,62,Express,On Time
+SHP000985,ORD000985,2,11,2026-03-01,West,Delhivery,575,3,3,0,Delivered,75,Standard,On Time
+SHP000986,ORD000986,3,12,2026-03-04,North,BlueDart,604,4,8,4,Delayed,88,Standard,Warehouse Delay
+SHP000987,ORD000987,4,13,2026-03-07,South,Ecom Express,633,2,4,2,Delayed,101,Standard,Weather
+SHP000988,ORD000988,5,14,2026-03-10,East,DTDC,662,3,3,0,Delivered,114,Express,On Time
+SHP000989,ORD000989,6,15,2026-03-13,Central,XpressBees,691,4,4,0,Delivered,127,Standard,On Time
+SHP000990,ORD000990,7,1,2026-03-16,West,Delhivery,720,2,2,0,Delivered,140,Standard,On Time
+SHP000991,ORD000991,8,2,2026-03-19,North,BlueDart,749,3,3,0,Delivered,153,Standard,On Time
+SHP000992,ORD000992,9,3,2026-03-22,South,Ecom Express,778,4,4,0,Returned,166,Express,On Time
+SHP000993,ORD000993,10,4,2026-03-25,East,DTDC,807,2,2,0,Delivered,179,Standard,On Time
+SHP000994,ORD000994,11,5,2026-03-28,Central,XpressBees,836,3,5,2,Delayed,192,Standard,Carrier Delay
+SHP000995,ORD000995,12,6,2026-03-31,West,Delhivery,865,4,4,0,Delivered,205,Standard,On Time
+SHP000996,ORD000996,1,7,2026-04-03,North,BlueDart,894,2,2,0,Delivered,218,Express,On Time
+SHP000997,ORD000997,2,8,2026-04-06,South,Ecom Express,923,3,3,0,Delivered,51,Standard,On Time
+SHP000998,ORD000998,3,9,2026-04-09,East,DTDC,952,4,4,0,Delivered,64,Standard,On Time
+SHP000999,ORD000999,4,10,2026-04-12,Central,XpressBees,981,2,2,0,Delivered,77,Standard,On Time
+SHP001000,ORD001000,5,11,2026-04-15,West,Delhivery,1010,3,3,0,Delivered,90,Express,On Time
