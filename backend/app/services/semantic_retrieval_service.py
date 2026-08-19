@@ -141,6 +141,35 @@ def build_clarification_question(candidate_table_names: list[str]) -> str:
 
     return f"I found more than one possible data area. Do you mean {choices}?"
 
+
+
+def get_clarification_candidates(
+    candidate_tables: list[dict],
+) -> list[str]:
+    """
+    Prefer tables with relationships for clarification choices.
+
+    These are usually the main business-data tables, while tables without
+    relationships are often supporting reference tables.
+    """
+    business_table_names = [
+        table["name"]
+        for table in candidate_tables
+        if table.get("relationships")
+    ]
+
+    if len(business_table_names) >= 2:
+        return business_table_names[:3]
+
+    return [
+        table["name"]
+        for table in candidate_tables[:3]
+    ]
+
+
+
+
+
 def _table_to_embedding_text(table: dict) -> str:
     """Create safe semantic text for one dynamically discovered table."""
     parts = [f"Table: {table['name']}"]
@@ -239,15 +268,12 @@ def _get_catalog_candidates() -> list[dict]:
     return candidates
 
 
-def get_semantically_relevant_catalog_for_llm(
+def get_semantic_catalog_selection(
     question: str,
     max_tables: int = 4,
-) -> str:
+) -> dict:
     """
-    Select the tables that are closest in meaning to the user's question.
-
-    This works even when words differ, such as:
-    'revenue' matching a column named 'net_sales'.
+    Select the closest database tables and return their confidence scores.
     """
     question_embedding = create_embedding(question)
     candidates = _get_catalog_candidates()
@@ -263,4 +289,41 @@ def get_semantically_relevant_catalog_for_llm(
         for match in matches
     ]
 
-    return _tables_to_llm_text(selected_tables)
+    candidate_table_names = [
+        match["name"]
+        for match in matches
+    ]
+
+    candidate_tables = [
+        match["table"]
+        for match in matches
+    ]
+
+    best_score = (
+        matches[0]["similarity_score"]
+        if matches
+        else 0.0
+    )
+
+    second_best_score = (
+        matches[1]["similarity_score"]
+        if len(matches) > 1
+        else None
+    )
+
+    return {
+        "schema_text": _tables_to_llm_text(selected_tables),
+        "candidate_table_names": candidate_table_names,
+        "best_score": best_score,
+        "second_best_score": second_best_score,
+        "candidate_tables": candidate_tables,
+    }
+
+
+def get_semantically_relevant_catalog_for_llm(
+    question: str,
+    max_tables: int = 4,
+) -> str:
+    """Return only the selected database context for Gemini."""
+    selection = get_semantic_catalog_selection(question, max_tables)
+    return selection["schema_text"]

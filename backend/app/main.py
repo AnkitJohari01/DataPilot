@@ -15,7 +15,9 @@ from app.database.metadata import (
 )
 
 from app.services.semantic_retrieval_service import (
-    get_semantically_relevant_catalog_for_llm,
+    build_clarification_question,
+    get_semantic_catalog_selection,
+    needs_clarification,
 )
 from app.services.gemini_service import generate_insights, generate_sql, validate_sql
 
@@ -91,7 +93,29 @@ def ask(request: AskRequest, db: Session = Depends(get_db)):
             },
         }
 
-    schema_text = get_semantically_relevant_catalog_for_llm(request.question)
+    selection = get_semantic_catalog_selection(request.question)
+
+    if needs_clarification(
+        selection["best_score"],
+        selection["second_best_score"],
+    ):
+        clarification_question = build_clarification_question(
+            selection["candidate_table_names"]
+        )
+
+        return {
+            "question": request.question,
+            "sql": None,
+            "rows": [],
+            "clarification_required": True,
+            "insights": {
+                "what_happened": clarification_question,
+                "why": [],
+                "next_steps": [],
+            },
+        }
+
+    schema_text = selection["schema_text"]
 
     try:
         raw_sql = generate_sql(request.question, schema_text, request.history)
