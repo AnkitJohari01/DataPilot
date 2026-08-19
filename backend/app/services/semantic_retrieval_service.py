@@ -103,6 +103,43 @@ _catalog_embedding_cache = {
     "candidates": [],
 }
 
+def _friendly_table_name(table_name: str) -> str:
+    """Turn a database table name into a readable label."""
+    words = table_name.replace("-", "_").split("_")
+
+    if words and words[0].lower() in {"fact", "dim", "tbl", "table"}:
+        words = words[1:]
+
+    return " ".join(words).strip()
+
+
+def build_clarification_question(candidate_table_names: list[str]) -> str:
+    """Create one simple clarification question from dynamic table names."""
+    options = [
+        _friendly_table_name(table_name)
+        for table_name in candidate_table_names[:3]
+    ]
+
+    options = [option for option in options if option]
+
+    if not options:
+        return (
+            "I am not sure which part of the data you mean. "
+            "Could you rephrase your question?"
+        )
+
+    if len(options) == 1:
+        return (
+            f"Could you clarify what you want to know about "
+            f"{options[0]}?"
+        )
+
+    if len(options) == 2:
+        choices = f"{options[0]} or {options[1]}"
+    else:
+        choices = f"{options[0]}, {options[1]}, or {options[2]}"
+
+    return f"I found more than one possible data area. Do you mean {choices}?"
 
 def _table_to_embedding_text(table: dict) -> str:
     """Create safe semantic text for one dynamically discovered table."""
