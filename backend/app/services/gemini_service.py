@@ -2,6 +2,8 @@
 
 from google import genai
 from app.config.settings import settings
+from sqlglot import exp, parse
+from sqlglot.errors import ParseError
 
 client = genai.Client(api_key=settings.gemini_api_key)
 
@@ -129,50 +131,102 @@ def generate_insights(question: str, rows: list[dict]) -> dict:
 
 import re
 
-FORBIDDEN = {
-    "insert", "update", "delete", "drop", "alter", "truncate",
-    "create", "grant", "revoke", "attach", "exec", "execute", "call"
-}                                                                        # Blocks anything not starting with SELECT
+FORBIDDEN_SQL_NODE_NAMES = {
+    "alter",
+    "attach",
+    "command",
+    "commit",
+    "copy",
+    "create",
+    "delete",
+    "detach",
+    "drop",
+    "grant",
+    "insert",
+    "merge",
+    "revoke",
+    "rollback",
+    "transaction",
+    "truncate",
+    "truncatetable",
+    "update",
+    "use",
+    "vacuum",
+}
+
 
 def validate_sql(sql: str, valid_identifiers: set[str]) -> tuple[bool, str]:
-    """Rejects anything that isn't a single, safe SELECT statement
-    using only real tables/columns from the schema."""
-    cleaned = sql.strip().rstrip(";")
+    """
+    Allow one read-only PostgreSQL query that references only known tables.
 
-    if not cleaned.lower().startswith("select"):
-        return False, "Only SELECT statements are allowed."
+    SQLGlot parses the query into an AST before it is checked, so SQL keywords
+    inside text values cannot bypass validation.
+    """
+    cleaned_sql = sql.strip()
 
-    if ";" in cleaned:
-        return False, "Multiple statements are not allowed."
+    if not cleaned_sql:
+        return False, "The generated query was empty."
 
-    tokens = set(re.findall(r"[a-zA-Z_]+", cleaned.lower()))
+    if cleaned_sql.endswith(";"):
+        cleaned_sql = cleaned_sql[:-1].strip()
 
-    hit = tokens & FORBIDDEN
-    if hit:
-        return False, f"Disallowed keyword(s): {', '.join(hit)}"
+    try:
+        statements = parse(cleaned_sql, read="postgres")
+    except ParseError:
+        return False, "The generated query is not valid SQL."
 
-    sql_keywords = {
-        "select", "from", "where", "and", "or", "not", "in", "as",
-        "join", "left", "right", "inner", "outer", "on", "group", "by",
-        "order", "desc", "asc", "limit", "offset", "having", "distinct",
-        "count", "sum", "avg", "min", "max", "null", "is", "between",
-        "like", "with", "case", "when", "then", "else", "end", "cast",
-        "extract", "date", "interval", "over", "partition", "coalesce"
+    if len(statements) != 1:
+        return False, "Only one SQL statement is allowed."
+
+    expression = statements[0]
+
+    allowed_root_types = (
+        exp.Select,
+        exp.Union,
+        exp.Intersect,
+        exp.Except,
+    )
+
+    if not isinstance(expression, allowed_root_types):
+        return False, "Only read-only SELECT queries are allowed."
+
+    for node in expression.walk():
+        node_name = type(node).__name__.lower()
+
+        if node_name in FORBIDDEN_SQL_NODE_NAMES:
+            return False, "Only read-only SELECT queries are allowed."
+
+    known_identifiers = {
+        identifier.lower()
+        for identifier in valid_identifiers
     }
 
-    # Column/table aliases (the word right after AS) are made-up labels,
-    # not real schema identifiers — exclude them from the unknown check.
-    aliases = set(re.findall(r"\bas\s+([a-zA-Z_]+)", cleaned.lower()))
+    cte_names = {
+        cte.alias_or_name.lower()
+        for cte in expression.find_all(exp.CTE)
+        if cte.alias_or_name
+    }
 
-    unknown = tokens - FORBIDDEN - sql_keywords - valid_identifiers - aliases
-    unknown = {t for t in unknown if len(t) > 2}
+    referenced_tables = {
+        table.name.lower()
+        for table in expression.find_all(exp.Table)
+        if table.name
+    }
 
-    if unknown:
-        return False, f"Query references unknown table/column(s): {', '.join(unknown)}"
+    unknown_tables = (
+        referenced_tables
+        - known_identifiers
+        - cte_names
+    )
 
-    if "limit" not in tokens:
-        cleaned += " LIMIT 100"
+    if unknown_tables:
+        return (
+            False,
+            "Query references an unknown table: "
+            + ", ".join(sorted(unknown_tables)),
+        )
 
-    return True, cleaned
+    if expression.args.get("limit") is None:
+        expression = expression.limit(100)
 
-
+    return True, expression.sql(dialect="postgres")

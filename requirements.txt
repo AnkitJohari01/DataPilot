@@ -17,3 +17,4 @@ python-dotenv==1.0.1
 
 # CORS and middleware
 python-multipart==0.0.9
+sqlglot
