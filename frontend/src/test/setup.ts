@@ -1,5 +1,10 @@
+import { cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
-import { vi } from "vitest";
+import { afterEach, vi } from "vitest";
+
+afterEach(() => {
+  cleanup();
+});
 
 Object.defineProperty(window, "matchMedia", {
   writable: true,

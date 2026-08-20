@@ -51,7 +51,10 @@ function App() {
   setError("");
   setInput("");
   setLoading(true);
-
+  const questionForApi =
+  isAwaitingClarification && lastMessage
+    ? `${lastMessage.question}\n\nClarification: ${question}`
+    : question; 
   const controller = new AbortController();
   abortControllerRef.current = controller;
 
@@ -66,7 +69,7 @@ function App() {
     const res = await fetch("http://localhost:8000/api/ask", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question, history }),
+      body: JSON.stringify({ question: questionForApi, history }),
       signal: controller.signal,
     });
 
@@ -75,7 +78,7 @@ function App() {
 
     setMessages((prev) => [
       ...prev,
-      { role: "assistant", question, sql: data.sql, insights: data.insights, clarificationRequired: data.clarification_required === true, },
+      { role: "assistant", question: questionForApi, sql: data.sql, insights: data.insights, clarificationRequired: data.clarification_required === true, },
     ]);
   } catch (err: any) {
     if (err.name === "AbortError") {
