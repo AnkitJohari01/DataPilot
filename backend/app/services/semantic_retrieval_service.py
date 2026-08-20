@@ -1,5 +1,5 @@
 from math import sqrt
-
+import re
 from google import genai
 
 from app.config.settings import settings
@@ -102,6 +102,98 @@ _catalog_embedding_cache = {
     "created_at": 0.0,
     "candidates": [],
 }
+
+
+DIRECT_MATCH_STOP_WORDS = {
+    "a",
+    "an",
+    "and",
+    "are",
+    "business",
+    "by",
+    "data",
+    "did",
+    "do",
+    "does",
+    "doing",
+    "for",
+    "from",
+    "had",
+    "has",
+    "have",
+    "how",
+    "in",
+    "is",
+    "least",
+    "me",
+    "most",
+    "of",
+    "on",
+    "or",
+    "overall",
+    "performance",
+    "show",
+    "tell",
+    "the",
+    "to",
+    "top",
+    "was",
+    "what",
+    "when",
+    "where",
+    "which",
+    "who",
+    "why",
+    "with",
+}
+
+
+def _normalise_catalog_word(word: str) -> str:
+    """Make simple singular and plural schema words match."""
+    if word.endswith("ies") and len(word) > 4:
+        return word[:-3] + "y"
+
+    if word.endswith("s") and len(word) > 3:
+        return word[:-1]
+
+    return word
+
+
+def _meaningful_words(text: str) -> set[str]:
+    """Return non-generic words from a question or schema name."""
+    words = re.findall(r"[a-zA-Z0-9]+", text.lower())
+
+    return {
+        _normalise_catalog_word(word)
+        for word in words
+        if word not in DIRECT_MATCH_STOP_WORDS and len(word) > 1
+    }
+
+
+def has_direct_catalog_match(
+    question: str,
+    candidate_tables: list[dict],
+) -> bool:
+    """
+    Return True when the user used a table or column term directly.
+
+    Example: 'products' and 'returns' directly match product and return
+    schema elements, so DataPilot should query instead of asking again.
+    """
+    question_words = _meaningful_words(question)
+
+    for table in candidate_tables:
+        schema_words = _meaningful_words(table["name"])
+
+        for column in table.get("columns", []):
+            schema_words.update(
+                _meaningful_words(column["name"])
+            )
+
+        if question_words & schema_words:
+            return True
+
+    return False
 
 def _friendly_table_name(table_name: str) -> str:
     """Turn a database table name into a readable label."""

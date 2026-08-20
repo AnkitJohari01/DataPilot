@@ -1,5 +1,7 @@
 """Wraps Gemini calls for SQL generation."""
 
+import re
+
 from google import genai
 from app.config.settings import settings
 from sqlglot import exp, parse
@@ -72,26 +74,31 @@ Rules:
 - If the result rows do not contain the reason for something, say:
   "The data does not show the cause."
 - Do not claim that an operational problem, customer behavior, or business event happened unless it appears in the result rows.
-- In Next Steps, suggest a safe follow-up question or filter to investigate. Do not recommend an action based on an assumed cause.
-- Use simple business English.
+- Recommendations must be safe data checks or follow-up filters, never a business action based on an assumed cause.
+- Next steps must be a safe follow-up question or filter to investigate, not an assumed cause.
+- Use simple, humanized business English. Short sentences. No jargon, no internal reasoning, no meta-commentary about how you produced the answer.
 
 Return exactly this format:
 
-WHAT HAPPENED: <one short factual answer based only on the result rows>
-WHY:
-- <a fact directly shown by the rows, or "The data does not show the cause.">
+OVERVIEW: <one or two short factual sentences answering the question, based only on the result rows>
+KEY FINDINGS:
+- <a specific fact directly shown by the rows>
+- <another specific fact, if the rows support one; omit this line if there is only one finding>
+RECOMMENDATIONS:
+- <a safe data check or filter to confirm the finding, or "The data does not show the cause." if nothing safe can be recommended>
 NEXT STEPS:
-- <a safe follow-up question or data check>
+- <a safe follow-up question to ask next>
 """
 
 
 def generate_insights(question: str, rows: list[dict]) -> dict:
-    """Turns raw query rows into a What happened / Why / What's next narrative."""
+    """Turns raw query rows into an Overview / Key Findings / Recommendations / Next Steps narrative."""
     if not rows:
         return {
-            "what_happened": "No data matched this question.",
-            "why": [],
-            "next_steps": ["Try rephrasing the question or check if the filters are too narrow."]
+            "overview": "No data matched this question.",
+            "key_findings": [],
+            "recommendations": [],
+            "next_steps": ["Try rephrasing the question or check if the filters are too narrow."],
         }
 
     prompt = build_insights_prompt(question, rows)
@@ -109,18 +116,20 @@ def generate_insights(question: str, rows: list[dict]) -> dict:
 
     text_out = response.text.strip()
 
-    sections = {"what_happened": "", "why": [], "next_steps": []}
+    sections = {"overview": "", "key_findings": [], "recommendations": [], "next_steps": []}
     current_key = None
 
     for line in text_out.splitlines():
         line = line.strip()
         if not line:
             continue
-        if line.startswith("WHAT HAPPENED:"):
-            sections["what_happened"] = line.replace("WHAT HAPPENED:", "").strip()
+        if line.startswith("OVERVIEW:"):
+            sections["overview"] = line.replace("OVERVIEW:", "").strip()
             current_key = None
-        elif line.startswith("WHY:"):
-            current_key = "why"
+        elif line.startswith("KEY FINDINGS:"):
+            current_key = "key_findings"
+        elif line.startswith("RECOMMENDATIONS:"):
+            current_key = "recommendations"
         elif line.startswith("NEXT STEPS:"):
             current_key = "next_steps"
         elif line.startswith("-") and current_key:
@@ -128,8 +137,6 @@ def generate_insights(question: str, rows: list[dict]) -> dict:
 
     return sections
 
-
-import re
 
 FORBIDDEN_SQL_NODE_NAMES = {
     "alter",
@@ -226,7 +233,51 @@ def validate_sql(sql: str, valid_identifiers: set[str]) -> tuple[bool, str]:
             + ", ".join(sorted(unknown_tables)),
         )
 
-    if expression.args.get("limit") is None:
-        expression = expression.limit(100)
+        if expression.args.get("limit") is None:
+            expression = expression.limit(100)
 
-    return True, expression.sql(dialect="postgres")
+            return True, expression.sql(dialect="postgres")
+
+
+def extract_data_sources(sql: str) -> list[dict]:
+    """
+    Parse the validated SQL to report which tables and columns the answer
+    actually used, for a "Data sources" citation in the UI.
+    """
+    try:
+        statements = parse(sql, read="postgres")
+    except ParseError:
+        return []
+
+    if not statements:
+        return []
+
+    expression = statements[0]
+
+    alias_to_table = {
+        table.alias_or_name: table.name
+        for table in expression.find_all(exp.Table)
+        if table.name
+    }
+
+    sources: dict[str, set[str]] = {}
+
+    for column in expression.find_all(exp.Column):
+        column_name = column.name
+        if not column_name:
+            continue
+
+        table_ref = column.table
+        if table_ref:
+            table_name = alias_to_table.get(table_ref, table_ref)
+        elif len(alias_to_table) == 1:
+            table_name = next(iter(alias_to_table.values()))
+        else:
+            continue
+
+        sources.setdefault(table_name, set()).add(column_name)
+
+    return [
+        {"table": table, "columns": sorted(columns)}
+        for table, columns in sources.items()
+    ]

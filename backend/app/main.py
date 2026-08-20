@@ -13,13 +13,18 @@ from app.database.metadata import (
     get_schema_catalog,
     get_catalog_for_llm,
 )
-
 from app.services.semantic_retrieval_service import (
     build_clarification_question,
     get_semantic_catalog_selection,
+    has_direct_catalog_match,
     needs_clarification,
 )
-from app.services.gemini_service import generate_insights, generate_sql, validate_sql
+from app.services.gemini_service import (
+    extract_data_sources,
+    generate_insights,
+    generate_sql,
+    validate_sql,
+)
 
 import logging
 import re
@@ -87,17 +92,26 @@ def ask(request: AskRequest, db: Session = Depends(get_db)):
             "sql": None,
             "rows": [],
             "insights": {
-                "what_happened": f"Here's the structure of the connected database:\n\n{schema_text}",
-                "why": "",
-                "next_steps": "Ask a business question about this data — e.g. 'What are total sales by category?'",
-            },
-        }
+                            "overview": f"Here's the structure of the connected database:\n\n{schema_text}",
+                            "key_findings": [],
+                            "recommendations": [],
+                            "next_steps": ["Ask a business question about this data — e.g. 'What are total sales by category?'"],
+                        },        
+            }
 
     selection = get_semantic_catalog_selection(request.question)
 
-    if needs_clarification(
-        selection["best_score"],
-        selection["second_best_score"],
+    direct_catalog_match = has_direct_catalog_match(
+        request.question,
+        selection["candidate_tables"],
+    )
+
+    if (
+        needs_clarification(
+            selection["best_score"],
+            selection["second_best_score"],
+        )
+        and not direct_catalog_match
     ):
         clarification_question = build_clarification_question(
             selection["candidate_table_names"]
@@ -109,8 +123,9 @@ def ask(request: AskRequest, db: Session = Depends(get_db)):
             "rows": [],
             "clarification_required": True,
             "insights": {
-                "what_happened": clarification_question,
-                "why": [],
+                "overview": clarification_question,
+                "key_findings": [],
+                "recommendations": [],
                 "next_steps": [],
             },
         }
@@ -158,4 +173,5 @@ def ask(request: AskRequest, db: Session = Depends(get_db)):
         "sql": result,
         "rows": row_dicts,
         "insights": insights,
+        "data_sources": extract_data_sources(result),
     }

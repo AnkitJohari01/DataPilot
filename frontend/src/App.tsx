@@ -6,9 +6,22 @@ type Message = {
   role: "user" | "assistant";
   question: string;
   sql?: string;
-  insights?: { what_happened: string; why: string[]; next_steps: string[] };
+  insights?: {
+    overview: string;
+    key_findings: string[];
+    recommendations: string[];
+    next_steps: string[];
+  };
+  data_sources?: Array<{ table: string; columns: string[] }>;
   showSql?: boolean;
+  expandedSections?: {
+    key_findings?: boolean;
+    recommendations?: boolean;
+    next_steps?: boolean;
+    data_sources?: boolean;
+  };
   clarificationRequired?: boolean;
+  rows?: Array<Record<string, unknown>>;
 };
 
 const SUGGESTIONS = [
@@ -17,6 +30,20 @@ const SUGGESTIONS = [
   "What caused the revenue change?",
   "Which products had the most returns?",
 ];
+
+function formatResultValue(value: unknown): string {
+  if (value === null || value === undefined) {
+    return "—";
+  }
+
+  if (typeof value === "number") {
+    return new Intl.NumberFormat("en-IN", {
+      maximumFractionDigits: 2,
+    }).format(value);
+  }
+
+  return String(value);
+}
 
 function App() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -78,7 +105,7 @@ function App() {
 
     setMessages((prev) => [
       ...prev,
-      { role: "assistant", question: questionForApi, sql: data.sql, insights: data.insights, clarificationRequired: data.clarification_required === true, },
+                  { role: "assistant", question: questionForApi, sql: data.sql, rows: data.rows ?? [], insights: data.insights, data_sources: data.data_sources ?? [], clarificationRequired: data.clarification_required === true, },
     ]);
   } catch (err: any) {
     if (err.name === "AbortError") {
@@ -96,9 +123,28 @@ function handleStop() {
   abortControllerRef.current?.abort();
 }
 
-  function toggleSql(index: number) {
+    function toggleSql(index: number) {
     setMessages((prev) =>
       prev.map((m, i) => (i === index ? { ...m, showSql: !m.showSql } : m))
+    );
+  }
+
+  function toggleSection(
+    index: number,
+    section: "key_findings" | "recommendations" | "next_steps" | "data_sources"
+  ) {
+    setMessages((prev) =>
+      prev.map((m, i) =>
+        i === index
+          ? {
+              ...m,
+              expandedSections: {
+                ...m.expandedSections,
+                [section]: !m.expandedSections?.[section],
+              },
+            }
+          : m
+      )
     );
   }
 
@@ -212,26 +258,130 @@ function handleStop() {
                   {m.clarificationRequired && (
                     <p className="clarification-label">Need clarification</p>
                   )}
-                  <p className="insight-line">{m.insights?.what_happened}</p>
-                  {m.insights?.why && m.insights.why.length > 0 && (
+                  <p className="insight-line">{m.insights?.overview}</p>
+
+                  {m.rows && m.rows.length > 0 && (
+                    <section className="results-section" aria-label="Query results">
+                      <strong>Results</strong>
+
+                      <div className="results-table-wrapper">
+                        <table className="results-table">
+                          <thead>
+                            <tr>
+                              {Object.keys(m.rows[0] || {}).map((column) => (
+                                <th key={column}>{column}</th>
+                              ))}
+                            </tr>
+                          </thead>
+
+                          <tbody>
+                            {m.rows.slice(0, 20).map((row, rowIndex) => (
+                              <tr key={rowIndex}>
+                                {Object.keys(m.rows?.[0] || {}).map((column) => (
+                                  <td key={column}>
+                                    {formatResultValue(row[column])}
+                                  </td>
+                                ))}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  )}
+
+
+                  {m.insights?.key_findings && m.insights.key_findings.length > 0 && (
                     <div className="insight-section">
-                      <strong>Why</strong>
-                      <ul>
-                        {m.insights.why.map((point: string, idx: number) => (
-                          <li key={idx}>{point}</li>
-                        ))}
-                      </ul>
+                      <button
+                        type="button"
+                        className="insight-section-toggle"
+                        onClick={() => toggleSection(i, "key_findings")}
+                        aria-expanded={m.expandedSections?.key_findings ?? false}
+                      >
+                        <strong>Key findings ({m.insights.key_findings.length})</strong>
+                        <span className="toggle-icon">
+                          {m.expandedSections?.key_findings ? "▲" : "▼"}
+                        </span>
+                      </button>
+                      {m.expandedSections?.key_findings && (
+                        <ul>
+                          {m.insights.key_findings.map((point: string, idx: number) => (
+                            <li key={idx}>{point}</li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  )}
+
+                  {m.insights?.recommendations && m.insights.recommendations.length > 0 && (
+                    <div className="insight-section">
+                      <button
+                        type="button"
+                        className="insight-section-toggle"
+                        onClick={() => toggleSection(i, "recommendations")}
+                        aria-expanded={m.expandedSections?.recommendations ?? false}
+                      >
+                        <strong>Recommendations ({m.insights.recommendations.length})</strong>
+                        <span className="toggle-icon">
+                          {m.expandedSections?.recommendations ? "▲" : "▼"}
+                        </span>
+                      </button>
+                      {m.expandedSections?.recommendations && (
+                        <ul>
+                          {m.insights.recommendations.map((point: string, idx: number) => (
+                            <li key={idx}>{point}</li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
                   )}
 
                   {m.insights?.next_steps && m.insights.next_steps.length > 0 && (
                     <div className="insight-section">
-                      <strong>Next steps</strong>
-                      <ul>
-                        {m.insights.next_steps.map((point: string, idx: number) => (
-                          <li key={idx}>{point}</li>
-                        ))}
-                      </ul>
+                      <button
+                        type="button"
+                        className="insight-section-toggle"
+                        onClick={() => toggleSection(i, "next_steps")}
+                        aria-expanded={m.expandedSections?.next_steps ?? false}
+                      >
+                        <strong>Next steps ({m.insights.next_steps.length})</strong>
+                        <span className="toggle-icon">
+                          {m.expandedSections?.next_steps ? "▲" : "▼"}
+                        </span>
+                      </button>
+                      {m.expandedSections?.next_steps && (
+                        <ul>
+                          {m.insights.next_steps.map((point: string, idx: number) => (
+                            <li key={idx}>{point}</li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  )}
+
+                  {m.data_sources && m.data_sources.length > 0 && (
+                    <div className="insight-section">
+                      <button
+                        type="button"
+                        className="insight-section-toggle"
+                        onClick={() => toggleSection(i, "data_sources")}
+                        aria-expanded={m.expandedSections?.data_sources ?? false}
+                      >
+                        <strong>Data sources ({m.data_sources.length})</strong>
+                        <span className="toggle-icon">
+                          {m.expandedSections?.data_sources ? "▲" : "▼"}
+                        </span>
+                      </button>
+                      {m.expandedSections?.data_sources && (
+                        <ul>
+                          {m.data_sources.map((source, idx: number) => (
+                            <li key={idx}>
+                              <code>{source.table}</code>: {source.columns.join(", ")}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
                   )}
                   {m.sql && (
