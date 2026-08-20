@@ -8,6 +8,7 @@ type Message = {
   sql?: string;
   insights?: { what_happened: string; why: string[]; next_steps: string[] };
   showSql?: boolean;
+  clarificationRequired?: boolean;
 };
 
 const SUGGESTIONS = [
@@ -27,10 +28,19 @@ function App() {
 
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     const saved = localStorage.getItem("theme");
+
     if (saved === "light" || saved === "dark") return saved;
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
   });
 
+  const lastMessage = messages[messages.length - 1];
+
+  const isAwaitingClarification =
+    lastMessage?.role === "assistant" &&
+    lastMessage.clarificationRequired === true;
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
@@ -65,7 +75,7 @@ function App() {
 
     setMessages((prev) => [
       ...prev,
-      { role: "assistant", question, sql: data.sql, insights: data.insights },
+      { role: "assistant", question, sql: data.sql, insights: data.insights, clarificationRequired: data.clarification_required === true, },
     ]);
   } catch (err: any) {
     if (err.name === "AbortError") {
@@ -196,6 +206,9 @@ function handleStop() {
             ) : (
               <div key={i} className="msg-row assistant-row">
                 <div className="msg assistant-msg">
+                  {m.clarificationRequired && (
+                    <p className="clarification-label">Need clarification</p>
+                  )}
                   <p className="insight-line">{m.insights?.what_happened}</p>
                   {m.insights?.why && m.insights.why.length > 0 && (
                     <div className="insight-section">
@@ -218,15 +231,18 @@ function handleStop() {
                       </ul>
                     </div>
                   )}
+                  {m.sql && (
+                    <>
+                      <div className="msg-actions">
+                        <button onClick={() => copySql(m.sql ?? "")}>Copy SQL</button>
+                        <button onClick={() => toggleSql(i)}>
+                          {m.showSql ? "Hide SQL" : "View SQL"}
+                        </button>
+                      </div>
 
-                  <div className="msg-actions">
-                    <button onClick={() => copySql(m.sql || "")}>Copy SQL</button>
-                    <button onClick={() => toggleSql(i)}>
-                      {m.showSql ? "Hide SQL" : "View SQL"}
-                    </button>
-                  </div>
-
-                  {m.showSql && <pre className="sql-block">{m.sql}</pre>}
+                      {m.showSql && <pre className="sql-block">{m.sql}</pre>}
+                    </>
+                  )}
                 </div>
               </div>
             )
@@ -242,12 +258,17 @@ function handleStop() {
         </div>
 
         <div className="input-bar">
+          {isAwaitingClarification}
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleAsk(input)}
-            placeholder="Ask anything about your business data..."
+            placeholder={
+              isAwaitingClarification
+                ? "Tell me which data area you mean..."
+                : "Ask anything about your business data..."
+            }
           />
           {loading ? (
             <button className="send-btn" onClick={handleStop}>

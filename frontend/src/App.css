@@ -576,3 +576,22 @@ body {
     animation: none;
   }
 }
+
+
+.clarification-label {
+  display: inline-block;
+  margin: 0 0 10px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: #e0f2fe;
+  color: #0369a1;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+[data-theme="dark"] .clarification-label {
+  background: #0c4a6e;
+  color: #bae6fd;
+}
