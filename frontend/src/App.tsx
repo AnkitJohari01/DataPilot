@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, type ReactElement } from "react";
+import { useState, useEffect, useRef, Fragment, type ReactElement } from "react";
 import "./App.css";
-
+import { Bar, BarChart, Line, LineChart, ComposedChart, Pie, PieChart, Cell, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Scatter, ScatterChart, Funnel, FunnelChart, LabelList, Treemap, Area, AreaChart } from "recharts";
 
 type Message = {
   role: "user" | "assistant";
@@ -39,10 +39,7 @@ function renderMarkdown(text: string): ReactElement[] {
   const output: ReactElement[] = [];
   let index = 0;
 
-  const isTableLine = (line: string) => {
-    const value = line.trim();
-    return value.includes("|") && value.split("|").length >= 3;
-  };
+ const isTableLine = (_line: string) => false;
 
   const cells = (line: string) => line.trim().replace(/^\||\|$/g, "").split("|").map((cell) => cell.trim());
   const inlineHtml = (value: string) => value.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
@@ -69,7 +66,7 @@ function renderMarkdown(text: string): ReactElement[] {
       continue;
     }
     const inline = inlineHtml(trimmed);
-    if (!trimmed) output.push(<br key={index} />);
+    if (!trimmed) { index += 1; continue; }
     else if (trimmed.startsWith("### ")) output.push(<h4 key={index}>{trimmed.slice(4)}</h4>);
     else if (trimmed.startsWith("## ")) output.push(<h3 key={index}>{trimmed.slice(3)}</h3>);
     else if (trimmed.startsWith("# ")) output.push(<h2 key={index}>{trimmed.slice(2)}</h2>);
@@ -85,19 +82,259 @@ function MarkdownContent({ text }: { text: string }) {
   return <div className="markdown-content">{renderMarkdown(text)}</div>;
 }
 
-function formatResultValue(value: unknown): string {
-  if (value === null || value === undefined) {
-    return "—";
-  }
 
-  if (typeof value === "number") {
-    return new Intl.NumberFormat("en-IN", {
-      maximumFractionDigits: 2,
-    }).format(value);
-  }
+type ChartType = "bar" | "pie" | "line" | "combo" | "scatter" | "funnel" | "treemap" | "heatmap" | "ribbon" | "waterfall";
 
-  return String(value);
+const CHART_COLORS = ["#C96442", "#4E9F6E", "#5B8DEF", "#D9A441", "#9B6BD9", "#4EA0A0"];
+
+function wantsChart(question: string): boolean {
+  return /chart|graph|plot|visuali[sz]e|trend|analy[sz]e|analysis|scatter|funnel|treemap|heatmap|heat map|ribbon|waterfall|clustered/i.test(question);
 }
+
+function detectChartTypeFromQuestion(question: string): ChartType | null {
+  if (/waterfall/i.test(question)) return "waterfall";
+  if (/heat\s?map/i.test(question)) return "heatmap";
+  if (/ribbon/i.test(question)) return "ribbon";
+  if (/funnel/i.test(question)) return "funnel";
+  if (/tree\s?map/i.test(question)) return "treemap";
+  if (/scatter/i.test(question)) return "scatter";
+  if (/clustered|combo|column.*line|line.*column/i.test(question)) return "combo";
+  if (/pie/i.test(question)) return "pie";
+  if (/\bline\b/i.test(question)) return "line";
+  if (/\bbar\b/i.test(question)) return "bar";
+  return null;
+}
+
+function pickChartTypeFromShape(rows: Array<Record<string, unknown>>): ChartType {
+  const keys = Object.keys(rows[0] || {});
+  const numericKeys = keys.filter((k) => typeof rows[0][k] === "number");
+  const textKeys = keys.filter((k) => !numericKeys.includes(k));
+  if (textKeys.length >= 2 && numericKeys.length >= 1) return "heatmap";
+  if (textKeys.length === 0 && numericKeys.length >= 2) return "scatter";
+  const labelKey = textKeys[0] ?? keys[0];
+  if (/date|month|year|period|week/i.test(labelKey)) return "line";
+  if (rows.length <= 6 && numericKeys.length === 1) return "pie";
+  if (numericKeys.length >= 2) return "combo";
+  return "bar";
+}
+
+function resolveChartType(question: string, rows: Array<Record<string, unknown>>): ChartType {
+  return detectChartTypeFromQuestion(question) ?? pickChartTypeFromShape(rows);
+}
+
+function HeatmapView({ rows, xKey, yKey, valueKey }: { rows: Array<Record<string, unknown>>; xKey: string; yKey: string; valueKey: string }) {
+  const xValues = Array.from(new Set(rows.map((r) => String(r[xKey] ?? ""))));
+  const yValues = Array.from(new Set(rows.map((r) => String(r[yKey] ?? ""))));
+  const lookup = new Map(rows.map((r) => [`${r[yKey]}|${r[xKey]}`, Number(r[valueKey]) || 0]));
+  const max = Math.max(...rows.map((r) => Number(r[valueKey]) || 0), 1);
+
+  return (
+    <div className="chart-wrapper heatmap-grid" style={{ gridTemplateColumns: `120px repeat(${xValues.length}, 1fr)` }}>
+      <div />
+      {xValues.map((x) => <div key={x} className="heatmap-label">{x}</div>)}
+      {yValues.map((y) => (
+        <Fragment key={y}>
+          <div className="heatmap-label">{y}</div>
+          {xValues.map((x) => {
+            const v = lookup.get(`${y}|${x}`) ?? 0;
+            const intensity = v / max;
+            return (
+              <div key={`${y}-${x}`} className="heatmap-cell" style={{ background: `rgba(201, 100, 66, ${0.1 + intensity * 0.8})` }} title={`${y} / ${x}: ${v}`}>
+                {v ? v.toLocaleString() : "—"}
+              </div>
+            );
+          })}
+        </Fragment>
+      ))}
+    </div>
+  );
+}
+
+function WaterfallChart({ rows, labelKey, valueKey }: { rows: Array<Record<string, unknown>>; labelKey: string; valueKey: string }) {
+  let running = 0;
+  const data = rows.slice(0, 20).map((row) => {
+    const value = Number(row[valueKey]) || 0;
+    const start = running;
+    running += value;
+    return { name: String(row[labelKey] ?? ""), base: Math.min(start, running), delta: Math.abs(value), rising: value >= 0 };
+  });
+  const tooltipStyle = { background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 8 };
+
+  return (
+    <div className="chart-wrapper">
+      <ResponsiveContainer width="100%" height={280}>
+        <BarChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+          <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={12} />
+          <YAxis stroke="var(--text-muted)" fontSize={12} />
+          <Tooltip contentStyle={tooltipStyle} />
+          <Bar dataKey="base" stackId="wf" fill="transparent" />
+          <Bar dataKey="delta" stackId="wf" radius={[4, 4, 4, 4]}>
+            {data.map((d, i) => <Cell key={i} fill={d.rising ? "var(--success)" : "var(--error)"} />)}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+function RibbonChart({ rows, labelKey, groupKey, valueKey }: { rows: Array<Record<string, unknown>>; labelKey: string; groupKey: string; valueKey: string }) {
+  const groups = Array.from(new Set(rows.map((r) => String(r[groupKey] ?? ""))));
+  const points = Array.from(new Set(rows.map((r) => String(r[labelKey] ?? ""))));
+  const data = points.map((p) => {
+    const point: Record<string, unknown> = { name: p };
+    groups.forEach((g) => {
+      const match = rows.find((r) => String(r[labelKey]) === p && String(r[groupKey]) === g);
+      point[g] = match ? Number(match[valueKey]) || 0 : 0;
+    });
+    return point;
+  });
+  const tooltipStyle = { background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 8 };
+
+  return (
+    <div className="chart-wrapper">
+      <ResponsiveContainer width="100%" height={280}>
+        <AreaChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+          <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={12} />
+          <YAxis stroke="var(--text-muted)" fontSize={12} />
+          <Tooltip contentStyle={tooltipStyle} />
+          {groups.map((g, i) => (
+            <Area key={g} type="monotone" dataKey={g} stackId="ribbon" stroke={CHART_COLORS[i % CHART_COLORS.length]} fill={CHART_COLORS[i % CHART_COLORS.length]} fillOpacity={0.55} />
+          ))}
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+function ChartView({ rows, question }: { rows: Array<Record<string, unknown>>; question: string }) {
+  if (!rows.length) return null;
+  const keys = Object.keys(rows[0] || {});
+  const numericKeys = keys.filter((k) => typeof rows[0][k] === "number");
+  const textKeys = keys.filter((k) => !numericKeys.includes(k));
+  const labelKey = textKeys[0] ?? keys[0];
+  const secondLabelKey = textKeys[1];
+  const valueKey = numericKeys[0];
+  if (!valueKey) return null;
+
+  const type = resolveChartType(question, rows);
+  const tooltipStyle = { background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 8 };
+  const data = rows.slice(0, 20).map((row) => {
+    const point: Record<string, unknown> = { name: String(row[labelKey] ?? "") };
+    numericKeys.forEach((k) => { point[k] = Number(row[k]) || 0; });
+    return point;
+  });
+
+  if (type === "heatmap" && secondLabelKey) {
+    return <HeatmapView rows={rows} xKey={secondLabelKey} yKey={labelKey} valueKey={valueKey} />;
+  }
+  if (type === "waterfall") {
+    return <WaterfallChart rows={rows} labelKey={labelKey} valueKey={valueKey} />;
+  }
+  if (type === "ribbon" && secondLabelKey) {
+    return <RibbonChart rows={rows} labelKey={labelKey} groupKey={secondLabelKey} valueKey={valueKey} />;
+  }
+  if (type === "scatter" && numericKeys.length >= 2) {
+    return (
+      <div className="chart-wrapper">
+        <ResponsiveContainer width="100%" height={280}>
+          <ScatterChart>
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+            <XAxis dataKey={numericKeys[0]} name={numericKeys[0]} stroke="var(--text-muted)" fontSize={12} />
+            <YAxis dataKey={numericKeys[1]} name={numericKeys[1]} stroke="var(--text-muted)" fontSize={12} />
+            <Tooltip contentStyle={tooltipStyle} cursor={{ strokeDasharray: "3 3" }} />
+            <Scatter data={data} fill="var(--accent)" />
+          </ScatterChart>
+        </ResponsiveContainer>
+      </div>
+    );
+  }
+  if (type === "funnel") {
+    const funnelData = [...data].sort((a, b) => Number(b[valueKey]) - Number(a[valueKey]));
+    return (
+      <div className="chart-wrapper">
+        <ResponsiveContainer width="100%" height={280}>
+          <FunnelChart>
+            <Tooltip contentStyle={tooltipStyle} />
+            <Funnel dataKey={valueKey} data={funnelData} isAnimationActive>
+              {funnelData.map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />)}
+              <LabelList dataKey="name" position="right" fill="var(--text)" />
+            </Funnel>
+          </FunnelChart>
+        </ResponsiveContainer>
+      </div>
+    );
+  }
+  if (type === "treemap") {
+    return (
+      <div className="chart-wrapper">
+        <ResponsiveContainer width="100%" height={280}>
+          <Treemap data={data.map((d) => ({ name: d.name, size: d[valueKey] }))} dataKey="size" stroke="var(--surface)" fill="var(--accent)" />
+        </ResponsiveContainer>
+      </div>
+    );
+  }
+  if (type === "combo" && numericKeys.length >= 2) {
+    return (
+      <div className="chart-wrapper">
+        <ResponsiveContainer width="100%" height={280}>
+          <ComposedChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+            <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={12} />
+            <YAxis stroke="var(--text-muted)" fontSize={12} />
+            <Tooltip contentStyle={tooltipStyle} />
+            <Bar dataKey={numericKeys[0]} fill="var(--accent)" radius={[6, 6, 0, 0]} />
+            <Line type="monotone" dataKey={numericKeys[1]} stroke="var(--success)" strokeWidth={2} dot={{ r: 3 }} />
+          </ComposedChart>
+        </ResponsiveContainer>
+      </div>
+    );
+  }
+  if (type === "pie") {
+    return (
+      <div className="chart-wrapper">
+        <ResponsiveContainer width="100%" height={280}>
+          <PieChart>
+            <Pie data={data} dataKey={valueKey} nameKey="name" outerRadius={100} label>
+              {data.map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />)}
+            </Pie>
+            <Tooltip contentStyle={tooltipStyle} />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+    );
+  }
+  if (type === "line") {
+    return (
+      <div className="chart-wrapper">
+        <ResponsiveContainer width="100%" height={280}>
+          <LineChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+            <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={12} />
+            <YAxis stroke="var(--text-muted)" fontSize={12} />
+            <Tooltip contentStyle={tooltipStyle} />
+            <Line type="monotone" dataKey={valueKey} stroke="var(--accent)" strokeWidth={2} dot={{ r: 3 }} />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    );
+  }
+  return (
+    <div className="chart-wrapper">
+      <ResponsiveContainer width="100%" height={280}>
+        <BarChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+          <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={12} />
+          <YAxis stroke="var(--text-muted)" fontSize={12} />
+          <Tooltip contentStyle={tooltipStyle} />
+          <Bar dataKey={valueKey} fill="var(--accent)" radius={[6, 6, 0, 0]} />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
 
 function App() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -299,15 +536,9 @@ function handleStop() {
                     />
                   </article>
 
-
-                  {m.rows && m.rows.length > 0 && (m.rows.length > 1 || Object.keys(m.rows[0] || {}).length > 1) && (
-                    <div className="data-preview" aria-label="Query data preview">
-                      <table className="results-table">
-                        <thead><tr>{Object.keys(m.rows[0] || {}).map((column) => <th key={column}>{column}</th>)}</tr></thead>
-                        <tbody>{m.rows.slice(0, 20).map((row, rowIndex) => <tr key={rowIndex}>{Object.keys(m.rows?.[0] || {}).map((column) => <td key={column}>{formatResultValue(row[column])}</td>)}</tr>)}</tbody>
-                      </table>
-                    </div>
-                  )}
+                  {m.rows && m.rows.length > 0 && wantsChart(m.question) && (
+                    <ChartView rows={m.rows} question={m.question} />
+                  )}    
                   {false && false && (
                     <div className="insight-section">
                       <button

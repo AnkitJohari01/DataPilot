@@ -75,7 +75,9 @@ Rules:
 - Never invent causes, trends, numbers, recommendations, or context.
 - Use exact values and comparisons when supported by the rows.
 - If the data cannot answer part of the question, say what is missing.
-- Use Markdown headings, bullets, numbered lists, tables, or concise prose only when useful.
+- Write in plain, simple business English, as if explaining to a non-technical manager. No jargon or technical terms.
+- Be thorough, not brief: explain what the numbers mean, compare categories against each other, call out anything notable (highs, lows, gaps, missing data), and give the full picture in multiple sentences or paragraphs rather than one-line summaries.
+- Never use Markdown tables. Present numbers and comparisons as plain sentences or bullet points instead.
 - Return only the user-facing answer with no fixed section labels.
 """
 

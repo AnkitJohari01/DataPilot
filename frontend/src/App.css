@@ -415,6 +415,18 @@ input:focus-visible {
   color: var(--text);
 }
 
+.markdown-content p {
+  margin: 0 0 10px;
+}
+.markdown-content p:last-child {
+  margin-bottom: 0;
+}
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4 {
+  margin: 14px 0 6px;
+}
+
 /* ---------- Results table ---------- */
 
 .results-section {
@@ -431,6 +443,36 @@ input:focus-visible {
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.03em;
+}
+
+.chart-wrapper {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px
+   solid var(--border);
+}
+
+
+.heatmap-grid {
+  display: grid;
+  gap: 2px;
+}
+.heatmap-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  padding: 4px 6px;
+}
+.heatmap-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  color: var(--text);
+  border-radius: 4px;
+  padding: 8px 4px;
+  min-height: 34px;
 }
 
 .results-table-wrapper {
