@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef} from "react";
+import { useState, useEffect, useRef, type ReactElement } from "react";
 import "./App.css";
 
 
@@ -7,19 +7,22 @@ type Message = {
   question: string;
   sql?: string;
   insights?: {
-    overview: string;
-    key_findings: string[];
-    recommendations: string[];
-    next_steps: string[];
+    text?: string;
+    overview?: string;
+    key_findings?: string[];
+    recommendations?: string[];
+    next_steps?: string[];
+    data_sources?: string[];
+  };
+  presentation?: {
+    title: string;
+    summary: string;
+    details: Array<{ title: string; items: string[] }>;
+    metadata: { result_count?: number; source_count?: number; has_sql?: boolean };
   };
   data_sources?: Array<{ table: string; columns: string[] }>;
+  expandedSections?: Record<string, boolean>;
   showSql?: boolean;
-  expandedSections?: {
-    key_findings?: boolean;
-    recommendations?: boolean;
-    next_steps?: boolean;
-    data_sources?: boolean;
-  };
   clarificationRequired?: boolean;
   rows?: Array<Record<string, unknown>>;
 };
@@ -30,6 +33,57 @@ const SUGGESTIONS = [
   "What caused the revenue change?",
   "Which products had the most returns?",
 ];
+
+function renderMarkdown(text: string): ReactElement[] {
+    const lines = text.split("\n");
+  const output: ReactElement[] = [];
+  let index = 0;
+
+  const isTableLine = (line: string) => {
+    const value = line.trim();
+    return value.includes("|") && value.split("|").length >= 3;
+  };
+
+  const cells = (line: string) => line.trim().replace(/^\||\|$/g, "").split("|").map((cell) => cell.trim());
+  const inlineHtml = (value: string) => value.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+
+  while (index < lines.length) {
+    const trimmed = lines[index].trim();
+    if (isTableLine(trimmed)) {
+      const tableLines: string[] = [];
+      while (index < lines.length && isTableLine(lines[index])) {
+        tableLines.push(lines[index].trim());
+        index += 1;
+      }
+      const header = cells(tableLines[0]);
+      const hasSeparator = tableLines[1]?.split("|").every((cell) => /^\s*:?-{3,}:?\s*$/.test(cell));
+      const body = tableLines.slice(hasSeparator ? 2 : 1);
+      output.push(
+        <div className="markdown-table-wrapper" key={`table-${index}`}>
+          <table className="markdown-table">
+            <thead><tr>{header.map((cell, cellIndex) => <th key={cellIndex}>{cell}</th>)}</tr></thead>
+            <tbody>{body.map((row, rowIndex) => <tr key={rowIndex}>{cells(row).map((cell, cellIndex) => <td key={cellIndex} dangerouslySetInnerHTML={{ __html: inlineHtml(cell) }} />)}</tr>)}</tbody>
+          </table>
+        </div>,
+      );
+      continue;
+    }
+    const inline = inlineHtml(trimmed);
+    if (!trimmed) output.push(<br key={index} />);
+    else if (trimmed.startsWith("### ")) output.push(<h4 key={index}>{trimmed.slice(4)}</h4>);
+    else if (trimmed.startsWith("## ")) output.push(<h3 key={index}>{trimmed.slice(3)}</h3>);
+    else if (trimmed.startsWith("# ")) output.push(<h2 key={index}>{trimmed.slice(2)}</h2>);
+    else if (/^[-*] /.test(trimmed)) output.push(<p className="markdown-list-item" key={index} dangerouslySetInnerHTML={{ __html: `• ${inline.slice(2)}` }} />);
+    else if (/^\d+\. /.test(trimmed)) output.push(<p className="markdown-list-item" key={index} dangerouslySetInnerHTML={{ __html: inline.replace(/^\d+\. /, "") }} />);
+    else output.push(<p key={index} dangerouslySetInnerHTML={{ __html: inline }} />);
+    index += 1;
+  }
+  return output;
+}
+
+function MarkdownContent({ text }: { text: string }) {
+  return <div className="markdown-content">{renderMarkdown(text)}</div>;
+}
 
 function formatResultValue(value: unknown): string {
   if (value === null || value === undefined) {
@@ -81,7 +135,7 @@ function App() {
   const questionForApi =
   isAwaitingClarification && lastMessage
     ? `${lastMessage.question}\n\nClarification: ${question}`
-    : question; 
+    : question;
   const controller = new AbortController();
   abortControllerRef.current = controller;
 
@@ -105,7 +159,7 @@ function App() {
 
     setMessages((prev) => [
       ...prev,
-                  { role: "assistant", question: questionForApi, sql: data.sql, rows: data.rows ?? [], insights: data.insights, data_sources: data.data_sources ?? [], clarificationRequired: data.clarification_required === true, },
+                  { role: "assistant", question: questionForApi, sql: data.sql, rows: data.rows ?? [], insights: data.insights, presentation: data.presentation, data_sources: data.data_sources ?? [], clarificationRequired: data.clarification_required === true, },
     ]);
   } catch (err: any) {
     if (err.name === "AbortError") {
@@ -126,25 +180,6 @@ function handleStop() {
     function toggleSql(index: number) {
     setMessages((prev) =>
       prev.map((m, i) => (i === index ? { ...m, showSql: !m.showSql } : m))
-    );
-  }
-
-  function toggleSection(
-    index: number,
-    section: "key_findings" | "recommendations" | "next_steps" | "data_sources"
-  ) {
-    setMessages((prev) =>
-      prev.map((m, i) =>
-        i === index
-          ? {
-              ...m,
-              expandedSections: {
-                ...m.expandedSections,
-                [section]: !m.expandedSections?.[section],
-              },
-            }
-          : m
-      )
     );
   }
 
@@ -258,55 +293,37 @@ function handleStop() {
                   {m.clarificationRequired && (
                     <p className="clarification-label">Need clarification</p>
                   )}
-                  <p className="insight-line">{m.insights?.overview}</p>
+                  <article className="answer-content" aria-label="Assistant response">
+                    <MarkdownContent
+                      text={m.insights?.text ?? m.presentation?.summary ?? m.insights?.overview ?? ""}
+                    />
+                  </article>
 
-                  {m.rows && m.rows.length > 0 && (
-                    <section className="results-section" aria-label="Query results">
-                      <strong>Results</strong>
 
-                      <div className="results-table-wrapper">
-                        <table className="results-table">
-                          <thead>
-                            <tr>
-                              {Object.keys(m.rows[0] || {}).map((column) => (
-                                <th key={column}>{column}</th>
-                              ))}
-                            </tr>
-                          </thead>
-
-                          <tbody>
-                            {m.rows.slice(0, 20).map((row, rowIndex) => (
-                              <tr key={rowIndex}>
-                                {Object.keys(m.rows?.[0] || {}).map((column) => (
-                                  <td key={column}>
-                                    {formatResultValue(row[column])}
-                                  </td>
-                                ))}
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </section>
+                  {m.rows && m.rows.length > 0 && (m.rows.length > 1 || Object.keys(m.rows[0] || {}).length > 1) && (
+                    <div className="data-preview" aria-label="Query data preview">
+                      <table className="results-table">
+                        <thead><tr>{Object.keys(m.rows[0] || {}).map((column) => <th key={column}>{column}</th>)}</tr></thead>
+                        <tbody>{m.rows.slice(0, 20).map((row, rowIndex) => <tr key={rowIndex}>{Object.keys(m.rows?.[0] || {}).map((column) => <td key={column}>{formatResultValue(row[column])}</td>)}</tr>)}</tbody>
+                      </table>
+                    </div>
                   )}
-
-
-                  {m.insights?.key_findings && m.insights.key_findings.length > 0 && (
+                  {false && false && (
                     <div className="insight-section">
                       <button
                         type="button"
                         className="insight-section-toggle"
-                        onClick={() => toggleSection(i, "key_findings")}
+                        onClick={() => undefined}
                         aria-expanded={m.expandedSections?.key_findings ?? false}
                       >
-                        <strong>Key findings ({m.insights.key_findings.length})</strong>
+                        <strong>Key findings ({m.insights?.key_findings?.length ?? 0})</strong>
                         <span className="toggle-icon">
                           {m.expandedSections?.key_findings ? "▲" : "▼"}
                         </span>
                       </button>
                       {m.expandedSections?.key_findings && (
                         <ul>
-                          {m.insights.key_findings.map((point: string, idx: number) => (
+                          {m.insights?.key_findings?.map((point: string, idx: number) => (
                             <li key={idx}>{point}</li>
                           ))}
                         </ul>
@@ -314,22 +331,22 @@ function handleStop() {
                     </div>
                   )}
 
-                  {m.insights?.recommendations && m.insights.recommendations.length > 0 && (
+                  {false && false && (
                     <div className="insight-section">
                       <button
                         type="button"
                         className="insight-section-toggle"
-                        onClick={() => toggleSection(i, "recommendations")}
+                        onClick={() => undefined}
                         aria-expanded={m.expandedSections?.recommendations ?? false}
                       >
-                        <strong>Recommendations ({m.insights.recommendations.length})</strong>
+                        <strong>Recommendations ({m.insights?.recommendations?.length ?? 0})</strong>
                         <span className="toggle-icon">
                           {m.expandedSections?.recommendations ? "▲" : "▼"}
                         </span>
                       </button>
                       {m.expandedSections?.recommendations && (
                         <ul>
-                          {m.insights.recommendations.map((point: string, idx: number) => (
+                          {m.insights?.recommendations?.map((point: string, idx: number) => (
                             <li key={idx}>{point}</li>
                           ))}
                         </ul>
@@ -337,22 +354,22 @@ function handleStop() {
                     </div>
                   )}
 
-                  {m.insights?.next_steps && m.insights.next_steps.length > 0 && (
+                  {false && false && (
                     <div className="insight-section">
                       <button
                         type="button"
                         className="insight-section-toggle"
-                        onClick={() => toggleSection(i, "next_steps")}
+                        onClick={() => undefined}
                         aria-expanded={m.expandedSections?.next_steps ?? false}
                       >
-                        <strong>Next steps ({m.insights.next_steps.length})</strong>
+                        <strong>Next steps ({m.insights?.next_steps?.length ?? 0})</strong>
                         <span className="toggle-icon">
                           {m.expandedSections?.next_steps ? "▲" : "▼"}
                         </span>
                       </button>
                       {m.expandedSections?.next_steps && (
                         <ul>
-                          {m.insights.next_steps.map((point: string, idx: number) => (
+                          {m.insights?.next_steps?.map((point: string, idx: number) => (
                             <li key={idx}>{point}</li>
                           ))}
                         </ul>
@@ -360,22 +377,22 @@ function handleStop() {
                     </div>
                   )}
 
-                  {m.data_sources && m.data_sources.length > 0 && (
+                  {false && false && (
                     <div className="insight-section">
                       <button
                         type="button"
                         className="insight-section-toggle"
-                        onClick={() => toggleSection(i, "data_sources")}
+                        onClick={() => undefined}
                         aria-expanded={m.expandedSections?.data_sources ?? false}
                       >
-                        <strong>Data sources ({m.data_sources.length})</strong>
+                        <strong>Data sources ({m.data_sources?.length ?? 0})</strong>
                         <span className="toggle-icon">
                           {m.expandedSections?.data_sources ? "▲" : "▼"}
                         </span>
                       </button>
                       {m.expandedSections?.data_sources && (
                         <ul>
-                          {m.data_sources.map((source, idx: number) => (
+                          {m.data_sources?.map((source, idx: number) => (
                             <li key={idx}>
                               <code>{source.table}</code>: {source.columns.join(", ")}
                             </li>
@@ -385,16 +402,16 @@ function handleStop() {
                     </div>
                   )}
                   {m.sql && (
-                    <>
+                    <details className="sql-details">
+                      <summary>View query details</summary>
                       <div className="msg-actions">
                         <button onClick={() => copySql(m.sql ?? "")}>Copy SQL</button>
                         <button onClick={() => toggleSql(i)}>
-                          {m.showSql ? "Hide SQL" : "View SQL"}
+                          {m.showSql ? "Hide query" : "Show query"}
                         </button>
                       </div>
-
                       {m.showSql && <pre className="sql-block">{m.sql}</pre>}
-                    </>
+                    </details>
                   )}
                 </div>
               </div>

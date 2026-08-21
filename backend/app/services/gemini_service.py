@@ -43,12 +43,12 @@ def generate_sql(question: str, schema_text: str, history: list[dict] = None) ->
 
     try:
         response = client.models.generate_content(
-            model="gemini-3.5-flash",
+            model="gemini-3.1-flash-lite",
             contents=prompt,
             config={
                 "system_instruction": SQL_SYSTEM_INSTRUCTION,
                 "temperature": 0,
-                "http_options": {"timeout": 10000},  # 10 seconds, in ms
+                "http_options": {"timeout": 20000},  # 20 seconds, in ms
             },
         )
     except Exception as e:
@@ -57,58 +57,48 @@ def generate_sql(question: str, schema_text: str, history: list[dict] = None) ->
     sql = response.text.strip()
     if sql.startswith("```"):
         sql = sql.strip("`").removeprefix("sql").strip()
-    return sql       
+    return sql
 
 
-def build_insights_prompt(question: str, rows: list[dict]) -> str:
-    """Build a safe, data-grounded prompt for the answer AI."""
+def build_insights_prompt(question: str, rows: list[dict], data_sources: list[dict] | None = None) -> str:
+    """Build a dynamic, data-grounded prompt for the answer AI."""
     return f"""
 Question: {question}
 
-Use only the result rows below:
+Result rows (use only these values; at most the first 20 rows):
 {rows[:20]}
 
 Rules:
-- Base every statement only on the result rows provided above.
+- Decide what is relevant for this specific question; do not follow a fixed report template.
+- Base every factual statement only on the result rows provided above.
 - Do not guess, infer, or invent causes, trends, events, or numbers.
-- If the result rows do not contain the reason for something, say:
-  "The data does not show the cause."
-- Do not claim that an operational problem, customer behavior, or business event happened unless it appears in the result rows.
-- Recommendations must be safe data checks or follow-up filters, never a business action based on an assumed cause.
-- Next steps must be a safe follow-up question or filter to investigate, not an assumed cause.
-- Use simple, humanized business English. Short sentences. No jargon, no internal reasoning, no meta-commentary about how you produced the answer.
-
-Return exactly this format:
-
-OVERVIEW: <one or two short factual sentences answering the question, based only on the result rows>
-KEY FINDINGS:
-- <a specific fact directly shown by the rows>
-- <another specific fact, if the rows support one; omit this line if there is only one finding>
-RECOMMENDATIONS:
-- <a safe data check or filter to confirm the finding, or "The data does not show the cause." if nothing safe can be recommended>
-NEXT STEPS:
-- <a safe follow-up question to ask next>
+- Never invent causes, trends, numbers, recommendations, or context.
+- Use exact values and comparisons when supported by the rows.
+- If the data cannot answer part of the question, say what is missing.
+- Use Markdown headings, bullets, numbered lists, tables, or concise prose only when useful.
+- Return only the user-facing answer with no fixed section labels.
 """
 
 
-def generate_insights(question: str, rows: list[dict]) -> dict:
-    """Turns raw query rows into an Overview / Key Findings / Recommendations / Next Steps narrative."""
+def generate_insights(question: str, rows: list[dict], data_sources: list[dict] | None = None) -> dict:
+    """Generate dynamic report sections with transparent rationale."""
     if not rows:
         return {
             "overview": "No data matched this question.",
-            "key_findings": [],
-            "recommendations": [],
-            "next_steps": ["Try rephrasing the question or check if the filters are too narrow."],
+            "key_findings": ["Insufficient evidence: no result rows were returned. Rationale: there are no observations to analyze."],
+            "recommendations": ["Review the filters or date range. Rationale: broader criteria may return analyzable data."],
+            "next_steps": ["Check which filter or date range should be broadened. Rationale: the current query returned no rows."],
+            "data_sources": ["Insufficient evidence: source contribution cannot be confirmed from an empty result. Rationale: provide a successful result or schema context."],
         }
 
     prompt = build_insights_prompt(question, rows)
     try:
         response = client.models.generate_content(
-            model="gemini-3.5-flash",
+            model="gemini-3.1-flash-lite",
             contents=prompt,
             config={
                 "temperature": 0,
-                "http_options": {"timeout": 10000},
+                "http_options": {"timeout": 20000},
             },
         )
     except Exception as e:
@@ -116,7 +106,14 @@ def generate_insights(question: str, rows: list[dict]) -> dict:
 
     text_out = response.text.strip()
 
-    sections = {"overview": "", "key_findings": [], "recommendations": [], "next_steps": []}
+    sections = {
+        "text": text_out,
+        "overview": "",
+        "key_findings": [],
+        "recommendations": [],
+        "next_steps": [],
+        "data_sources": [],
+    }
     current_key = None
 
     for line in text_out.splitlines():
@@ -132,6 +129,8 @@ def generate_insights(question: str, rows: list[dict]) -> dict:
             current_key = "recommendations"
         elif line.startswith("NEXT STEPS:"):
             current_key = "next_steps"
+        elif line.startswith("DATA SOURCES:"):
+            current_key = "data_sources"
         elif line.startswith("-") and current_key:
             sections[current_key].append(line.lstrip("-").strip())
 
@@ -233,10 +232,10 @@ def validate_sql(sql: str, valid_identifiers: set[str]) -> tuple[bool, str]:
             + ", ".join(sorted(unknown_tables)),
         )
 
-        if expression.args.get("limit") is None:
-            expression = expression.limit(100)
+    if expression.args.get("limit") is None:
+        expression = expression.limit(100)
 
-            return True, expression.sql(dialect="postgres")
+    return True, expression.sql(dialect="postgres")
 
 
 def extract_data_sources(sql: str) -> list[dict]:

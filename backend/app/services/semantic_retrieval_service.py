@@ -419,3 +419,17 @@ def get_semantically_relevant_catalog_for_llm(
     """Return only the selected database context for Gemini."""
     selection = get_semantic_catalog_selection(question, max_tables)
     return selection["schema_text"]
+
+
+def refresh_catalog_cache() -> int:
+    """
+    Force an immediate rebuild of the table-embedding cache instead of
+    waiting up to CATALOG_CACHE_SECONDS for it to expire naturally.
+
+    Returns the number of tables re-embedded.
+    """
+    _catalog_embedding_cache["created_at"] = 0.0
+    _catalog_embedding_cache["candidates"] = []
+
+    candidates = _get_catalog_candidates()
+    return len(candidates)

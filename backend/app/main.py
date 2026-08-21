@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from app.config.settings import settings
 from app.database.connection import get_db
@@ -18,6 +18,7 @@ from app.services.semantic_retrieval_service import (
     get_semantic_catalog_selection,
     has_direct_catalog_match,
     needs_clarification,
+    refresh_catalog_cache,
 )
 from app.services.gemini_service import (
     extract_data_sources,
@@ -76,28 +77,87 @@ def get_schema_compact():
 def get_catalog():
     return get_schema_catalog()
 
+@app.post("/api/catalog/refresh")
+def refresh_catalog():
+    table_count = refresh_catalog_cache()
+    return {
+        "status": "refreshed",
+        "tables_reembedded": table_count,
+    }
+
 
 class AskRequest(BaseModel):
     question: str
-    history: list[dict] = []
+    history: list[dict] = Field(default_factory=list)
 
+class PresentationSection(BaseModel):
+    title: str
+    items: list[str] = Field(default_factory=list)
 
-@app.post("/api/ask")
+class PresentationPayload(BaseModel):
+    title: str
+    summary: str
+    details: list[PresentationSection] = Field(default_factory=list)
+    metadata: dict[str, object] = Field(default_factory=dict)
+
+class AskResponse(BaseModel):
+    question: str
+    sql: str | None = None
+    rows: list[dict] = Field(default_factory=list)
+    insights: dict
+    data_sources: list[dict] = Field(default_factory=list)
+    clarification_required: bool = False
+    presentation: PresentationPayload
+
+def build_presentation(
+    question: str,
+    insights: dict,
+    rows: list[dict],
+    data_sources: list[dict],
+    sql: str | None = None,
+    clarification_required: bool = False,
+) -> PresentationPayload:
+    details = []
+    section_map = (
+        ("Key findings", "key_findings"),
+        ("Recommendations", "recommendations"),
+        ("Next steps", "next_steps"),
+        ("Data sources", "data_sources"),
+    )
+    for title, key in section_map:
+        items = [str(item) for item in insights.get(key, [])]
+        if items:
+            details.append(PresentationSection(title=title, items=items))
+
+    return PresentationPayload(
+        title=("Clarification needed" if clarification_required else question.strip()),
+        summary=str(insights.get("overview", "")),
+        details=details,
+        metadata={
+            "result_count": len(rows),
+            "source_count": len(data_sources),
+            "has_sql": sql is not None,
+        },
+    )
+
+@app.post("/api/ask", response_model=AskResponse)
 def ask(request: AskRequest, db: Session = Depends(get_db)):
     if is_schema_question(request.question):
         schema_text = get_catalog_for_llm()
 
+        insights = {
+            "overview": f"Here's the structure of the connected database:\n\n{schema_text}",
+            "key_findings": [],
+            "recommendations": [],
+            "next_steps": ["Ask a business question about this data — e.g. 'What are total sales by category?'"],
+        }
         return {
             "question": request.question,
             "sql": None,
             "rows": [],
-            "insights": {
-                            "overview": f"Here's the structure of the connected database:\n\n{schema_text}",
-                            "key_findings": [],
-                            "recommendations": [],
-                            "next_steps": ["Ask a business question about this data — e.g. 'What are total sales by category?'"],
-                        },        
-            }
+            "insights": insights,
+            "presentation": build_presentation(request.question, insights, [], []),
+        }
 
     selection = get_semantic_catalog_selection(request.question)
 
@@ -117,17 +177,22 @@ def ask(request: AskRequest, db: Session = Depends(get_db)):
             selection["candidate_table_names"]
         )
 
+        insights = {
+            "overview": clarification_question,
+            "key_findings": [],
+            "recommendations": [],
+            "next_steps": [],
+            "data_sources": [],
+        }
         return {
             "question": request.question,
             "sql": None,
             "rows": [],
             "clarification_required": True,
-            "insights": {
-                "overview": clarification_question,
-                "key_findings": [],
-                "recommendations": [],
-                "next_steps": [],
-            },
+            "insights": insights,
+            "presentation": build_presentation(
+                request.question, insights, [], clarification_required=True
+            ),
         }
 
     schema_text = selection["schema_text"]
@@ -159,8 +224,14 @@ def ask(request: AskRequest, db: Session = Depends(get_db)):
 
     row_dicts = [dict(row) for row in rows]
 
+    data_sources = extract_data_sources(result)
+
     try:
-        insights = generate_insights(request.question, row_dicts)
+        insights = generate_insights(
+            request.question,
+            row_dicts,
+            data_sources=data_sources,
+        )
     except RuntimeError as e:
         logger.error(str(e))
         raise HTTPException(
@@ -173,5 +244,8 @@ def ask(request: AskRequest, db: Session = Depends(get_db)):
         "sql": result,
         "rows": row_dicts,
         "insights": insights,
-        "data_sources": extract_data_sources(result),
+        "data_sources": data_sources,
+        "presentation": build_presentation(
+            request.question, insights, row_dicts, data_sources, sql=result
+        ),
     }
