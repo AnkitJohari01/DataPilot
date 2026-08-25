@@ -312,8 +312,21 @@ SCHEMA_KEYWORDS = {"table", "tables", "column", "columns", "schema", "field", "f
 
 
 def is_schema_question(question: str) -> bool:
-    words = set(re.findall(r"[a-zA-Z]+", question.lower()))
-    return bool(words & SCHEMA_KEYWORDS)
+    lowered = question.lower()
+    words = set(re.findall(r"[a-zA-Z]+", lowered))
+
+    if not (words & SCHEMA_KEYWORDS):
+        return False
+
+    # If the question names an actual table/column (e.g. "dim_location"),
+    # it wants a specific answer, not a full schema dump — let the normal
+    # SQL/insight pipeline handle it so it can pull the real description
+    # out of data_dictionary.
+    named_identifiers = {
+        identifier for identifier in get_valid_identifiers()
+        if identifier in lowered
+    }
+    return not named_identifiers
 
 
 app.add_middleware(
