@@ -1,0 +1,42 @@
+table_name,column_name,table_description,column_description
+dim_customer,customer_key,Dimension table holding one row per unique customer (identity and segment).,Surrogate primary key for the customer dimension.
+dim_customer,customer_id,Dimension table holding one row per unique customer (identity and segment).,"Original business identifier for the customer, unique per customer."
+dim_customer,customer_name,Dimension table holding one row per unique customer (identity and segment).,Customer's full name.
+dim_customer,segment,Dimension table holding one row per unique customer (identity and segment).,"Customer segment: Consumer, Home Office, or Corporate."
+dim_product,product_key,Dimension table holding one row per unique product (category hierarchy and name).,Surrogate primary key for the product dimension.
+dim_product,product_id,Dimension table holding one row per unique product (category hierarchy and name).,"Original business identifier for the product, unique per product."
+dim_product,category,Dimension table holding one row per unique product (category hierarchy and name).,Top-level product category.
+dim_product,sub_category,Dimension table holding one row per unique product (category hierarchy and name).,"Product sub-category, nested under category."
+dim_product,product_name,Dimension table holding one row per unique product (category hierarchy and name).,Descriptive product name (first name seen for products with more than one recorded name).
+dim_location,location_key,Dimension table holding one row per unique delivery location (city/state/postal/region/country).,Surrogate primary key for the location dimension.
+dim_location,city,Dimension table holding one row per unique delivery location (city/state/postal/region/country).,Delivery city.
+dim_location,state,Dimension table holding one row per unique delivery location (city/state/postal/region/country).,Delivery state.
+dim_location,postal_code,Dimension table holding one row per unique delivery location (city/state/postal/region/country).,Delivery postal/ZIP code.
+dim_location,region,Dimension table holding one row per unique delivery location (city/state/postal/region/country).,"Sales region grouping (Central, East, West, South)."
+dim_location,country,Dimension table holding one row per unique delivery location (city/state/postal/region/country).,Delivery country.
+dim_ship_mode,ship_mode_key,Dimension table listing the distinct shipping methods available.,Surrogate primary key for the shipping-mode dimension.
+dim_ship_mode,ship_mode,Dimension table listing the distinct shipping methods available.,"Shipping method: Standard Class, Second Class, First Class, or Same Day."
+dim_date,date_key,"Role-playing date dimension covering every order date and ship date in fact_sales, with calendar attributes.","Surrogate primary key for the date dimension, formatted YYYYMMDD."
+dim_date,date,"Role-playing date dimension covering every order date and ship date in fact_sales, with calendar attributes.",Calendar date in ISO format (YYYY-MM-DD).
+dim_date,year,"Role-playing date dimension covering every order date and ship date in fact_sales, with calendar attributes.",Calendar year of the date.
+dim_date,quarter,"Role-playing date dimension covering every order date and ship date in fact_sales, with calendar attributes.",Calendar quarter of the date (Q1-Q4).
+dim_date,month,"Role-playing date dimension covering every order date and ship date in fact_sales, with calendar attributes.",Calendar month number (1-12) of the date.
+dim_date,month_name,"Role-playing date dimension covering every order date and ship date in fact_sales, with calendar attributes.",Calendar month name of the date.
+dim_date,day,"Role-playing date dimension covering every order date and ship date in fact_sales, with calendar attributes.",Day of month of the date.
+dim_date,day_name,"Role-playing date dimension covering every order date and ship date in fact_sales, with calendar attributes.",Day of week name of the date.
+fact_sales,sales_key,"Fact table at the sales-line grain; one row per product line within an order, linked to all dimension tables.",Surrogate primary key for the fact table; one row per sales line item (source Row ID).
+fact_sales,order_id,"Fact table at the sales-line grain; one row per product line within an order, linked to all dimension tables.",Business order identifier; multiple sales_key rows can share the same order_id.
+fact_sales,order_date_key,"Fact table at the sales-line grain; one row per product line within an order, linked to all dimension tables.",Foreign key to dim_date representing the date the order was placed.
+fact_sales,ship_date_key,"Fact table at the sales-line grain; one row per product line within an order, linked to all dimension tables.",Foreign key to dim_date representing the date the order was shipped.
+fact_sales,customer_key,"Fact table at the sales-line grain; one row per product line within an order, linked to all dimension tables.",Foreign key to dim_customer identifying who placed the order.
+fact_sales,product_key,"Fact table at the sales-line grain; one row per product line within an order, linked to all dimension tables.",Foreign key to dim_product identifying the product sold.
+fact_sales,location_key,"Fact table at the sales-line grain; one row per product line within an order, linked to all dimension tables.",Foreign key to dim_location identifying the delivery location.
+fact_sales,ship_mode_key,"Fact table at the sales-line grain; one row per product line within an order, linked to all dimension tables.",Foreign key to dim_ship_mode identifying the shipping method used.
+fact_sales,sales,"Fact table at the sales-line grain; one row per product line within an order, linked to all dimension tables.","Revenue for this sales line item, in dollars."
+fact_sales,quantity,"Fact table at the sales-line grain; one row per product line within an order, linked to all dimension tables.",Number of units sold in this sales line item.
+fact_sales,discount,"Fact table at the sales-line grain; one row per product line within an order, linked to all dimension tables.","Discount rate applied to this line item, stored as a fraction (0.0-0.8)."
+fact_sales,profit,"Fact table at the sales-line grain; one row per product line within an order, linked to all dimension tables.","Profit for this sales line item, in dollars; can be negative."
+data_dictionary,table_name,Central metadata table documenting every table and column in this data model.,"Name of the documented table, exactly as it appears in the database."
+data_dictionary,column_name,Central metadata table documenting every table and column in this data model.,"Name of the documented column, exactly as it appears in the table."
+data_dictionary,table_description,Central metadata table documenting every table and column in this data model.,Business description of the table as a whole (repeated on every row for that table).
+data_dictionary,column_description,Central metadata table documenting every table and column in this data model.,Business description of what this specific column represents and how it is used.

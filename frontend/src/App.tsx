@@ -87,8 +87,19 @@ type ChartType = "bar" | "pie" | "line" | "combo" | "scatter" | "funnel" | "tree
 
 const CHART_COLORS = ["#C96442", "#4E9F6E", "#5B8DEF", "#D9A441", "#9B6BD9", "#4EA0A0"];
 
-function wantsChart(question: string): boolean {
-  return /chart|graph|plot|visuali[sz]e|trend|analy[sz]e|analysis|scatter|funnel|treemap|heatmap|heat map|ribbon|waterfall|clustered/i.test(question);
+const EXPLICIT_CHART_HINT = /chart|graph|plot|visuali[sz]e|scatter|funnel|treemap|heatmap|heat map|ribbon|waterfall|clustered|\bpie\b|\bline\b|\bbar\b/i;
+
+// Shows a chart when the question explicitly asks for one, OR when the
+// returned rows are naturally chartable: more than one row, at least one
+// label-like column, and at least one numeric column. A single-row answer
+// (e.g. "what's total profit?") or a purely text/list answer won't qualify.
+function wantsChart(question: string, rows: Array<Record<string, unknown>>): boolean {
+  if (EXPLICIT_CHART_HINT.test(question)) return true;
+  if (!rows || rows.length < 2) return false;
+  const keys = Object.keys(rows[0] || {});
+  const numericKeys = keys.filter((k) => typeof rows[0][k] === "number");
+  const hasLabel = keys.some((k) => !numericKeys.includes(k));
+  return numericKeys.length >= 1 && hasLabel;
 }
 
 function detectChartTypeFromQuestion(question: string): ChartType | null {
@@ -536,7 +547,7 @@ function handleStop() {
                     />
                   </article>
 
-                  {m.rows && m.rows.length > 0 && wantsChart(m.question) && (
+                  {m.rows && m.rows.length > 0 && wantsChart(m.question, m.rows) && (
                     <ChartView rows={m.rows} question={m.question} />
                   )}    
                   {false && false && (

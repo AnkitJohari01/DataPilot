@@ -137,7 +137,28 @@ def _make_json_safe(value):
     return value
 
 
+from sqlalchemy.exc import OperationalError
+import time
+
+
 def get_schema_catalog(sample_limit: int = 5) -> dict:
+    """
+    Build a dynamic catalog for any connected database.
+
+    Retries once if the connection was killed mid-reflection (e.g. a
+    serverless Postgres provider like Neon suspending/cold-starting).
+    """
+    for attempt in range(2):
+        try:
+            return _build_schema_catalog(sample_limit)
+        except OperationalError:
+            if attempt == 0:
+                time.sleep(1)  # give the DB a beat to finish waking up
+                continue
+            raise
+
+
+def _build_schema_catalog(sample_limit: int) -> dict:
     """
     Build a dynamic catalog for any connected database.
 
