@@ -351,9 +351,10 @@
 
 # Rules:
 # - Use ONLY the tables and columns given in the schema below. Never invent a table or column name.
-# - If the question uses a business term with no exact matching column (e.g. "revenue" when the
-#   column is "sales_amount"), map it to the closest real column or compute it with an aggregate
-#   (e.g. SUM(sales_amount)). Do this silently — do not ask the user to clarify.
+#If the question uses a business term with no exact matching column, map it to whichever real
+#column in the schema above represents that value (e.g. a numeric "sales" or "revenue"-type
+#column) and aggregate it if needed. Every column name you use MUST appear verbatim in the
+#schema block above — never invent one. Do this silently — do not ask the user to clarify.
 # - If the question refers to an entity loosely (e.g. "product 12" when the real identifier is
 #   product_id or product_code), match it to the appropriate key column and filter on it.
 # - Only generate SELECT or WITH queries. Never INSERT, UPDATE, DELETE, DROP, ALTER, TRUNCATE, or CREATE.
@@ -1001,8 +1002,6 @@
 
 """Wraps Gemini calls for SQL generation."""
 
-import re
-
 from google import genai
 from app.config.settings import settings
 from sqlglot import exp, parse
@@ -1018,9 +1017,10 @@ computation over real columns — your job is to find that mapping, not to rejec
 
 Rules:
 - Use ONLY the tables and columns given in the schema below. Never invent a table or column name.
-- If the question uses a business term with no exact matching column (e.g. "revenue" when the
-  column is "sales_amount"), map it to the closest real column or compute it with an aggregate
-  (e.g. SUM(sales_amount)). Do this silently — do not ask the user to clarify.
+- If the question uses a business term with no exact matching column, map it to whichever real
+  column in the schema above represents that value (e.g. a numeric "sales" or "revenue"-type
+  column) and aggregate it if needed. Every column name you use MUST appear verbatim in the
+  schema block above — never invent one. Do this silently — do not ask the user to clarify.
 - If the question refers to an entity loosely (e.g. "product 12" when the real identifier is
   product_id or product_code), match it to the appropriate key column and filter on it.
 - If the question references a specific month (e.g. "March") without a year, do NOT fall back
@@ -1038,7 +1038,7 @@ Rules:
 """
 
 
-def generate_sql(question: str, schema_text: str, history: list[dict] = None) -> str:
+def generate_sql(question: str, schema_text: str, history: list[dict] = None, feedback: str = None) -> str:
     history_text = ""
     if history:
         recent = [
@@ -1051,7 +1051,8 @@ def generate_sql(question: str, schema_text: str, history: list[dict] = None) ->
             )
             history_text = f"\nPrevious questions in this conversation:\n{history_text}\n"
 
-    prompt = f"Schema:\n{schema_text}\n{history_text}\nQuestion: {question}\n\nSQL:"
+    feedback_text = f"\nYour previous query was rejected: {feedback}\nFix it.\n" if feedback else ""
+    prompt = f"Schema:\n{schema_text}\n{history_text}{feedback_text}\nQuestion: {question}\n\nSQL:"
 
     try:
         response = client.models.generate_content(
@@ -1072,58 +1073,16 @@ def generate_sql(question: str, schema_text: str, history: list[dict] = None) ->
     return sql
 
 
-DIAGNOSTIC_KEYWORDS = {
-    "why",
-    "dropped",
-    "drop",
-    "drops",
-    "declined",
-    "decline",
-    "declines",
-    "decrease",
-    "decreased",
-    "fell",
-    "fall",
-    "falling",
-    "down",
-    "worse",
-    "underperform",
-    "underperformed",
-    "underperforming",
-    "cause",
-    "caused",
-    "causing",
-    "reason",
-    "reasons",
-    "wrong",
-    "slump",
-    "slumped",
-    "lower",
-    "lagging",
-    "lag",
-    "shrink",
-    "shrunk",
-    "shrinking",
-}
+DIAGNOSTIC_SQL_SYSTEM_INSTRUCTION = """You generate a PostgreSQL diagnostic breakdown query, or decide none is needed.
 
+First decide: does this question ask WHY a metric moved, or would a segment-level breakdown
+meaningfully help answer it (e.g. "why did sales drop in March", "what caused the decline")?
+If not — e.g. it just asks for a number, a ranking, a list, or a lookup — return exactly the
+text NONE and nothing else.
 
-def is_diagnostic_question(question: str) -> bool:
-    """
-    Detect questions that ask *why* a metric moved (e.g. "why did sales drop
-    in March"), as opposed to questions that just ask for a number or a
-    ranking. Diagnostic questions need a segment-level breakdown query in
-    addition to the primary aggregate query to be answerable with grounded,
-    non-invented detail.
-    """
-    words = set(re.findall(r"[a-zA-Z]+", question.lower()))
-    return bool(words & DIAGNOSTIC_KEYWORDS)
-
-
-DIAGNOSTIC_SQL_SYSTEM_INSTRUCTION = """You generate a PostgreSQL diagnostic breakdown query.
-
-The user asked a question about WHY a metric changed (e.g. "why did sales drop in March").
-A separate query has already computed the overall aggregate for the period in question; your
-job is to write ONE query that explains WHERE the change is concentrated, not why it happened.
+If a breakdown IS warranted, a separate query has already computed the overall aggregate for
+the period in question; your job is to write ONE query that explains WHERE the change is
+concentrated, not why it happened.
 
 Your query must:
 - Break the relevant metric down by exactly one categorical dimension available in the schema
@@ -1145,7 +1104,7 @@ Your query must:
 - Only generate a SELECT or WITH query. Never INSERT, UPDATE, DELETE, DROP, ALTER, TRUNCATE, or CREATE.
 - Use explicit JOIN conditions based on the foreign keys shown.
 - Add a reasonable LIMIT (e.g. 20) since this is a per-segment breakdown, not a single total.
-- Return ONLY the raw SQL query. No markdown fences, no explanation, no commentary.
+- Return ONLY the raw SQL query, or exactly NONE. No markdown fences, no explanation, no commentary.
 """
 
 
@@ -1156,6 +1115,10 @@ def generate_diagnostic_sql(question: str, schema_text: str, primary_sql: str | 
     and compares it against the prior comparable period. This gives the
     insights step real, grounded detail to point to instead of only the
     single aggregate number the primary query returns.
+
+    Gemini itself decides whether a breakdown is warranted for this question
+    and returns the literal string "NONE" when it isn't — callers should
+    check for that instead of pre-filtering on keywords.
     """
     primary_sql_block = ""
     if primary_sql:
@@ -1373,6 +1336,27 @@ def validate_sql(sql: str, valid_identifiers: set[str]) -> tuple[bool, str]:
         - known_identifiers
         - cte_names
     )
+
+    defined_aliases = {
+        alias.alias_or_name.lower()
+        for alias in expression.find_all(exp.Alias)
+        if alias.alias_or_name
+    }
+
+    referenced_columns = {
+        column.name.lower()
+        for column in expression.find_all(exp.Column)
+        if column.name and column.name != "*"
+    }
+
+    unknown_columns = referenced_columns - known_identifiers - defined_aliases
+
+    if unknown_columns:
+        return (
+            False,
+            "Query references an unknown column: "
+            + ", ".join(sorted(unknown_columns)),
+        )
 
     if unknown_tables:
         return (

@@ -360,14 +360,45 @@ def _get_catalog_candidates() -> list[dict]:
     return candidates
 
 
+def _build_contextual_question(
+    question: str,
+    history: list[dict] | None,
+) -> str:
+    """
+    Combine the current question with the most recent prior question.
+
+    A short follow-up like "products" is typically an answer to a
+    clarification prompt, not a standalone question. Embedded alone it is
+    just as ambiguous as it looks, so DataPilot keeps asking the same
+    clarification forever. Folding in the previous turn's question gives
+    the embedding the context it needs to resolve on the next attempt.
+    """
+    if not history:
+        return question
+
+    last_turn = history[-1]
+
+    if not isinstance(last_turn, dict):
+        return question
+
+    previous_question = last_turn.get("question")
+
+    if not previous_question:
+        return question
+
+    return f"{previous_question}\n{question}"
+
+
 def get_semantic_catalog_selection(
     question: str,
     max_tables: int = 4,
+    history: list[dict] | None = None,
 ) -> dict:
     """
     Select the closest database tables and return their confidence scores.
     """
-    question_embedding = create_embedding(question)
+    contextual_question = _build_contextual_question(question, history)
+    question_embedding = create_embedding(contextual_question)
     candidates = _get_catalog_candidates()
 
     matches = rank_by_similarity(

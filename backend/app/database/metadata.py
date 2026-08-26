@@ -354,3 +354,70 @@ def get_relevant_catalog_for_llm(question: str, max_tables: int = 4) -> str:
         relevant_tables = catalog["tables"]
 
     return _catalog_tables_to_llm_text(relevant_tables)
+
+
+from sqlalchemy import text
+
+META_INTENT_WORDS = {
+    "table", "tables", "column", "columns", "field", "fields", "schema",
+    "description", "descriptions", "describe", "definition", "define",
+    "meaning", "means", "documentation", "docs", "dictionary",
+}
+
+def is_data_dictionary_question(question: str) -> bool:
+    words = set(re.findall(r"[a-zA-Z]+", question.lower()))
+    return bool(words & META_INTENT_WORDS)
+
+
+def _named_identifiers(question: str) -> list[str]:
+    """Every real table/column name literally present in the question,
+    longest match first so 'dim_ship_mode' isn't shadowed by 'ship_mode'."""
+    lowered = question.lower()
+    return [
+        identifier
+        for identifier in sorted(get_valid_identifiers(), key=len, reverse=True)
+        if re.search(rf"\b{re.escape(identifier)}\b", lowered)
+    ]
+
+
+def answer_data_dictionary_question(question: str) -> tuple[str, str] | None:
+    named = _named_identifiers(question)
+    if not named:
+        return None
+
+    target = named[0]
+    table_names = {t.lower() for t in inspect(engine).get_table_names()}
+
+    with engine.connect() as connection:
+        if target in table_names:
+            sql_display = (
+                "SELECT column_name, table_description, column_description "
+                f"FROM data_dictionary WHERE table_name = '{target}' ORDER BY column_name"
+            )
+            rows = connection.execute(
+                text(
+                    "SELECT column_name, table_description, column_description "
+                    "FROM data_dictionary WHERE table_name = :t ORDER BY column_name"
+                ),
+                {"t": target},
+            ).all()
+            if not rows:
+                return None
+            lines = [f"{target}: {rows[0][1]}", ""]
+            lines += [f"- {r[0]}: {r[2]}" for r in rows]
+            return "\n".join(lines), sql_display
+
+        sql_display = (
+            "SELECT table_name, column_description "
+            f"FROM data_dictionary WHERE column_name = '{target}'"
+        )
+        rows = connection.execute(
+            text(
+                "SELECT table_name, column_description "
+                "FROM data_dictionary WHERE column_name = :c"
+            ),
+            {"c": target},
+        ).all()
+        if not rows:
+            return None
+        return "\n".join(f"- {r[0]}.{target}: {r[1]}" for r in rows), sql_display
