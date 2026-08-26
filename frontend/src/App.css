@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 #root {
   max-width: none;
   margin: 0;
@@ -12,7 +12,7 @@
   --text: #2B2A28;
   --text-muted: #87837C;
   --border: #E8E4DC;
-  --accent: #c7bf1f;
+  --accent: #eceace;
   --accent-tint: rgba(201, 100, 66, 0.10);
   --accent-tint-strong: rgba(201, 100, 66, 0.16);
   --success: #4E9F6E;
@@ -20,8 +20,8 @@
   --error-bg: rgba(194, 74, 63, 0.08);
   --shadow-sm: 0 1px 2px rgba(43, 42, 40, 0.06);
   --shadow-md: 0 4px 16px rgba(43, 42, 40, 0.08);
-  --font-display: 'Fraunces', Georgia, serif;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
   --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
   --radius-sm: 8px;
   --radius-md: 14px;
@@ -637,8 +637,8 @@ input:focus-visible {
 
 .danger-btn {
   background: var(--surface);
-  border: 1px solid var(--error);
-  color: var(--error);
+  border: 1px solid var(--accent);
+  color: #f2d252;
   font-size: 0.8rem;
   font-weight: 500;
   padding: 7px 14px;
@@ -773,7 +773,7 @@ input:focus-visible {
 }
 
 .user-msg {
-  background: var(--accent-tint-strong);
+  background: var(--accent-tint);
   color: var(--text);
   padding: 11px 16px;
   border-radius: var(--radius-lg) var(--radius-lg) 4px var(--radius-lg);
