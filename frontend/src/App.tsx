@@ -34,6 +34,67 @@ const SUGGESTIONS = [
   "Which products had the most returns?",
 ];
 
+type ChatSession = {
+  id: string;
+  title: string;
+  messages: Message[];
+  createdAt: number;
+  updatedAt: number;
+};
+
+const SESSIONS_STORAGE_KEY = "datapilot_sessions";
+
+function loadSessions(): ChatSession[] {
+  try {
+    const raw = localStorage.getItem(SESSIONS_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function makeSessionTitle(question: string): string {
+  const trimmed = question.trim().replace(/\s+/g, " ");
+  if (!trimmed) return "New chat";
+  return trimmed.length > 42 ? `${trimmed.slice(0, 42)}…` : trimmed;
+}
+
+function formatRelativeTime(timestamp: number): string {
+  const diffMin = Math.round((Date.now() - timestamp) / 60000);
+  if (diffMin < 1) return "Just now";
+  if (diffMin < 60) return `${diffMin}m ago`;
+  const diffHr = Math.round(diffMin / 60);
+  if (diffHr < 24) return `${diffHr}h ago`;
+  const diffDay = Math.round(diffHr / 24);
+  if (diffDay < 7) return `${diffDay}d ago`;
+  return new Date(timestamp).toLocaleDateString();
+}
+
+type SavedInsight = {
+  id: string;
+  key: string; // `${sessionId}-${messageIndex}` — used to detect "already saved"
+  question: string;
+  answerText: string;
+  sql?: string;
+  sessionId: string | null;
+  savedAt: number;
+};
+
+const SAVED_INSIGHTS_STORAGE_KEY = "datapilot_saved_insights";
+
+function loadSavedInsights(): SavedInsight[] {
+  try {
+    const raw = localStorage.getItem(SAVED_INSIGHTS_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
 function renderMarkdown(text: string): ReactElement[] {
     const lines = text.split("\n");
   const output: ReactElement[] = [];
@@ -347,6 +408,344 @@ function ChartView({ rows, question }: { rows: Array<Record<string, unknown>>; q
 }
 
 
+type CatalogColumn = {
+  name: string;
+  type: string;
+  nullable: boolean;
+  role: string;
+  sample_values: unknown[];
+};
+
+type CatalogTable = {
+  name: string;
+  primary_key: string[];
+  relationships: Array<{
+    column: string[];
+    references_table: string;
+    references_column: string[];
+  }>;
+  columns: CatalogColumn[];
+};
+
+type Catalog = { tables: CatalogTable[] };
+
+function DataSourcesView({
+  catalog,
+  loading,
+  error,
+  expandedTables,
+  onToggleTable,
+  onRefresh,
+}: {
+  catalog: Catalog | null;
+  loading: boolean;
+  error: string;
+  expandedTables: Record<string, boolean>;
+  onToggleTable: (name: string) => void;
+  onRefresh: () => void;
+}) {
+  return (
+    <div className="data-sources">
+      <div className="data-sources-header">
+        <div>
+          <h2>Connected data</h2>
+          <p>Tables and columns DataPilot can query in the sales database.</p>
+        </div>
+        <button className="refresh-btn" onClick={onRefresh} disabled={loading}>
+          {loading ? "Refreshing…" : "Refresh"}
+        </button>
+      </div>
+
+      {error && <div className="error-banner">{error}</div>}
+
+      {loading && !catalog && (
+        <div className="analyzing">
+          <span className="pulse-dot" />
+          Loading data sources...
+        </div>
+      )}
+
+      {catalog && (
+        <div className="table-list">
+          {catalog.tables.map((table) => {
+            const expanded = expandedTables[table.name] ?? false;
+            return (
+              <div className="table-card" key={table.name}>
+                <button
+                  className="table-card-header"
+                  onClick={() => onToggleTable(table.name)}
+                  aria-expanded={expanded}
+                >
+                  <span className="table-card-name">
+                    <code>{table.name}</code>
+                    <span className="table-card-count">
+                      {table.columns.length} column{table.columns.length === 1 ? "" : "s"}
+                    </span>
+                  </span>
+                  <span className="toggle-icon">{expanded ? "▲" : "▼"}</span>
+                </button>
+
+                {expanded && (
+                  <div className="table-card-body">
+                    {table.primary_key.length > 0 && (
+                      <p className="table-meta">
+                        <strong>Primary key:</strong> {table.primary_key.join(", ")}
+                      </p>
+                    )}
+                    {table.relationships.length > 0 && (
+                      <p className="table-meta">
+                        <strong>Relationships:</strong>{" "}
+                        {table.relationships
+                          .map(
+                            (r) =>
+                              `${r.column.join(", ")} → ${r.references_table}(${r.references_column.join(", ")})`
+                          )
+                          .join("; ")}
+                      </p>
+                    )}
+                    <table className="column-table">
+                      <thead>
+                        <tr>
+                          <th>Column</th>
+                          <th>Type</th>
+                          <th>Role</th>
+                          <th>Examples</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {table.columns.map((col) => (
+                          <tr key={col.name}>
+                            <td><code>{col.name}</code></td>
+                            <td>{col.type}</td>
+                            <td>{col.role}</td>
+                            <td>
+                              {col.sample_values.length > 0
+                                ? col.sample_values.map((v) => String(v)).join(", ")
+                                : "—"}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SettingsView({
+  theme,
+  onSetTheme,
+  apiBaseUrl,
+  onApiBaseUrlChange,
+  sessionsCount,
+  savedInsightsCount,
+  onClearChats,
+  onClearSavedInsights,
+}: {
+  theme: "light" | "dark";
+  onSetTheme: (theme: "light" | "dark") => void;
+  apiBaseUrl: string;
+  onApiBaseUrlChange: (value: string) => void;
+  sessionsCount: number;
+  savedInsightsCount: number;
+  onClearChats: () => void;
+  onClearSavedInsights: () => void;
+}) {
+  return (
+    <div className="data-sources">
+      <div className="data-sources-header">
+        <div>
+          <h2>Settings</h2>
+          <p>Preferences and connection settings, stored on this device.</p>
+        </div>
+      </div>
+
+      <section className="settings-section">
+        <h3>Appearance</h3>
+        <div className="settings-row">
+          <div>
+            <p className="settings-row-title">Theme</p>
+            <p className="settings-row-desc">Switch between light and dark mode.</p>
+          </div>
+          <div className="theme-switch">
+            <button
+              className={theme === "light" ? "active" : ""}
+              onClick={() => onSetTheme("light")}
+            >
+              Light
+            </button>
+            <button
+              className={theme === "dark" ? "active" : ""}
+              onClick={() => onSetTheme("dark")}
+            >
+              Dark
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section className="settings-section">
+        <h3>Connection</h3>
+        <div className="settings-row">
+          <div>
+            <p className="settings-row-title">Backend URL</p>
+            <p className="settings-row-desc">Where the DataPilot API is running.</p>
+          </div>
+          <input
+            type="text"
+            className="settings-input"
+            value={apiBaseUrl}
+            onChange={(e) => onApiBaseUrlChange(e.target.value)}
+            placeholder="http://localhost:8000"
+          />
+        </div>
+      </section>
+
+      <section className="settings-section">
+        <h3>Data</h3>
+        <div className="settings-row">
+          <div>
+            <p className="settings-row-title">Chat history</p>
+            <p className="settings-row-desc">
+              {sessionsCount} saved chat{sessionsCount === 1 ? "" : "s"} on this device.
+            </p>
+          </div>
+          <button className="danger-btn" onClick={onClearChats} disabled={sessionsCount === 0}>
+            Clear all chats
+          </button>
+        </div>
+        <div className="settings-row">
+          <div>
+            <p className="settings-row-title">Saved insights</p>
+            <p className="settings-row-desc">
+              {savedInsightsCount} saved insight{savedInsightsCount === 1 ? "" : "s"} on this device.
+            </p>
+          </div>
+          <button
+            className="danger-btn"
+            onClick={onClearSavedInsights}
+            disabled={savedInsightsCount === 0}
+          >
+            Clear all insights
+          </button>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+const FAQ_ITEMS: Array<{ q: string; a: string }> = [
+  {
+    q: "Why does DataPilot ask me to clarify a question?",
+    a: "When a question could reasonably match more than one data area (for example, several tables score similarly), DataPilot asks which one you meant instead of guessing. Answering directly — e.g. \"products\" — resolves it and continues.",
+  },
+  {
+    q: "How do I see the SQL behind an answer?",
+    a: "Open \"View query details\" underneath any answer to expand the generated SQL, and use \"Copy SQL\" to copy it.",
+  },
+  {
+    q: "Where is my chat history stored?",
+    a: "Chats and saved insights are stored locally in your browser (localStorage), not on a server. Clearing your browser data will remove them. You can also clear them yourself from Settings.",
+  },
+  {
+    q: "Can I point DataPilot at a different backend?",
+    a: "Yes — go to Settings and update the Backend URL. It defaults to http://localhost:8000.",
+  },
+  {
+    q: "What kinds of questions can I ask?",
+    a: "Anything about the connected sales database: revenue, orders, products, customers, regions, ship modes, and time trends. Check the Data Sources tab to see exactly which tables and columns are available.",
+  },
+];
+
+function HelpView({ apiBaseUrl }: { apiBaseUrl: string }) {
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [checking, setChecking] = useState(false);
+  const [apiStatus, setApiStatus] = useState<"unknown" | "ok" | "down">("unknown");
+  const [dbStatus, setDbStatus] = useState<"unknown" | "ok" | "down">("unknown");
+
+  async function runHealthCheck() {
+    setChecking(true);
+    const base = apiBaseUrl.trim().replace(/\/$/, "") || "http://localhost:8000";
+
+    try {
+      const res = await fetch(`${base}/api/health`);
+      setApiStatus(res.ok ? "ok" : "down");
+    } catch {
+      setApiStatus("down");
+    }
+
+    try {
+      const res = await fetch(`${base}/api/health/db`);
+      setDbStatus(res.ok ? "ok" : "down");
+    } catch {
+      setDbStatus("down");
+    }
+
+    setChecking(false);
+  }
+
+  function statusLabel(status: "unknown" | "ok" | "down") {
+    if (status === "ok") return { text: "Connected", cls: "status-ok" };
+    if (status === "down") return { text: "Unreachable", cls: "status-down" };
+    return { text: "Not checked yet", cls: "status-unknown" };
+  }
+
+  const api = statusLabel(apiStatus);
+  const db = statusLabel(dbStatus);
+
+  return (
+    <div className="data-sources">
+      <div className="data-sources-header">
+        <div>
+          <h2>Help &amp; Support</h2>
+          <p>Answers to common questions, and a quick connection check.</p>
+        </div>
+      </div>
+
+      <section className="settings-section">
+        <h3>Connection check</h3>
+        <div className="settings-row">
+          <div>
+            <p className="settings-row-title">API server</p>
+            <p className={`settings-row-desc health-status ${api.cls}`}>{api.text}</p>
+          </div>
+          <div>
+            <p className="settings-row-title">Database</p>
+            <p className={`settings-row-desc health-status ${db.cls}`}>{db.text}</p>
+          </div>
+          <button className="refresh-btn" onClick={runHealthCheck} disabled={checking}>
+            {checking ? "Checking…" : "Run check"}
+          </button>
+        </div>
+      </section>
+
+      <section className="settings-section">
+        <h3>Frequently asked questions</h3>
+        {FAQ_ITEMS.map((item, i) => (
+          <div className="faq-item" key={item.q}>
+            <button
+              className="faq-question"
+              onClick={() => setOpenFaq(openFaq === i ? null : i)}
+              aria-expanded={openFaq === i}
+            >
+              <span>{item.q}</span>
+              <span className="toggle-icon">{openFaq === i ? "▲" : "▼"}</span>
+            </button>
+            {openFaq === i && <p className="faq-answer">{item.a}</p>}
+          </div>
+        ))}
+      </section>
+    </div>
+  );
+}
+
+
 function App() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -354,6 +753,161 @@ function App() {
   const [error, setError] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
+
+  const [sessions, setSessions] = useState<ChatSession[]>(() => loadSessions());
+  const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
+  const skipNextSyncRef = useRef(false);
+
+  useEffect(() => {
+    localStorage.setItem(SESSIONS_STORAGE_KEY, JSON.stringify(sessions));
+  }, [sessions]);
+
+  // Keep the active session's stored messages in sync with what's on screen,
+  // creating a new session the first time a message lands in a fresh chat.
+  useEffect(() => {
+    if (skipNextSyncRef.current) {
+      skipNextSyncRef.current = false;
+      return;
+    }
+    if (messages.length === 0) return;
+
+    const firstUserMessage = messages.find((m) => m.role === "user");
+    const title = makeSessionTitle(firstUserMessage?.question ?? "");
+    const sessionId =
+      activeSessionId ??
+      `session-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+
+    if (!activeSessionId) {
+      setActiveSessionId(sessionId);
+    }
+
+    setSessions((prev) => {
+      const exists = prev.some((s) => s.id === sessionId);
+      if (exists) {
+        return prev.map((s) =>
+          s.id === sessionId
+            ? { ...s, messages, title, updatedAt: Date.now() }
+            : s
+        );
+      }
+      return [
+        { id: sessionId, title, messages, createdAt: Date.now(), updatedAt: Date.now() },
+        ...prev,
+      ];
+    });
+  }, [messages, activeSessionId]);
+
+  function startNewChat() {
+    setMessages([]);
+    setActiveSessionId(null);
+  }
+
+  function selectSession(id: string) {
+    const target = sessions.find((s) => s.id === id);
+    if (!target || id === activeSessionId) {
+      setSidebarOpen(false);
+      return;
+    }
+    skipNextSyncRef.current = true;
+    setActiveSessionId(id);
+    setMessages(target.messages);
+    setSidebarOpen(false);
+  }
+
+  function deleteSession(id: string, e: React.MouseEvent) {
+    e.stopPropagation();
+    setSessions((prev) => prev.filter((s) => s.id !== id));
+    if (id === activeSessionId) {
+      setActiveSessionId(null);
+      setMessages([]);
+    }
+  }
+
+  const sortedSessions = [...sessions].sort((a, b) => b.updatedAt - a.updatedAt);
+
+  const [activeNav, setActiveNav] = useState<"chats" | "insights" | "sources" | "settings" | "help">("chats");
+  const [savedInsights, setSavedInsights] = useState<SavedInsight[]>(() => loadSavedInsights());
+
+  const [catalog, setCatalog] = useState<Catalog | null>(null);
+  const [catalogLoading, setCatalogLoading] = useState(false);
+  const [catalogError, setCatalogError] = useState("");
+  const [expandedTables, setExpandedTables] = useState<Record<string, boolean>>({});
+
+  async function fetchCatalog() {
+    setCatalogLoading(true);
+    setCatalogError("");
+    try {
+      const res = await fetch(`${getApiBaseUrl()}/api/catalog`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "Failed to load data sources");
+      setCatalog(data);
+    } catch (err: any) {
+      setCatalogError(err.message || "Failed to load data sources");
+    } finally {
+      setCatalogLoading(false);
+    }
+  }
+
+  function openDataSources() {
+    setActiveNav("sources");
+    setSidebarOpen(false);
+    if (!catalog && !catalogLoading) {
+      fetchCatalog();
+    }
+  }
+
+  function toggleTableExpanded(name: string) {
+    setExpandedTables((prev) => ({ ...prev, [name]: !prev[name] }));
+  }
+
+  useEffect(() => {
+    localStorage.setItem(SAVED_INSIGHTS_STORAGE_KEY, JSON.stringify(savedInsights));
+  }, [savedInsights]);
+
+  function getMessageKey(index: number) {
+    return `${activeSessionId ?? "unsaved"}-${index}`;
+  }
+
+  function isMessageSaved(index: number) {
+    return savedInsights.some((s) => s.key === getMessageKey(index));
+  }
+
+  function toggleSaveInsight(m: Message, index: number) {
+    const key = getMessageKey(index);
+    setSavedInsights((prev) => {
+      const exists = prev.some((s) => s.key === key);
+      if (exists) return prev.filter((s) => s.key !== key);
+
+      const answerText = m.insights?.text ?? m.presentation?.summary ?? m.insights?.overview ?? "";
+      const newInsight: SavedInsight = {
+        id: `insight-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        key,
+        question: m.question,
+        answerText,
+        sql: m.sql,
+        sessionId: activeSessionId,
+        savedAt: Date.now(),
+      };
+      return [newInsight, ...prev];
+    });
+  }
+
+  function removeSavedInsight(id: string, e: React.MouseEvent) {
+    e.stopPropagation();
+    setSavedInsights((prev) => prev.filter((s) => s.id !== id));
+  }
+
+  function openSavedInsight(insight: SavedInsight) {
+    if (insight.sessionId) {
+      const target = sessions.find((s) => s.id === insight.sessionId);
+      if (target) {
+        selectSession(target.id);
+        setSidebarOpen(false);
+        return;
+      }
+    }
+    setError("The chat this insight came from is no longer available.");
+  }
 
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     const saved = localStorage.getItem("theme");
@@ -364,6 +918,30 @@ function App() {
       ? "dark"
       : "light";
   });
+
+  const [apiBaseUrl, setApiBaseUrl] = useState<string>(
+    () => localStorage.getItem("datapilot_api_base_url") || "http://localhost:8000"
+  );
+
+  useEffect(() => {
+    localStorage.setItem("datapilot_api_base_url", apiBaseUrl);
+  }, [apiBaseUrl]);
+
+  function getApiBaseUrl() {
+    return apiBaseUrl.trim().replace(/\/$/, "") || "http://localhost:8000";
+  }
+
+  function clearAllChats() {
+    if (!window.confirm("Delete all saved chats? This can't be undone.")) return;
+    setSessions([]);
+    setActiveSessionId(null);
+    setMessages([]);
+  }
+
+  function clearAllSavedInsights() {
+    if (!window.confirm("Delete all saved insights? This can't be undone.")) return;
+    setSavedInsights([]);
+  }
 
   const lastMessage = messages[messages.length - 1];
 
@@ -395,7 +973,7 @@ function App() {
   setMessages((prev) => [...prev, { role: "user", question }]);
 
   try {
-    const res = await fetch("http://localhost:8000/api/ask", {
+    const res = await fetch(`${getApiBaseUrl()}/api/ask`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ question: questionForApi, history }),
@@ -451,19 +1029,111 @@ function handleStop() {
           DataPilot
         </div>
 
-        <button className="new-chat-btn" onClick={() => setMessages([])} aria-label="Start a new chat">
+        <button className="new-chat-btn" onClick={startNewChat} aria-label="Start a new chat">
           <span>+</span> New Chat
         </button>
 
         <nav className="sidebar-nav">
-          <button className="nav-item active" aria-label="Recent Chats">Recent Chats</button>
-          <button className="nav-item" aria-label="Saved Insights">Saved Insights</button>
-          <button className="nav-item" aria-label="Data Sources">Data Sources</button>
+          <button
+            className={`nav-item ${activeNav === "chats" ? "active" : ""}`}
+            onClick={() => setActiveNav("chats")}
+            aria-label="Recent Chats"
+          >
+            Recent Chats
+          </button>
+          <button
+            className={`nav-item ${activeNav === "insights" ? "active" : ""}`}
+            onClick={() => setActiveNav("insights")}
+            aria-label="Saved Insights"
+          >
+            Saved Insights
+          </button>
+          <button
+            className={`nav-item ${activeNav === "sources" ? "active" : ""}`}
+            onClick={openDataSources}
+            aria-label="Data Sources"
+          >
+            Data Sources
+          </button>
         </nav>
 
+        {(activeNav === "chats" || activeNav === "insights") && (
+          <div className="chat-history">
+            {activeNav === "chats" ? (
+              sortedSessions.length === 0 ? (
+                <p className="chat-history-empty">No chats yet</p>
+              ) : (
+                sortedSessions.map((s) => (
+                  <button
+                    key={s.id}
+                    className={`chat-history-item ${s.id === activeSessionId ? "active" : ""}`}
+                    onClick={() => selectSession(s.id)}
+                    aria-label={`Open chat: ${s.title}`}
+                  >
+                    <span className="chat-history-text">
+                      <span className="chat-history-title">{s.title}</span>
+                      <span className="chat-history-time">{formatRelativeTime(s.updatedAt)}</span>
+                    </span>
+                    <span
+                      className="chat-history-delete"
+                      role="button"
+                      aria-label={`Delete chat: ${s.title}`}
+                      onClick={(e) => deleteSession(s.id, e)}
+                    >
+                      ✕
+                    </span>
+                  </button>
+                ))
+              )
+            ) : savedInsights.length === 0 ? (
+              <p className="chat-history-empty">No saved insights yet</p>
+            ) : (
+              savedInsights.map((insight) => (
+                <button
+                  key={insight.id}
+                  className="chat-history-item"
+                  onClick={() => openSavedInsight(insight)}
+                  aria-label={`Open saved insight: ${insight.question}`}
+                >
+                  <span className="chat-history-text">
+                    <span className="chat-history-title">{makeSessionTitle(insight.question)}</span>
+                    <span className="chat-history-time">{formatRelativeTime(insight.savedAt)}</span>
+                  </span>
+                  <span
+                    className="chat-history-delete"
+                    role="button"
+                    aria-label="Remove saved insight"
+                    onClick={(e) => removeSavedInsight(insight.id, e)}
+                  >
+                    ✕
+                  </span>
+                </button>
+              ))
+            )}
+          </div>
+        )}
+
         <div className="sidebar-footer">
-          <button className="nav-item muted" aria-label="Settings">Settings</button>
-          <button className="nav-item muted" aria-label="Help & Support">Help & Support</button>
+          <button
+            className={`nav-item ${activeNav === "settings" ? "active" : "muted"}`}
+            onClick={() => {
+              setActiveNav("settings");
+              setSidebarOpen(false);
+            }}
+            aria-label="Settings"
+          >
+            Settings
+          </button>
+          <button
+            className={`nav-item ${activeNav === "help" ? "active" : "muted"}`}
+            onClick={() => {
+              setActiveNav("help");
+              setSidebarOpen(false);
+            }}
+            aria-label="Help & Support"
+          >
+            Help &amp; Support
+          </button>
         </div>
       </aside>
 
@@ -515,6 +1185,30 @@ function handleStop() {
           </div>
         </header>
 
+        {activeNav === "sources" ? (
+          <DataSourcesView
+            catalog={catalog}
+            loading={catalogLoading}
+            error={catalogError}
+            expandedTables={expandedTables}
+            onToggleTable={toggleTableExpanded}
+            onRefresh={fetchCatalog}
+          />
+        ) : activeNav === "settings" ? (
+          <SettingsView
+            theme={theme}
+            onSetTheme={setTheme}
+            apiBaseUrl={apiBaseUrl}
+            onApiBaseUrlChange={setApiBaseUrl}
+            sessionsCount={sessions.length}
+            savedInsightsCount={savedInsights.length}
+            onClearChats={clearAllChats}
+            onClearSavedInsights={clearAllSavedInsights}
+          />
+        ) : activeNav === "help" ? (
+          <HelpView apiBaseUrl={apiBaseUrl} />
+        ) : (
+          <>
         <div className="conversation">
           {messages.length === 0 && (
             <div className="empty-state">
@@ -549,7 +1243,18 @@ function handleStop() {
 
                   {m.rows && m.rows.length > 0 && wantsChart(m.question, m.rows) && (
                     <ChartView rows={m.rows} question={m.question} />
-                  )}    
+                  )}
+                  {!m.clarificationRequired &&
+                    (m.insights?.text || m.presentation?.summary || m.insights?.overview) && (
+                      <div className="msg-actions">
+                        <button
+                          className={isMessageSaved(i) ? "saved" : ""}
+                          onClick={() => toggleSaveInsight(m, i)}
+                        >
+                          {isMessageSaved(i) ? "★ Saved" : "☆ Save insight"}
+                        </button>
+                      </div>
+                    )}    
                   {false && false && (
                     <div className="insight-section">
                       <button
@@ -692,6 +1397,8 @@ function handleStop() {
             </button>
           )}
         </div>
+          </>
+        )}
       </main>
     </div>
   );
