@@ -1033,6 +1033,13 @@ Rules:
 - Only generate SELECT or WITH queries. Never INSERT, UPDATE, DELETE, DROP, ALTER, TRUNCATE, or CREATE.
 - Use explicit JOIN conditions based on the foreign keys shown.
 - Add a reasonable LIMIT unless the question clearly needs all rows (e.g. an aggregate).
+- If the question asks which single entity is the most/least/highest/lowest/best/worst at
+  something (e.g. "which product category generates the most sales"), do NOT limit the result
+  to 1 row. Return the full ranking (or at least the top 10) ordered by the relevant metric, so
+  the top entity's value can be compared against the rest — the answer will highlight the
+  winner, but the surrounding rows are needed to show how much it leads by. Only return a single
+  row when the question asks for a raw scalar total with no ranking implied (e.g. "what is our
+  total revenue").
 - Use deterministic ORDER BY when ranking or returning top-N results.
 - Return ONLY the raw SQL query. No markdown fences, no explanation, no commentary.
 """

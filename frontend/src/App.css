@@ -12,9 +12,9 @@
   --text: #2B2A28;
   --text-muted: #87837C;
   --border: #E8E4DC;
-  --accent: #eceace;
-  --accent-tint: rgba(201, 100, 66, 0.10);
-  --accent-tint-strong: rgba(201, 100, 66, 0.16);
+  --accent: #0e0e0d;
+  --accent-tint: rgba(242, 210, 82, 0.12);
+  --accent-tint-strong: rgba(242, 210, 82, 0.18);
   --success: #4E9F6E;
   --error: #C24A3F;
   --error-bg: rgba(194, 74, 63, 0.08);
@@ -187,7 +187,7 @@ input:focus-visible {
 }
 
 .nav-item.active {
-  background: var(--accent-tint);
+  background: rgba(242, 210, 82, 0.12);
   color: var(--accent);
 }
 
@@ -638,7 +638,7 @@ input:focus-visible {
 .danger-btn {
   background: var(--surface);
   border: 1px solid var(--accent);
-  color: #f2d252;
+  color: var(--text);
   font-size: 0.8rem;
   font-weight: 500;
   padding: 7px 14px;
