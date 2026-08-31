@@ -10,11 +10,11 @@ psycopg[binary]==3.2.1
 psycopg2-binary==2.9.9
 
 # Google Gemini
-google-genai
+google-genai==2.8.0
 
 # Environment and configuration
 python-dotenv==1.0.1
 
 # CORS and middleware
 python-multipart==0.0.9
-sqlglot
+sqlglot==30.17.0

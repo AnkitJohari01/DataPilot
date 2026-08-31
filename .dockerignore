@@ -1,0 +1,15 @@
+denv/
+venv/
+env/
+ENV/
+frontend/node_modules/
+frontend/dist/
+__pycache__/
+*.pyc
+.git/
+.gitignore
+.env
+.env.local
+*.log
+.vscode/
+.idea/
