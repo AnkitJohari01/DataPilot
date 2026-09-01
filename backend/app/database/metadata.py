@@ -3,7 +3,7 @@ from app.database.connection import engine
 from datetime import date, datetime
 from decimal import Decimal
 import re
-from sqlalchemy import MetaData, Table, inspect, select
+from sqlalchemy import MetaData, Table, inspect, select, text
 
 from app.database.connection import engine
 
@@ -170,7 +170,28 @@ def _build_schema_catalog(sample_limit: int) -> dict:
     catalog_tables = []
 
     with engine.connect() as connection:
+        # Build a (table_name, column_name) -> description lookup from
+        # data_dictionary, if it exists, so real column descriptions can be
+        # shown instead of raw sample values.
+        description_lookup: dict[tuple[str, str], str] = {}
+        if "data_dictionary" in inspector.get_table_names():
+            try:
+                rows = connection.execute(
+                    text(
+                        "SELECT table_name, column_name, column_description "
+                        "FROM data_dictionary"
+                    )
+                ).all()
+                description_lookup = {
+                    (row[0], row[1]): row[2] for row in rows if row[2]
+                }
+            except Exception:
+                description_lookup = {}
+
         for table_name in inspector.get_table_names():
+            if table_name == "data_dictionary":
+                continue
+
             table = Table(table_name, metadata, autoload_with=engine)
 
             columns = inspector.get_columns(table_name)
@@ -221,6 +242,9 @@ def _build_schema_catalog(sample_limit: int) -> dict:
                         "nullable": column_info["nullable"],
                         "role": role,
                         "sample_values": sample_values,
+                        "description": description_lookup.get(
+                            (table_name, column_name), ""
+                        ),
                     }
                 )
 
