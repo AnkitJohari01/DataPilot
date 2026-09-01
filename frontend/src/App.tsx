@@ -920,7 +920,7 @@ function App() {
   });
 
   const [apiBaseUrl, setApiBaseUrl] = useState<string>(
-    () => localStorage.getItem("datapilot_api_base_url") || "http://localhost:8000"
+    () => localStorage.getItem("datapilot_api_base_url") || "https://datapilot-1scv.onrender.com"
   );
 
   useEffect(() => {
@@ -928,7 +928,7 @@ function App() {
   }, [apiBaseUrl]);
 
   function getApiBaseUrl() {
-    return apiBaseUrl.trim().replace(/\/$/, "") || "http://localhost:8000";
+    return apiBaseUrl.trim().replace(/\/$/, "") || "https://datapilot-1scv.onrender.com";
   }
 
   function clearAllChats() {
