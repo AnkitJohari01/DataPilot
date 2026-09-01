@@ -414,6 +414,7 @@ type CatalogColumn = {
   nullable: boolean;
   role: string;
   sample_values: unknown[];
+  description: string;
 };
 
 type CatalogTable = {
@@ -492,24 +493,13 @@ function DataSourcesView({
                         <strong>Primary key:</strong> {table.primary_key.join(", ")}
                       </p>
                     )}
-                    {table.relationships.length > 0 && (
-                      <p className="table-meta">
-                        <strong>Relationships:</strong>{" "}
-                        {table.relationships
-                          .map(
-                            (r) =>
-                              `${r.column.join(", ")} → ${r.references_table}(${r.references_column.join(", ")})`
-                          )
-                          .join("; ")}
-                      </p>
-                    )}
                     <table className="column-table">
                       <thead>
                         <tr>
                           <th>Column</th>
                           <th>Type</th>
                           <th>Role</th>
-                          <th>Examples</th>
+                          <th>Description</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -518,11 +508,7 @@ function DataSourcesView({
                             <td><code>{col.name}</code></td>
                             <td>{col.type}</td>
                             <td>{col.role}</td>
-                            <td>
-                              {col.sample_values.length > 0
-                                ? col.sample_values.map((v) => String(v)).join(", ")
-                                : "—"}
-                            </td>
+                            <td>{col.description || "—"}</td>
                           </tr>
                         ))}
                       </tbody>
