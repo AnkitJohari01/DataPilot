@@ -175,7 +175,7 @@ def ask(request: AskRequest, db: Session = Depends(get_db)):
     feedback = None
     rows = None
 
-    for attempt in range(2):
+    for attempt in range(3):
         try:
             raw_sql = generate_sql(request.question, schema_text, request.history, feedback)
         except RuntimeError as e:
