@@ -1031,15 +1031,14 @@ Rules:
   must still return data at the granularity the question needs (e.g. a monthly or daily figure
   for that specific month), never just an annual total.
 - Only generate SELECT or WITH queries. Never INSERT, UPDATE, DELETE, DROP, ALTER, TRUNCATE, or CREATE.
+- If a table has multiple foreign keys pointing to the same referenced table (e.g. both
+  order_date_key and ship_date_key both referencing dim_date), each FK column keeps its own
+  distinct name in the fact table -- there is no generic/shared column name across them. Always
+  use the exact FK column name shown in the schema (e.g. order_date_key, not date_key) when
+  joining, and pick the correct one based on what the question is asking about (order date vs
+  ship date, etc.).
 - Use explicit JOIN conditions based on the foreign keys shown.
 - Add a reasonable LIMIT unless the question clearly needs all rows (e.g. an aggregate).
-- If the question asks which single entity is the most/least/highest/lowest/best/worst at
-  something (e.g. "which product category generates the most sales"), do NOT limit the result
-  to 1 row. Return the full ranking (or at least the top 10) ordered by the relevant metric, so
-  the top entity's value can be compared against the rest — the answer will highlight the
-  winner, but the surrounding rows are needed to show how much it leads by. Only return a single
-  row when the question asks for a raw scalar total with no ranking implied (e.g. "what is our
-  total revenue").
 - Use deterministic ORDER BY when ranking or returning top-N results.
 - Return ONLY the raw SQL query. No markdown fences, no explanation, no commentary.
 """
