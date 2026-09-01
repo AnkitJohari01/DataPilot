@@ -1051,9 +1051,9 @@ function handleStop() {
           <button
             className={`nav-item ${activeNav === "sources" ? "active" : ""}`}
             onClick={openDataSources}
-            aria-label="Data Sources"
+            aria-label="About Data"
           >
-            Data Sources
+            About Data
           </button>
         </nav>
 
