@@ -28,10 +28,10 @@ type Message = {
 };
 
 const SUGGESTIONS = [
-  "Which product category generates the most sales?",
-  "Show me the top 5 products by sales amount",
-  "What caused the revenue change?",
-  "Which products had the most returns?",
+  "Which product categories generate the most profit, and what are their profit margins?",
+  "Which products are losing money after discounts?",
+  "Which regions have high sales but weak profit margins?",
+  "How have sales, profit, and profit margin changed month over month?",
 ];
 
 type ChatSession = {
