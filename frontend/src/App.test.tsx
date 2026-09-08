@@ -333,3 +333,151 @@ describe("dataset import & catalog", () => {
     expect(screen.queryByText("Items")).not.toBeInTheDocument();
   });
 });
+
+const ONE_DATASET = [
+  {
+    id: 1,
+    name: "orders.csv",
+    created_at: null,
+    tables: [
+      {
+        display_table_name: "orders",
+        db_table_name: "orders",
+        row_count: 10,
+        column_map: { Order: "order", Revenue: "revenue" },
+      },
+    ],
+  },
+];
+
+function mockDatasetsAndStrictAsk(strictResponse: unknown) {
+  return vi.fn((url: string, init?: RequestInit) => {
+    const path = url.replace(/^https?:\/\/[^/]+/, "");
+    if (path === "/api/datasets" && init?.method === undefined) {
+      return Promise.resolve({ ok: true, json: async () => ONE_DATASET });
+    }
+    if (path === "/api/ask/strict") {
+      return Promise.resolve({ ok: true, json: async () => strictResponse });
+    }
+    return Promise.resolve({ ok: true, json: async () => [] });
+  });
+}
+
+async function enterDataModeAndSelectDataset() {
+  fireEvent.click(screen.getByRole("tab", { name: "My Data" }));
+  await screen.findByText("orders.csv");
+  fireEvent.click(screen.getByLabelText("orders.csv"));
+}
+
+describe("dataset selection & strict-answer display", () => {
+  it("blocks asking until a dataset is selected", async () => {
+    vi.stubGlobal("fetch", mockDatasetsAndStrictAsk({}));
+    render(<App />);
+
+    fireEvent.click(screen.getByRole("tab", { name: "My Data" }));
+    await screen.findByText("orders.csv");
+
+    expect(
+      screen.getByPlaceholderText("Ask anything about your business data..."),
+    ).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Send" })).toBeDisabled();
+    expect(
+      screen.getByText("Select at least one dataset above to ask a question."),
+    ).toBeInTheDocument();
+  });
+
+  it("starts a new chat when the dataset selection changes", async () => {
+    const fetchMock = mockDatasetsAndStrictAsk({
+      question: "How many orders?",
+      sql: "SELECT COUNT(*) AS count FROM imported.orders",
+      rows: [{ count: 10 }],
+      result_count: 1,
+      sources: [{ table: "orders", columns: ["count"] }],
+      declined: false,
+      message: null,
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    render(<App />);
+
+    await enterDataModeAndSelectDataset();
+
+    fireEvent.change(
+      screen.getByPlaceholderText("Ask anything about your business data..."),
+      { target: { value: "How many orders?" } },
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Send" }));
+
+    await screen.findByText("Results");
+    expect(
+      screen.getByText("How many orders?", { selector: ".user-msg" }),
+    ).toBeInTheDocument();
+
+    // Changing the selection (deselecting) should clear the conversation.
+    fireEvent.click(screen.getByLabelText("orders.csv"));
+
+    expect(
+      screen.queryByText("How many orders?", { selector: ".user-msg" }),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText("Results")).not.toBeInTheDocument();
+  });
+
+  it("renders evidence (sql + rows), with no narrative insight sections", async () => {
+    const fetchMock = mockDatasetsAndStrictAsk({
+      question: "Total revenue",
+      sql: "SELECT SUM(revenue) AS total FROM imported.orders",
+      rows: [{ total: 500 }],
+      result_count: 1,
+      sources: [{ table: "orders", columns: ["revenue"] }],
+      declined: false,
+      message: null,
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    render(<App />);
+
+    await enterDataModeAndSelectDataset();
+
+    fireEvent.change(
+      screen.getByPlaceholderText("Ask anything about your business data..."),
+      { target: { value: "Total revenue" } },
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Send" }));
+
+    expect(await screen.findByText("Results")).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "total" })).toBeInTheDocument();
+    expect(screen.getByText("500")).toBeInTheDocument();
+    expect(screen.getByText("View query details")).toBeInTheDocument();
+
+    expect(screen.queryByText(/Key findings/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Recommendations/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Next steps/i)).not.toBeInTheDocument();
+  });
+
+  it("shows the deterministic no-evidence message for an empty result", async () => {
+    const fetchMock = mockDatasetsAndStrictAsk({
+      question: "Orders from Mars",
+      sql: "SELECT * FROM imported.orders WHERE planet = 'Mars'",
+      rows: [],
+      result_count: 0,
+      sources: [],
+      declined: false,
+      message: "No matching evidence was found in the selected datasets.",
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    render(<App />);
+
+    await enterDataModeAndSelectDataset();
+
+    fireEvent.change(
+      screen.getByPlaceholderText("Ask anything about your business data..."),
+      { target: { value: "Orders from Mars" } },
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Send" }));
+
+    expect(
+      await screen.findByText(
+        "No matching evidence was found in the selected datasets.",
+      ),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Results")).not.toBeInTheDocument();
+  });
+});

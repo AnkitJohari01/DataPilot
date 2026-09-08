@@ -25,6 +25,12 @@ type Message = {
   showSql?: boolean;
   clarificationRequired?: boolean;
   rows?: Array<Record<string, unknown>>;
+  // Set on messages produced by the dataset-scoped strict-answer path
+  // (/api/ask/strict). These never carry insights/presentation — evidence
+  // only, no narrative.
+  mode?: "business" | "data";
+  declined?: boolean;
+  strictMessage?: string | null;
 };
 
 const SUGGESTIONS = [
@@ -408,6 +414,36 @@ function ChartView({ rows, question }: { rows: Array<Record<string, unknown>>; q
 }
 
 
+function ResultsTable({ rows }: { rows: Array<Record<string, unknown>> }) {
+  if (!rows.length) return null;
+  const columns = Object.keys(rows[0]);
+  return (
+    <div className="results-table-wrapper">
+      <h4>Results</h4>
+      <div className="results-table-scroll">
+        <table className="results-table">
+          <thead>
+            <tr>
+              {columns.map((col) => (
+                <th key={col}>{col}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, i) => (
+              <tr key={i}>
+                {columns.map((col) => (
+                  <td key={col}>{String(row[col] ?? "")}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 type CatalogColumn = {
   name: string;
   type: string;
@@ -692,6 +728,47 @@ function DatasetsView({
           })}
         </div>
       )}
+    </div>
+  );
+}
+
+function DatasetPicker({
+  datasets,
+  loading,
+  selectedIds,
+  onToggle,
+}: {
+  datasets: UploadedDataset[] | null;
+  loading: boolean;
+  selectedIds: number[];
+  onToggle: (id: number) => void;
+}) {
+  if (loading && !datasets) {
+    return <p className="dataset-picker-empty">Loading your datasets…</p>;
+  }
+  if (!datasets || datasets.length === 0) {
+    return (
+      <p className="dataset-picker-empty">
+        No datasets imported yet — open "My Datasets" to upload a CSV or
+        Excel file first.
+      </p>
+    );
+  }
+  return (
+    <div className="dataset-picker" role="group" aria-label="Select datasets to query">
+      {datasets.map((d) => (
+        <label
+          key={d.id}
+          className={`dataset-chip ${selectedIds.includes(d.id) ? "selected" : ""}`}
+        >
+          <input
+            type="checkbox"
+            checked={selectedIds.includes(d.id)}
+            onChange={() => onToggle(d.id)}
+          />
+          {d.name}
+        </label>
+      ))}
     </div>
   );
 }
@@ -1072,6 +1149,30 @@ function App() {
     }
   }
 
+  // --- Dataset-scoped chat mode (strict, evidence-only answers) ---
+  const [chatMode, setChatMode] = useState<"business" | "data">("business");
+  const [selectedDatasetIds, setSelectedDatasetIds] = useState<number[]>([]);
+
+  function switchChatMode(mode: "business" | "data") {
+    if (mode === chatMode) return;
+    setChatMode(mode);
+    setSelectedDatasetIds([]);
+    startNewChat();
+    if (mode === "data" && !datasets && !datasetsLoading) {
+      fetchDatasets();
+    }
+  }
+
+  function toggleDatasetSelected(id: number) {
+    setSelectedDatasetIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+    );
+    // Per spec: changing the dataset selection begins a fresh chat, since
+    // any follow-up SQL history from before the change may no longer be
+    // valid against the new set of selected tables.
+    startNewChat();
+  }
+
   useEffect(() => {
     localStorage.setItem(SAVED_INSIGHTS_STORAGE_KEY, JSON.stringify(savedInsights));
   }, [savedInsights]);
@@ -1167,15 +1268,25 @@ function App() {
 
   async function handleAsk(question: string) {
   if (!question.trim() || loading) return;
+  if (chatMode === "data" && selectedDatasetIds.length === 0) {
+    setError("Select at least one dataset before asking a question.");
+    return;
+  }
   setError("");
   setInput("");
   setLoading(true);
+  const controller = new AbortController();
+  abortControllerRef.current = controller;
+
+  if (chatMode === "data") {
+    await handleStrictAsk(question, controller);
+    return;
+  }
+
   const questionForApi =
   isAwaitingClarification && lastMessage
     ? `${lastMessage.question}\n\nClarification: ${question}`
     : question;
-  const controller = new AbortController();
-  abortControllerRef.current = controller;
 
   const history = messages
     .filter((m) => m.role === "assistant" && m.sql)
@@ -1198,6 +1309,54 @@ function App() {
     setMessages((prev) => [
       ...prev,
                   { role: "assistant", question: questionForApi, sql: data.sql, rows: data.rows ?? [], insights: data.insights, presentation: data.presentation, data_sources: data.data_sources ?? [], clarificationRequired: data.clarification_required === true, },
+    ]);
+  } catch (err: any) {
+    if (err.name === "AbortError") {
+      setError("Request stopped.");
+    } else {
+      setError(err.message);
+    }
+  } finally {
+    setLoading(false);
+    abortControllerRef.current = null;
+  }
+}
+
+async function handleStrictAsk(question: string, controller: AbortController) {
+  const history = messages
+    .filter((m) => m.role === "assistant" && m.mode === "data" && m.sql)
+    .slice(-3)
+    .map((m) => ({ question: m.question, sql: m.sql }));
+
+  setMessages((prev) => [...prev, { role: "user", question }]);
+
+  try {
+    const res = await fetch(`${getApiBaseUrl()}/api/ask/strict`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        question,
+        dataset_ids: selectedDatasetIds,
+        history,
+      }),
+      signal: controller.signal,
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || "Something went wrong");
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "assistant",
+        question,
+        mode: "data",
+        sql: data.sql ?? undefined,
+        rows: data.rows ?? [],
+        data_sources: data.sources ?? [],
+        declined: data.declined === true,
+        strictMessage: data.message ?? null,
+      },
     ]);
   } catch (err: any) {
     if (err.name === "AbortError") {
@@ -1440,8 +1599,40 @@ function handleStop() {
           <HelpView apiBaseUrl={apiBaseUrl} />
         ) : (
           <>
+        <div className="chat-mode-tabs" role="tablist" aria-label="Chat mode">
+          <button
+            role="tab"
+            type="button"
+            aria-selected={chatMode === "business"}
+            className={`mode-tab ${chatMode === "business" ? "active" : ""}`}
+            onClick={() => switchChatMode("business")}
+          >
+            Business Chat
+          </button>
+          <button
+            role="tab"
+            type="button"
+            aria-selected={chatMode === "data"}
+            className={`mode-tab ${chatMode === "data" ? "active" : ""}`}
+            onClick={() => switchChatMode("data")}
+          >
+            My Data
+          </button>
+        </div>
+
+        {chatMode === "data" && (
+          <div className="dataset-picker-bar">
+            <DatasetPicker
+              datasets={datasets}
+              loading={datasetsLoading}
+              selectedIds={selectedDatasetIds}
+              onToggle={toggleDatasetSelected}
+            />
+          </div>
+        )}
+
         <div className="conversation">
-          {messages.length === 0 && (
+          {messages.length === 0 && chatMode === "business" && (
             <div className="empty-state">
               <h2>How can DataPilot help you today?</h2>
               <p>Ask questions about your business data in plain English.</p>
@@ -1455,10 +1646,59 @@ function handleStop() {
             </div>
           )}
 
+          {messages.length === 0 && chatMode === "data" && (
+            <div className="empty-state">
+              <h2>Ask your own data</h2>
+              <p>
+                {selectedDatasetIds.length === 0
+                  ? "Select at least one dataset above, then ask a question. Answers here are evidence only — query results, no narrative or recommendations."
+                  : "Ask a question about your selected dataset(s). You'll get back the SQL and the matching rows, nothing inferred."}
+              </p>
+            </div>
+          )}
+
           {messages.map((m, i) =>
             m.role === "user" ? (
               <div key={i} className="msg-row user-row">
                 <div className="msg user-msg">{m.question}</div>
+              </div>
+            ) : m.mode === "data" ? (
+              <div key={i} className="msg-row assistant-row">
+                <div className="msg assistant-msg strict-answer">
+                  {m.declined && <p className="clarification-label">Declined</p>}
+                  {m.strictMessage && (
+                    <article className="answer-content" aria-label="Assistant response">
+                      <MarkdownContent text={m.strictMessage} />
+                    </article>
+                  )}
+                  {!m.declined && m.rows && m.rows.length > 0 && (
+                    <ResultsTable rows={m.rows} />
+                  )}
+                  {!m.declined && m.data_sources && m.data_sources.length > 0 && (
+                    <div className="strict-sources">
+                      <strong>Sources</strong>
+                      <ul>
+                        {m.data_sources.map((source, idx) => (
+                          <li key={idx}>
+                            <code>{source.table}</code>: {source.columns.join(", ")}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {m.sql && (
+                    <details className="sql-details">
+                      <summary>View query details</summary>
+                      <div className="msg-actions">
+                        <button onClick={() => copySql(m.sql ?? "")}>Copy SQL</button>
+                        <button onClick={() => toggleSql(i)}>
+                          {m.showSql ? "Hide query" : "Show query"}
+                        </button>
+                      </div>
+                      {m.showSql && <pre className="sql-block">{m.sql}</pre>}
+                    </details>
+                  )}
+                </div>
               </div>
             ) : (
               <div key={i} className="msg-row assistant-row">
@@ -1475,6 +1715,7 @@ function handleStop() {
                   {m.rows && m.rows.length > 0 && wantsChart(m.question, m.rows) && (
                     <ChartView rows={m.rows} question={m.question} />
                   )}
+                  {m.rows && m.rows.length > 0 && <ResultsTable rows={m.rows} />}
                   {!m.clarificationRequired &&
                     (m.insights?.text || m.presentation?.summary || m.insights?.overview) && (
                       <div className="msg-actions">
@@ -1605,6 +1846,11 @@ function handleStop() {
           {error && <div className="error-banner">{error}</div>}
         </div>
 
+        {chatMode === "data" && selectedDatasetIds.length === 0 && (
+          <p className="dataset-required-hint">
+            Select at least one dataset above to ask a question.
+          </p>
+        )}
         <div className="input-bar">
           {isAwaitingClarification}
           <input
@@ -1612,6 +1858,7 @@ function handleStop() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleAsk(input)}
+            disabled={chatMode === "data" && selectedDatasetIds.length === 0}
             placeholder={
               isAwaitingClarification
                 ? "Tell me which data area you mean..."
@@ -1623,7 +1870,11 @@ function handleStop() {
               Stop
             </button>
           ) : (
-            <button className="send-btn" onClick={() => handleAsk(input)} disabled={loading}>
+            <button
+              className="send-btn"
+              onClick={() => handleAsk(input)}
+              disabled={loading || (chatMode === "data" && selectedDatasetIds.length === 0)}
+            >
               Send
             </button>
           )}
