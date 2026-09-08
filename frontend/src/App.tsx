@@ -430,6 +430,20 @@ type CatalogTable = {
 
 type Catalog = { tables: CatalogTable[] };
 
+type DatasetTable = {
+  display_table_name: string;
+  db_table_name: string;
+  row_count: number;
+  column_map: Record<string, string>;
+};
+
+type UploadedDataset = {
+  id: number;
+  name: string;
+  created_at: string | null;
+  tables: DatasetTable[];
+};
+
 function DataSourcesView({
   catalog,
   loading,
@@ -513,6 +527,164 @@ function DataSourcesView({
                         ))}
                       </tbody>
                     </table>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function DatasetsView({
+  datasets,
+  loading,
+  error,
+  uploading,
+  uploadError,
+  expandedDatasets,
+  onToggleDataset,
+  onRefresh,
+  onFileSelected,
+}: {
+  datasets: UploadedDataset[] | null;
+  loading: boolean;
+  error: string;
+  uploading: boolean;
+  uploadError: string;
+  expandedDatasets: Record<number, boolean>;
+  onToggleDataset: (id: number) => void;
+  onRefresh: () => void;
+  onFileSelected: (file: File) => void;
+}) {
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) {
+      onFileSelected(file);
+    }
+    // Reset so selecting the same file again still fires onChange.
+    e.target.value = "";
+  }
+
+  return (
+    <div className="data-sources">
+      <div className="data-sources-header">
+        <div>
+          <h2>Your datasets</h2>
+          <p>Upload a CSV or Excel file to ask questions over your own data.</p>
+        </div>
+        <button className="refresh-btn" onClick={onRefresh} disabled={loading}>
+          {loading ? "Refreshing…" : "Refresh"}
+        </button>
+      </div>
+
+      <section className="settings-section">
+        <h3>Import a dataset</h3>
+        <div className="settings-row">
+          <div>
+            <p className="settings-row-title">CSV or Excel file</p>
+            <p className="settings-row-desc">
+              A CSV becomes one table; an Excel workbook becomes one table
+              per sheet.
+            </p>
+          </div>
+          <button
+            className="refresh-btn"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+            aria-label="Upload dataset"
+          >
+            {uploading ? "Uploading…" : "Upload file"}
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".csv,.xlsx"
+            aria-label="Choose dataset file"
+            onChange={handleChange}
+            disabled={uploading}
+            style={{ display: "none" }}
+          />
+        </div>
+        {uploading && (
+          <div className="analyzing">
+            <span className="pulse-dot" />
+            Importing your file...
+          </div>
+        )}
+        {uploadError && <div className="error-banner">{uploadError}</div>}
+      </section>
+
+      {error && <div className="error-banner">{error}</div>}
+
+      {loading && !datasets && (
+        <div className="analyzing">
+          <span className="pulse-dot" />
+          Loading your datasets...
+        </div>
+      )}
+
+      {datasets && datasets.length === 0 && (
+        <p className="chat-history-empty">
+          No datasets imported yet — upload a CSV or Excel file above to get
+          started.
+        </p>
+      )}
+
+      {datasets && datasets.length > 0 && (
+        <div className="table-list">
+          {datasets.map((dataset) => {
+            const expanded = expandedDatasets[dataset.id] ?? false;
+            return (
+              <div className="table-card" key={dataset.id}>
+                <button
+                  className="table-card-header"
+                  onClick={() => onToggleDataset(dataset.id)}
+                  aria-expanded={expanded}
+                >
+                  <span className="table-card-name">
+                    <code>{dataset.name}</code>
+                    <span className="table-card-count">
+                      {dataset.tables.length} table
+                      {dataset.tables.length === 1 ? "" : "s"}
+                    </span>
+                  </span>
+                  <span className="toggle-icon">{expanded ? "▲" : "▼"}</span>
+                </button>
+
+                {expanded && (
+                  <div className="table-card-body">
+                    {dataset.tables.map((table) => (
+                      <div key={table.db_table_name} className="table-card">
+                        <p className="table-meta">
+                          <strong>{table.display_table_name}</strong>{" "}
+                          ({table.row_count} row
+                          {table.row_count === 1 ? "" : "s"})
+                        </p>
+                        <table className="column-table">
+                          <thead>
+                            <tr>
+                              <th>Column</th>
+                              <th>Stored as</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {Object.entries(table.column_map).map(
+                              ([label, dbName]) => (
+                                <tr key={dbName}>
+                                  <td>{label}</td>
+                                  <td><code>{dbName}</code></td>
+                                </tr>
+                              ),
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
@@ -811,7 +983,7 @@ function App() {
 
   const sortedSessions = [...sessions].sort((a, b) => b.updatedAt - a.updatedAt);
 
-  const [activeNav, setActiveNav] = useState<"chats" | "insights" | "sources" | "settings" | "help">("chats");
+  const [activeNav, setActiveNav] = useState<"chats" | "insights" | "sources" | "datasets" | "settings" | "help">("chats");
   const [savedInsights, setSavedInsights] = useState<SavedInsight[]>(() => loadSavedInsights());
 
   const [catalog, setCatalog] = useState<Catalog | null>(null);
@@ -844,6 +1016,60 @@ function App() {
 
   function toggleTableExpanded(name: string) {
     setExpandedTables((prev) => ({ ...prev, [name]: !prev[name] }));
+  }
+
+  const [datasets, setDatasets] = useState<UploadedDataset[] | null>(null);
+  const [datasetsLoading, setDatasetsLoading] = useState(false);
+  const [datasetsError, setDatasetsError] = useState("");
+  const [datasetUploading, setDatasetUploading] = useState(false);
+  const [datasetUploadError, setDatasetUploadError] = useState("");
+  const [expandedDatasets, setExpandedDatasets] = useState<Record<number, boolean>>({});
+
+  async function fetchDatasets() {
+    setDatasetsLoading(true);
+    setDatasetsError("");
+    try {
+      const res = await fetch(`${getApiBaseUrl()}/api/datasets`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "Failed to load datasets");
+      setDatasets(data);
+    } catch (err: any) {
+      setDatasetsError(err.message || "Failed to load datasets");
+    } finally {
+      setDatasetsLoading(false);
+    }
+  }
+
+  function openMyDatasets() {
+    setActiveNav("datasets");
+    setSidebarOpen(false);
+    if (!datasets && !datasetsLoading) {
+      fetchDatasets();
+    }
+  }
+
+  function toggleDatasetExpanded(id: number) {
+    setExpandedDatasets((prev) => ({ ...prev, [id]: !prev[id] }));
+  }
+
+  async function uploadDataset(file: File) {
+    setDatasetUploading(true);
+    setDatasetUploadError("");
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch(`${getApiBaseUrl()}/api/datasets`, {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "Import failed");
+      setDatasets((prev) => [...(prev ?? []), data]);
+    } catch (err: any) {
+      setDatasetUploadError(err.message || "Import failed");
+    } finally {
+      setDatasetUploading(false);
+    }
   }
 
   useEffect(() => {
@@ -1041,6 +1267,13 @@ function handleStop() {
           >
             About Data
           </button>
+          <button
+            className={`nav-item ${activeNav === "datasets" ? "active" : ""}`}
+            onClick={openMyDatasets}
+            aria-label="My Datasets"
+          >
+            My Datasets
+          </button>
         </nav>
 
         {(activeNav === "chats" || activeNav === "insights") && (
@@ -1179,6 +1412,18 @@ function handleStop() {
             expandedTables={expandedTables}
             onToggleTable={toggleTableExpanded}
             onRefresh={fetchCatalog}
+          />
+        ) : activeNav === "datasets" ? (
+          <DatasetsView
+            datasets={datasets}
+            loading={datasetsLoading}
+            error={datasetsError}
+            uploading={datasetUploading}
+            uploadError={datasetUploadError}
+            expandedDatasets={expandedDatasets}
+            onToggleDataset={toggleDatasetExpanded}
+            onRefresh={fetchDatasets}
+            onFileSelected={uploadDataset}
           />
         ) : activeNav === "settings" ? (
           <SettingsView

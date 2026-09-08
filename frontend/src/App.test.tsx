@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import App from "./App";
@@ -157,5 +157,179 @@ describe("clarification responses", () => {
       screen.getByRole("columnheader", { name: "product_name" }),
     ).toBeInTheDocument();
     expect(screen.getByText("Product 001")).toBeInTheDocument();
+  });
+});
+
+function makeCsvFile(name = "data.csv"): File {
+  return new File(["a,b\n1,2\n"], name, { type: "text/csv" });
+}
+
+describe("dataset import & catalog", () => {
+  it("shows an upload control and calls the import API when a file is selected", async () => {
+    const fetchMock = vi.fn((_url: string, init?: RequestInit) => {
+      if (init?.method === "POST") {
+        return Promise.resolve({
+          ok: true,
+          json: async () => ({
+            id: 1,
+            name: "data",
+            created_at: null,
+            tables: [
+              {
+                display_table_name: "data",
+                db_table_name: "data",
+                row_count: 1,
+                column_map: { a: "a", b: "b" },
+              },
+            ],
+          }),
+        });
+      }
+      return Promise.resolve({ ok: true, json: async () => [] });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: "My Datasets" }));
+
+    const fileInput = await screen.findByLabelText("Choose dataset file");
+    fireEvent.change(fileInput, { target: { files: [makeCsvFile()] } });
+
+    await screen.findByText("data");
+
+    const postCall = fetchMock.mock.calls.find(
+      (call) => (call[1] as RequestInit)?.method === "POST",
+    );
+    expect(postCall).toBeTruthy();
+    expect(String(postCall?.[0])).toContain("/api/datasets");
+    expect((postCall?.[1] as RequestInit).body).toBeInstanceOf(FormData);
+  });
+
+  it("shows a progress indicator while the import request is in flight", async () => {
+    let resolvePost: (value: unknown) => void = () => {};
+    const fetchMock = vi.fn((_url: string, init?: RequestInit) => {
+      if (init?.method === "POST") {
+        return new Promise((resolve) => {
+          resolvePost = resolve;
+        });
+      }
+      return Promise.resolve({ ok: true, json: async () => [] });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: "My Datasets" }));
+
+    const fileInput = await screen.findByLabelText("Choose dataset file");
+    fireEvent.change(fileInput, { target: { files: [makeCsvFile()] } });
+
+    expect(
+      await screen.findByText("Importing your file..."),
+    ).toBeInTheDocument();
+
+    resolvePost({
+      ok: true,
+      json: async () => ({
+        id: 1,
+        name: "data",
+        created_at: null,
+        tables: [],
+      }),
+    });
+
+    await waitFor(() =>
+      expect(
+        screen.queryByText("Importing your file..."),
+      ).not.toBeInTheDocument(),
+    );
+  });
+
+  it("shows an error and does not add a dataset when the import fails", async () => {
+    const fetchMock = vi.fn((_url: string, init?: RequestInit) => {
+      if (init?.method === "POST") {
+        return Promise.resolve({
+          ok: false,
+          json: async () => ({
+            detail: "Only .csv and .xlsx files are supported.",
+          }),
+        });
+      }
+      return Promise.resolve({ ok: true, json: async () => [] });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: "My Datasets" }));
+
+    const fileInput = await screen.findByLabelText("Choose dataset file");
+    fireEvent.change(fileInput, {
+      target: { files: [makeCsvFile("notes.txt")] },
+    });
+
+    expect(
+      await screen.findByText("Only .csv and .xlsx files are supported."),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "No datasets imported yet — upload a CSV or Excel file above to get started.",
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it("groups the dataset catalog by dataset, not flattened", async () => {
+    const fetchMock = vi.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: async () => [
+          {
+            id: 1,
+            name: "Sales Export",
+            created_at: "2026-01-01T00:00:00Z",
+            tables: [
+              {
+                display_table_name: "Sheet1",
+                db_table_name: "sheet1",
+                row_count: 10,
+                column_map: { A: "a" },
+              },
+              {
+                display_table_name: "Sheet2",
+                db_table_name: "sheet2",
+                row_count: 5,
+                column_map: { B: "b" },
+              },
+            ],
+          },
+          {
+            id: 2,
+            name: "Inventory",
+            created_at: "2026-01-02T00:00:00Z",
+            tables: [
+              {
+                display_table_name: "Items",
+                db_table_name: "items",
+                row_count: 20,
+                column_map: { C: "c" },
+              },
+            ],
+          },
+        ],
+      }),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: "My Datasets" }));
+
+    expect(await screen.findByText("Sales Export")).toBeInTheDocument();
+    expect(screen.getByText("Inventory")).toBeInTheDocument();
+    expect(screen.getByText("2 tables")).toBeInTheDocument();
+    expect(screen.getByText("1 table")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText("Sales Export"));
+    expect(await screen.findByText("Sheet1")).toBeInTheDocument();
+    // Items belongs to the Inventory group, which is still collapsed — it
+    // must not appear just because Sales Export's group was expanded.
+    expect(screen.queryByText("Items")).not.toBeInTheDocument();
   });
 });

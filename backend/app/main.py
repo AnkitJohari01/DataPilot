@@ -1,4 +1,7 @@
-from fastapi import FastAPI, Depends, HTTPException
+import io
+
+import pandas as pd
+from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from sqlalchemy import text
@@ -12,6 +15,9 @@ from app.database.metadata import (
     get_valid_identifiers,
     get_schema_catalog,
     get_catalog_for_llm,
+    create_dataset_import,
+    list_datasets,
+    DATASET_SCHEMA,
 )
 from app.services.semantic_retrieval_service import (
     build_clarification_question,
@@ -26,6 +32,16 @@ from app.services.gemini_service import (
     generate_insights,
     generate_sql,
     validate_sql,
+)
+from app.services.strict_answer_service import (
+    DatasetSelectionError,
+    DECLINED_CAUSAL_MESSAGE,
+    NO_EVIDENCE_MESSAGE,
+    build_allowlist,
+    build_dataset_schema_text,
+    is_causal_or_recommendation_question,
+    resolve_selected_tables,
+    validate_dataset_scoped_sql,
 )
 
 import logging
@@ -76,6 +92,86 @@ def refresh_catalog():
         "status": "refreshed",
         "tables_reembedded": table_count,
     }
+
+
+# --- Dataset import (shared CSV/Excel datasets) ---
+
+ALLOWED_DATASET_EXTENSIONS = {".csv", ".xlsx"}
+
+
+class DatasetTableResponse(BaseModel):
+    display_table_name: str
+    db_table_name: str
+    row_count: int
+    column_map: dict[str, str]
+
+
+class DatasetResponse(BaseModel):
+    id: int
+    name: str
+    created_at: str | None = None
+    tables: list[DatasetTableResponse] = Field(default_factory=list)
+
+
+def _dataframes_from_upload(filename: str, content: bytes) -> dict[str, "pd.DataFrame"]:
+    """Parse an uploaded CSV or Excel file into display_name -> DataFrame.
+    A CSV yields exactly one table named after the file; an Excel workbook
+    yields one table per non-empty worksheet. Raises HTTPException on an
+    unsupported extension, an unparsable file, or no usable data."""
+    lower_name = filename.lower()
+    suffix = lower_name[lower_name.rfind(".") :] if "." in lower_name else ""
+    if suffix not in ALLOWED_DATASET_EXTENSIONS:
+        raise HTTPException(
+            status_code=400, detail="Only .csv and .xlsx files are supported."
+        )
+
+    if suffix == ".csv":
+        try:
+            df = pd.read_csv(io.BytesIO(content))
+        except Exception as e:
+            raise HTTPException(status_code=400, detail=f"Could not parse CSV: {e}")
+        if df.empty or len(df.columns) == 0:
+            raise HTTPException(status_code=400, detail="The uploaded CSV has no data.")
+        base_name = filename.rsplit(".", 1)[0]
+        return {base_name: df}
+
+    try:
+        sheets = pd.read_excel(io.BytesIO(content), sheet_name=None)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Could not parse Excel file: {e}")
+
+    non_empty = {
+        sheet_name: df
+        for sheet_name, df in sheets.items()
+        if not df.empty and len(df.columns) > 0
+    }
+    if not non_empty:
+        raise HTTPException(
+            status_code=400, detail="The uploaded workbook has no non-empty sheets."
+        )
+    return non_empty
+
+
+@app.post("/api/datasets", response_model=DatasetResponse, status_code=201)
+def import_dataset(file: UploadFile = File(...), name: str | None = Form(None)):
+    content = file.file.read()
+    tables = _dataframes_from_upload(file.filename or "", content)
+    dataset_name = name or (file.filename or "dataset")
+
+    try:
+        dataset = create_dataset_import(dataset_name, tables)
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Dataset import failed: {e}")
+        raise HTTPException(status_code=400, detail=f"Import failed: {e}")
+
+    return dataset
+
+
+@app.get("/api/datasets", response_model=list[DatasetResponse])
+def get_datasets():
+    return list_datasets()
 
 
 class AskRequest(BaseModel):
@@ -266,4 +362,95 @@ def ask(request: AskRequest, db: Session = Depends(get_db)):
         "presentation": build_presentation(
             request.question, insights, row_dicts, data_sources, sql=result
         ),
+    }
+
+
+# --- Strict, dataset-scoped ask (evidence only: no narrative, no causal
+# inference, no recommendations). A parallel path to /api/ask above, which
+# stays as-is for the existing full-schema, narrative-insights flow. ---
+
+
+class StrictAskRequest(BaseModel):
+    question: str
+    dataset_ids: list[int]
+    history: list[dict] = Field(default_factory=list)
+
+
+class StrictAskResponse(BaseModel):
+    question: str
+    sql: str | None = None
+    rows: list[dict] = Field(default_factory=list)
+    result_count: int = 0
+    sources: list[dict] = Field(default_factory=list)
+    declined: bool = False
+    message: str | None = None
+
+
+@app.post("/api/ask/strict", response_model=StrictAskResponse)
+def ask_strict(request: StrictAskRequest, db: Session = Depends(get_db)):
+    try:
+        tables = resolve_selected_tables(request.dataset_ids)
+    except DatasetSelectionError as e:
+        raise HTTPException(status_code=400, detail=e.detail)
+
+    if is_causal_or_recommendation_question(request.question):
+        return {
+            "question": request.question,
+            "sql": None,
+            "rows": [],
+            "result_count": 0,
+            "sources": [],
+            "declined": True,
+            "message": DECLINED_CAUSAL_MESSAGE,
+        }
+
+    allowlist = build_allowlist(tables)
+    schema_text = build_dataset_schema_text(tables)
+
+    feedback = None
+    rows = None
+    result = None
+
+    for attempt in range(3):
+        try:
+            raw_sql = generate_sql(request.question, schema_text, request.history, feedback)
+        except RuntimeError as e:
+            logger.error(str(e))
+            raise HTTPException(
+                status_code=503,
+                detail="AI service is unavailable right now. Please try again.",
+            )
+
+        is_valid, validation_result = validate_dataset_scoped_sql(raw_sql, allowlist)
+
+        if not is_valid:
+            feedback = validation_result
+            if attempt == 1:
+                raise HTTPException(status_code=400, detail=validation_result)
+            continue
+
+        result = validation_result
+        try:
+            db.execute(text(f'SET search_path TO "{DATASET_SCHEMA}", public'))
+            db.execute(text("SET statement_timeout = 15000"))
+            rows = db.execute(text(result)).mappings().all()
+            break
+        except Exception as e:
+            logger.error(f"Strict-ask query failed: {e}")
+            db.rollback()
+            feedback = f"The database rejected this query: {e}"
+            if attempt == 1:
+                raise HTTPException(status_code=400, detail=f"The query failed: {e}")
+
+    row_dicts = [dict(row) for row in rows]
+    sources = extract_data_sources(result)
+
+    return {
+        "question": request.question,
+        "sql": result,
+        "rows": row_dicts,
+        "result_count": len(row_dicts),
+        "sources": sources,
+        "declined": False,
+        "message": None if row_dicts else NO_EVIDENCE_MESSAGE,
     }

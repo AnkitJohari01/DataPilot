@@ -7,6 +7,9 @@ from sqlalchemy import MetaData, Table, inspect, select, text
 
 from app.database.connection import engine
 
+import json
+import pandas as pd
+
 def get_schema_summary() -> dict:
     """Inspect the connected database and return a compact schema map."""
     inspector = inspect(engine)
@@ -445,3 +448,281 @@ def answer_data_dictionary_question(question: str) -> tuple[str, str] | None:
         if not rows:
             return None
         return "\n".join(f"- {r[0]}.{target}: {r[1]}" for r in rows), sql_display
+
+
+# --- Dataset import registry (shared, user-uploaded CSV/Excel datasets) ---
+#
+# Imported data lives in its own Postgres schema (DATASET_SCHEMA) so it can
+# never collide with the app's existing business tables, and never shows up
+# in get_valid_identifiers()/get_schema_catalog() scans of the default
+# schema. Two small registry tables (dp_datasets, dp_dataset_tables) track
+# dataset name, creation time, imported table names, row counts, and the
+# display-label -> db-identifier column mapping, so the catalog UI can show
+# the original labels even though the actual columns are normalized.
+#
+# Table creation + row inserts use plain DDL and batched parameterized
+# INSERTs (not pandas.to_sql) for the same reason load_sales_dashboard.py
+# does: pandas.to_sql doesn't detect the SQLAlchemy Connection object in
+# this environment (pandas/sqlalchemy version mismatch).
+
+DATASET_SCHEMA = "imported"
+IMPORT_CHUNK_SIZE = 500
+
+
+def ensure_registry_tables() -> None:
+    """Create the imported-data schema and registry tables if they don't
+    already exist. Safe to call on every import/list request."""
+    with engine.begin() as connection:
+        connection.execute(text(f'CREATE SCHEMA IF NOT EXISTS "{DATASET_SCHEMA}"'))
+        connection.execute(
+            text(
+                """
+                CREATE TABLE IF NOT EXISTS dp_datasets (
+                    id SERIAL PRIMARY KEY,
+                    name TEXT NOT NULL,
+                    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+                )
+                """
+            )
+        )
+        connection.execute(
+            text(
+                """
+                CREATE TABLE IF NOT EXISTS dp_dataset_tables (
+                    id SERIAL PRIMARY KEY,
+                    dataset_id INTEGER NOT NULL REFERENCES dp_datasets(id),
+                    display_table_name TEXT NOT NULL,
+                    db_table_name TEXT NOT NULL,
+                    row_count INTEGER NOT NULL,
+                    column_map JSONB NOT NULL
+                )
+                """
+            )
+        )
+
+
+def normalize_identifier(label: str, existing: set[str]) -> str:
+    """Turn an arbitrary display label into a unique, valid Postgres
+    identifier. `existing` is mutated to include the returned name, so
+    callers normalizing a batch of labels (e.g. all columns in one sheet)
+    can pass the same set through and get unique results."""
+    slug = re.sub(r"[^a-zA-Z0-9]+", "_", label.strip().lower()).strip("_")
+    slug = re.sub(r"_+", "_", slug)
+    if not slug:
+        slug = "col"
+    if slug[0].isdigit():
+        slug = f"_{slug}"
+    slug = slug[:63]
+
+    candidate = slug
+    suffix = 2
+    while candidate in existing:
+        suffix_str = f"_{suffix}"
+        candidate = slug[: 63 - len(suffix_str)] + suffix_str
+        suffix += 1
+
+    existing.add(candidate)
+    return candidate
+
+
+def _pg_type_for_dtype(dtype) -> str:
+    """Map a pandas/numpy dtype to a Postgres column type."""
+    kind = dtype.kind
+    if kind in ("i", "u"):
+        return "BIGINT"
+    if kind == "f":
+        return "DOUBLE PRECISION"
+    if kind == "b":
+        return "BOOLEAN"
+    if kind == "M":
+        return "TIMESTAMP"
+    return "TEXT"
+
+
+def create_dataset_import(dataset_name: str, tables: dict[str, "pd.DataFrame"]) -> dict:
+    """
+    Create one table per entry in `tables` (display_table_name -> DataFrame,
+    already filtered to non-empty) inside DATASET_SCHEMA, plus the registry
+    rows describing them, all in a single transaction. On any failure the
+    whole import (DDL, data, registry rows) is rolled back — no partial
+    dataset is left visible.
+
+    Table and column names are normalized and de-duplicated before
+    creation; the original labels are preserved in the registry's
+    display_table_name / column_map for the catalog UI.
+    """
+    ensure_registry_tables()
+
+    with engine.begin() as connection:
+        table_name_taken: set[str] = {
+            row[0]
+            for row in connection.execute(
+                text(
+                    "SELECT table_name FROM information_schema.tables "
+                    "WHERE table_schema = :schema"
+                ),
+                {"schema": DATASET_SCHEMA},
+            ).all()
+        }
+
+        dataset_id = connection.execute(
+            text("INSERT INTO dp_datasets (name) VALUES (:name) RETURNING id"),
+            {"name": dataset_name},
+        ).scalar_one()
+
+        created_tables = []
+
+        for display_table_name, df in tables.items():
+            db_table_name = normalize_identifier(display_table_name, table_name_taken)
+
+            column_seen: set[str] = set()
+            column_map: dict[str, str] = {}
+            db_columns: list[tuple[str, str]] = []
+            for original_col in df.columns:
+                db_col = normalize_identifier(str(original_col), column_seen)
+                column_map[str(original_col)] = db_col
+                db_columns.append((db_col, _pg_type_for_dtype(df[original_col].dtype)))
+
+            column_ddl = ", ".join(f'"{name}" {pg_type}' for name, pg_type in db_columns)
+            connection.execute(
+                text(f'CREATE TABLE "{DATASET_SCHEMA}"."{db_table_name}" ({column_ddl})')
+            )
+
+            renamed_df = df.rename(
+                columns={orig: column_map[str(orig)] for orig in df.columns}
+            )
+            records = renamed_df.where(pd.notnull(renamed_df), None).to_dict("records")
+
+            if records:
+                col_list = ", ".join(f'"{c}"' for c, _ in db_columns)
+                placeholders = ", ".join(f":{c}" for c, _ in db_columns)
+                insert_stmt = text(
+                    f'INSERT INTO "{DATASET_SCHEMA}"."{db_table_name}" ({col_list}) '
+                    f"VALUES ({placeholders})"
+                )
+                for i in range(0, len(records), IMPORT_CHUNK_SIZE):
+                    connection.execute(insert_stmt, records[i : i + IMPORT_CHUNK_SIZE])
+
+            connection.execute(
+                text(
+                    "INSERT INTO dp_dataset_tables "
+                    "(dataset_id, display_table_name, db_table_name, row_count, column_map) "
+                    "VALUES (:dataset_id, :display_table_name, :db_table_name, :row_count, :column_map)"
+                ),
+                {
+                    "dataset_id": dataset_id,
+                    "display_table_name": display_table_name,
+                    "db_table_name": db_table_name,
+                    "row_count": len(df),
+                    "column_map": json.dumps(column_map),
+                },
+            )
+
+            created_tables.append(
+                {
+                    "display_table_name": display_table_name,
+                    "db_table_name": db_table_name,
+                    "row_count": len(df),
+                    "column_map": column_map,
+                }
+            )
+
+    return {"id": dataset_id, "name": dataset_name, "tables": created_tables}
+
+
+def get_dataset_tables_by_ids(dataset_ids: list[int]) -> tuple[list[dict], set[int]]:
+    """Resolve the given dataset ids against the registry.
+
+    Returns (table_rows, existing_dataset_ids). table_rows is one entry per
+    imported table belonging to any of the requested datasets (a dataset
+    with several sheets/tables contributes several rows). existing_dataset_ids
+    is the subset of `dataset_ids` that actually exist in dp_datasets, so
+    callers can detect and reject any unknown id even though a dataset with
+    zero tables can't otherwise occur (create_dataset_import always creates
+    at least one non-empty table).
+    """
+    ensure_registry_tables()
+    if not dataset_ids:
+        return [], set()
+
+    with engine.connect() as connection:
+        existing_rows = connection.execute(
+            text("SELECT id FROM dp_datasets WHERE id = ANY(:ids)"),
+            {"ids": list(dataset_ids)},
+        ).all()
+        existing_dataset_ids = {row[0] for row in existing_rows}
+
+        table_rows = connection.execute(
+            text(
+                "SELECT dt.dataset_id, d.name, dt.display_table_name, "
+                "dt.db_table_name, dt.column_map "
+                "FROM dp_dataset_tables dt "
+                "JOIN dp_datasets d ON d.id = dt.dataset_id "
+                "WHERE dt.dataset_id = ANY(:ids) "
+                "ORDER BY dt.dataset_id, dt.id"
+            ),
+            {"ids": list(dataset_ids)},
+        ).all()
+
+    tables = [
+        {
+            "dataset_id": row[0],
+            "dataset_name": row[1],
+            "display_table_name": row[2],
+            "db_table_name": row[3],
+            "column_map": row[4] if isinstance(row[4], dict) else json.loads(row[4]),
+        }
+        for row in table_rows
+    ]
+    return tables, existing_dataset_ids
+
+
+def get_all_imported_identifiers() -> set[str]:
+    """Every table/column identifier across ALL imported datasets, regardless
+    of selection. Used only to distinguish "this table exists but isn't in
+    your selected datasets" from "this table doesn't exist at all" in the
+    strict-ask validation error message."""
+    identifiers: set[str] = set()
+    for dataset in list_datasets():
+        for table in dataset["tables"]:
+            identifiers.add(table["db_table_name"].lower())
+            for db_col in table["column_map"].values():
+                identifiers.add(db_col.lower())
+    return identifiers
+
+
+def list_datasets() -> list[dict]:
+    """Live read of the dataset registry — no cache, so a freshly imported
+    dataset is always visible on the next call."""
+    ensure_registry_tables()
+    with engine.connect() as connection:
+        dataset_rows = connection.execute(
+            text("SELECT id, name, created_at FROM dp_datasets ORDER BY created_at")
+        ).all()
+
+        datasets = []
+        for dataset_id, name, created_at in dataset_rows:
+            table_rows = connection.execute(
+                text(
+                    "SELECT display_table_name, db_table_name, row_count, column_map "
+                    "FROM dp_dataset_tables WHERE dataset_id = :id ORDER BY id"
+                ),
+                {"id": dataset_id},
+            ).all()
+            datasets.append(
+                {
+                    "id": dataset_id,
+                    "name": name,
+                    "created_at": created_at.isoformat() if created_at else None,
+                    "tables": [
+                        {
+                            "display_table_name": r[0],
+                            "db_table_name": r[1],
+                            "row_count": r[2],
+                            "column_map": r[3] if isinstance(r[3], dict) else json.loads(r[3]),
+                        }
+                        for r in table_rows
+                    ],
+                }
+            )
+        return datasets
