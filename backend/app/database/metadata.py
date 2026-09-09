@@ -630,6 +630,43 @@ def create_dataset_import(dataset_name: str, tables: dict[str, "pd.DataFrame"]) 
     return {"id": dataset_id, "name": dataset_name, "tables": created_tables}
 
 
+def delete_dataset(dataset_id: int) -> bool:
+    """Delete a dataset: drop its imported tables and remove its registry
+    rows (dp_dataset_tables then dp_datasets), all in one transaction.
+    Returns False without changing anything if the dataset id doesn't
+    exist; True on success."""
+    ensure_registry_tables()
+    with engine.begin() as connection:
+        exists = connection.execute(
+            text("SELECT 1 FROM dp_datasets WHERE id = :id"),
+            {"id": dataset_id},
+        ).first()
+        if not exists:
+            return False
+
+        table_rows = connection.execute(
+            text(
+                "SELECT db_table_name FROM dp_dataset_tables WHERE dataset_id = :id"
+            ),
+            {"id": dataset_id},
+        ).all()
+
+        for (db_table_name,) in table_rows:
+            connection.execute(
+                text(f'DROP TABLE IF EXISTS "{DATASET_SCHEMA}"."{db_table_name}"')
+            )
+
+        connection.execute(
+            text("DELETE FROM dp_dataset_tables WHERE dataset_id = :id"),
+            {"id": dataset_id},
+        )
+        connection.execute(
+            text("DELETE FROM dp_datasets WHERE id = :id"), {"id": dataset_id}
+        )
+
+    return True
+
+
 def get_dataset_tables_by_ids(dataset_ids: list[int]) -> tuple[list[dict], set[int]]:
     """Resolve the given dataset ids against the registry.
 
