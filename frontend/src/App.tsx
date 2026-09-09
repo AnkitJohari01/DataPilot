@@ -581,9 +581,12 @@ function DatasetsView({
   uploading,
   uploadError,
   expandedDatasets,
+  deletingId,
+  deleteError,
   onToggleDataset,
   onRefresh,
   onFileSelected,
+  onDelete,
 }: {
   datasets: UploadedDataset[] | null;
   loading: boolean;
@@ -591,9 +594,12 @@ function DatasetsView({
   uploading: boolean;
   uploadError: string;
   expandedDatasets: Record<number, boolean>;
+  deletingId: number | null;
+  deleteError: string;
   onToggleDataset: (id: number) => void;
   onRefresh: () => void;
   onFileSelected: (file: File) => void;
+  onDelete: (id: number) => void;
 }) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -656,6 +662,7 @@ function DatasetsView({
       </section>
 
       {error && <div className="error-banner">{error}</div>}
+      {deleteError && <div className="error-banner">{deleteError}</div>}
 
       {loading && !datasets && (
         <div className="analyzing">
@@ -677,20 +684,30 @@ function DatasetsView({
             const expanded = expandedDatasets[dataset.id] ?? false;
             return (
               <div className="table-card" key={dataset.id}>
-                <button
-                  className="table-card-header"
-                  onClick={() => onToggleDataset(dataset.id)}
-                  aria-expanded={expanded}
-                >
-                  <span className="table-card-name">
-                    <code>{dataset.name}</code>
-                    <span className="table-card-count">
-                      {dataset.tables.length} table
-                      {dataset.tables.length === 1 ? "" : "s"}
+                <div className="table-card-header-row">
+                  <button
+                    className="table-card-header"
+                    onClick={() => onToggleDataset(dataset.id)}
+                    aria-expanded={expanded}
+                  >
+                    <span className="table-card-name">
+                      <code>{dataset.name}</code>
+                      <span className="table-card-count">
+                        {dataset.tables.length} table
+                        {dataset.tables.length === 1 ? "" : "s"}
+                      </span>
                     </span>
-                  </span>
-                  <span className="toggle-icon">{expanded ? "▲" : "▼"}</span>
-                </button>
+                    <span className="toggle-icon">{expanded ? "▲" : "▼"}</span>
+                  </button>
+                  <button
+                    className="dataset-delete-btn"
+                    aria-label={`Delete ${dataset.name}`}
+                    disabled={deletingId === dataset.id}
+                    onClick={() => onDelete(dataset.id)}
+                  >
+                    {deletingId === dataset.id ? "Deleting…" : "Delete"}
+                  </button>
+                </div>
 
                 {expanded && (
                   <div className="table-card-body">
@@ -1101,6 +1118,8 @@ function App() {
   const [datasetUploading, setDatasetUploading] = useState(false);
   const [datasetUploadError, setDatasetUploadError] = useState("");
   const [expandedDatasets, setExpandedDatasets] = useState<Record<number, boolean>>({});
+  const [deletingDatasetId, setDeletingDatasetId] = useState<number | null>(null);
+  const [datasetDeleteError, setDatasetDeleteError] = useState("");
 
   async function fetchDatasets() {
     setDatasetsLoading(true);
@@ -1146,6 +1165,50 @@ function App() {
       setDatasetUploadError(err.message || "Import failed");
     } finally {
       setDatasetUploading(false);
+    }
+  }
+
+  async function deleteDataset(id: number) {
+    const target = datasets?.find((d) => d.id === id);
+    if (
+      !window.confirm(
+        `Delete "${target?.name ?? "this dataset"}"? This can't be undone.`,
+      )
+    ) {
+      return;
+    }
+    setDeletingDatasetId(id);
+    setDatasetDeleteError("");
+    try {
+      const res = await fetch(`${getApiBaseUrl()}/api/datasets/${id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        let detail = "Delete failed";
+        try {
+          const data = await res.json();
+          detail = data.detail || detail;
+        } catch {
+          // No JSON body (e.g. a bare 404/500) — keep the default message.
+        }
+        throw new Error(detail);
+      }
+      setDatasets((prev) => (prev ?? []).filter((d) => d.id !== id));
+      setExpandedDatasets((prev) => {
+        const { [id]: _removed, ...rest } = prev;
+        return rest;
+      });
+      if (selectedDatasetIds.includes(id)) {
+        // The deleted dataset was part of the active selection — any
+        // follow-up SQL history from before is no longer valid, so start
+        // the chat fresh, same as any other selection change.
+        setSelectedDatasetIds((prev) => prev.filter((x) => x !== id));
+        startNewChat();
+      }
+    } catch (err: any) {
+      setDatasetDeleteError(err.message || "Delete failed");
+    } finally {
+      setDeletingDatasetId(null);
     }
   }
 
@@ -1580,9 +1643,12 @@ function handleStop() {
             uploading={datasetUploading}
             uploadError={datasetUploadError}
             expandedDatasets={expandedDatasets}
+            deletingId={deletingDatasetId}
+            deleteError={datasetDeleteError}
             onToggleDataset={toggleDatasetExpanded}
             onRefresh={fetchDatasets}
             onFileSelected={uploadDataset}
+            onDelete={deleteDataset}
           />
         ) : activeNav === "settings" ? (
           <SettingsView

@@ -17,6 +17,7 @@ from app.database.connection import engine
 from app.database.metadata import (
     DATASET_SCHEMA,
     create_dataset_import,
+    delete_dataset,
     list_datasets,
     normalize_identifier,
 )
@@ -144,6 +145,26 @@ try:
     # 8. The registry is read live (no cache) — a fresh import is visible immediately
     assert dataset_again["id"] in {d["id"] for d in list_datasets()}
     print("Live registry read test passed.")
+
+    # 9. Deleting a dataset drops its table(s) and removes its registry rows;
+    # it's no longer selectable, and deleting an unknown id is a no-op.
+    to_delete_tables = _dataframes_from_upload("deleteme.csv", csv_bytes)
+    to_delete = create_dataset_import("Delete Me Test", to_delete_tables)
+    deleted_table_name = to_delete["tables"][0]["db_table_name"]
+
+    assert delete_dataset(to_delete["id"]) is True
+    assert to_delete["id"] not in {d["id"] for d in list_datasets()}
+    with engine.connect() as connection:
+        table_exists = connection.execute(
+            text(
+                "SELECT 1 FROM information_schema.tables "
+                "WHERE table_schema = :schema AND table_name = :table"
+            ),
+            {"schema": DATASET_SCHEMA, "table": deleted_table_name},
+        ).first()
+    assert table_exists is None, "imported table was not dropped on delete"
+    assert delete_dataset(999999) is False, "deleting an unknown id should return False"
+    print("Delete dataset test passed.")
 
     print("\nAll dataset import tests passed.")
 

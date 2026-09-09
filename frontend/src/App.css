@@ -480,6 +480,37 @@ input:focus-visible {
   color: var(--text);
 }
 
+.table-card-header-row {
+  display: flex;
+  align-items: center;
+}
+
+.table-card-header-row .table-card-header {
+  flex: 1;
+}
+
+.dataset-delete-btn {
+  flex-shrink: 0;
+  margin-right: 12px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm, 6px);
+  background: none;
+  color: var(--error);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.dataset-delete-btn:hover:not(:disabled) {
+  border-color: var(--error);
+  background: var(--error-bg);
+}
+
+.dataset-delete-btn:disabled {
+  color: var(--text-muted);
+  cursor: default;
+}
+
 .table-card-name {
   display: flex;
   align-items: center;

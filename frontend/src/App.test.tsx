@@ -332,6 +332,135 @@ describe("dataset import & catalog", () => {
     // must not appear just because Sales Export's group was expanded.
     expect(screen.queryByText("Items")).not.toBeInTheDocument();
   });
+
+  it("deletes a dataset after confirmation and removes it from the list", async () => {
+    vi.spyOn(window, "confirm").mockReturnValue(true);
+    const fetchMock = vi.fn((_url: string, init?: RequestInit) => {
+      if (init?.method === "DELETE") {
+        return Promise.resolve({ ok: true, status: 204, json: async () => ({}) });
+      }
+      return Promise.resolve({
+        ok: true,
+        json: async () => [
+          {
+            id: 1,
+            name: "Sales Export",
+            created_at: "2026-01-01T00:00:00Z",
+            tables: [
+              {
+                display_table_name: "Sheet1",
+                db_table_name: "sheet1",
+                row_count: 10,
+                column_map: { A: "a" },
+              },
+            ],
+          },
+        ],
+      });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: "My Datasets" }));
+
+    expect(await screen.findByText("Sales Export")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Delete Sales Export" }));
+
+    expect(window.confirm).toHaveBeenCalled();
+    await waitFor(() =>
+      expect(screen.queryByText("Sales Export")).not.toBeInTheDocument(),
+    );
+
+    const deleteCall = fetchMock.mock.calls.find(
+      (call) => (call[1] as RequestInit | undefined)?.method === "DELETE",
+    );
+    expect(deleteCall?.[0]).toContain("/api/datasets/1");
+  });
+
+  it("does not delete when the confirmation is declined", async () => {
+    vi.spyOn(window, "confirm").mockReturnValue(false);
+    const fetchMock = vi.fn((_url: string, init?: RequestInit) => {
+      if (init?.method === "DELETE") {
+        return Promise.resolve({ ok: true, status: 204, json: async () => ({}) });
+      }
+      return Promise.resolve({
+        ok: true,
+        json: async () => [
+          {
+            id: 1,
+            name: "Sales Export",
+            created_at: "2026-01-01T00:00:00Z",
+            tables: [
+              {
+                display_table_name: "Sheet1",
+                db_table_name: "sheet1",
+                row_count: 10,
+                column_map: { A: "a" },
+              },
+            ],
+          },
+        ],
+      });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: "My Datasets" }));
+
+    await screen.findByText("Sales Export");
+    fireEvent.click(screen.getByRole("button", { name: "Delete Sales Export" }));
+
+    expect(
+      fetchMock.mock.calls.some(
+        (call) => (call[1] as RequestInit | undefined)?.method === "DELETE",
+      ),
+    ).toBe(false);
+    expect(screen.getByText("Sales Export")).toBeInTheDocument();
+  });
+
+  it("shows an error and keeps the dataset when delete fails", async () => {
+    vi.spyOn(window, "confirm").mockReturnValue(true);
+    const fetchMock = vi.fn((_url: string, init?: RequestInit) => {
+      if (init?.method === "DELETE") {
+        return Promise.resolve({
+          ok: false,
+          status: 400,
+          json: async () => ({ detail: "Delete failed: still in use" }),
+        });
+      }
+      return Promise.resolve({
+        ok: true,
+        json: async () => [
+          {
+            id: 1,
+            name: "Sales Export",
+            created_at: "2026-01-01T00:00:00Z",
+            tables: [
+              {
+                display_table_name: "Sheet1",
+                db_table_name: "sheet1",
+                row_count: 10,
+                column_map: { A: "a" },
+              },
+            ],
+          },
+        ],
+      });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: "My Datasets" }));
+
+    await screen.findByText("Sales Export");
+    fireEvent.click(screen.getByRole("button", { name: "Delete Sales Export" }));
+
+    expect(
+      await screen.findByText("Delete failed: still in use"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Sales Export")).toBeInTheDocument();
+  });
 });
 
 const ONE_DATASET = [

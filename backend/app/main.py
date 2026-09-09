@@ -16,6 +16,7 @@ from app.database.metadata import (
     get_schema_catalog,
     get_catalog_for_llm,
     create_dataset_import,
+    delete_dataset,
     list_datasets,
     DATASET_SCHEMA,
 )
@@ -172,6 +173,20 @@ def import_dataset(file: UploadFile = File(...), name: str | None = Form(None)):
 @app.get("/api/datasets", response_model=list[DatasetResponse])
 def get_datasets():
     return list_datasets()
+
+
+@app.delete("/api/datasets/{dataset_id}", status_code=204)
+def remove_dataset(dataset_id: int):
+    try:
+        deleted = delete_dataset(dataset_id)
+    except Exception as e:
+        logger.error(f"Dataset delete failed: {e}")
+        raise HTTPException(status_code=400, detail=f"Delete failed: {e}")
+
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Dataset not found.")
+
+    return None
 
 
 class AskRequest(BaseModel):
