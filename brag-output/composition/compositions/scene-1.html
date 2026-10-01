@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 60px 120px;
+          color: #edeae4;
+          font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+        }
+        .hook-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          max-width: 1200px;
+          width: 100%;
+        }
+        .hook-tagline {
+          font-size: 22px;
+          font-weight: 600;
+          color: #f2d252;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          margin-bottom: 20px;
+        }
+        .hook-title {
+          font-size: 64px;
+          font-weight: 700;
+          line-height: 1.15;
+          letter-spacing: -0.03em;
+          color: #ffffff;
+          margin-bottom: 48px;
+        }
+        .prompt-box {
+          width: 100%;
+          max-width: 960px;
+          background: #252420;
+          border: 1px solid #4a4740;
+          border-radius: 18px;
+          padding: 24px 32px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+        }
+        .prompt-left {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          font-size: 24px;
+          color: #edeae4;
+        }
+        .sparkle-icon {
+          color: #f2d252;
+          font-size: 28px;
+        }
+        .prompt-cursor {
+          display: inline-block;
+          width: 3px;
+          height: 28px;
+          background: #f2d252;
+          vertical-align: middle;
+          margin-left: 4px;
+        }
+        .send-chip {
+          padding: 12px 28px;
+          background: #f2d252;
+          color: #181715;
+          border-radius: 12px;
+          font-weight: 700;
+          font-size: 16px;
+        }
+      </style>
+
+      <div
+        id="root"
+        data-composition-id="scene-1"
+        data-width="1920"
+        data-height="1080"
+      >
+        <div class="hook-container" id="s1-content">
+          <p class="hook-tagline">Natural Language Business Intelligence</p>
+          <h1 class="hook-title">Ask your database anything in plain English.</h1>
+          <div class="prompt-box" id="s1-prompt">
+            <div class="prompt-left">
+              <span class="sparkle-icon">✦</span>
+              <span id="typed-text"></span>
+              <span class="prompt-cursor" id="cursor"></span>
+            </div>
+            <div class="send-chip" id="s1-btn">Send</div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        const tl = gsap.timeline({ paused: true });
+
+        tl.fromTo(
+          "#s1-content",
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
+          0.2
+        );
+
+        const fullQuery = "Which products are losing money after discounts?";
+        const typedEl = document.getElementById("typed-text");
+        const cursorEl = document.getElementById("cursor");
+
+        tl.to(
+          { count: 0 },
+          {
+            count: fullQuery.length,
+            duration: 1.6,
+            ease: "none",
+            onUpdate: function () {
+              const c = Math.floor(this.targets()[0].count);
+              if (typedEl) typedEl.textContent = fullQuery.slice(0, c);
+            },
+          },
+          0.8
+        );
+
+        tl.to(cursorEl, { opacity: 0, repeat: 4, yoyo: true, duration: 0.2 }, 0.8);
+        tl.to("#s1-btn", { scale: 0.94, duration: 0.15, yoyo: true, repeat: 1, ease: "power1.inOut" }, 2.5);
+        tl.to("#s1-content", { opacity: 0, y: -20, duration: 0.4, ease: "power2.in" }, 2.8);
+
+        window.__timelines["scene-1"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

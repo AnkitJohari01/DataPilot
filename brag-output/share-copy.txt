@@ -1,0 +1,1 @@
+Introducing DataPilot: an AI business intelligence layer on PostgreSQL. Ask in plain English, get validated SQL through SQLGlot, and explore instant charts grounded strictly in real database rows — zero hallucinations.

@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 60px 120px;
+          color: #edeae4;
+          font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+        }
+        .pipeline-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          width: 100%;
+          max-width: 1280px;
+        }
+        .chips-row {
+          display: flex;
+          gap: 20px;
+          margin-bottom: 28px;
+        }
+        .table-badge {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 12px 24px;
+          background: #252420;
+          border: 1px solid #3a3834;
+          border-radius: 12px;
+          font-size: 18px;
+          font-weight: 600;
+          color: #edeae4;
+        }
+        .badge-score {
+          padding: 4px 10px;
+          background: rgba(78, 159, 110, 0.2);
+          color: #6bbf8c;
+          border-radius: 6px;
+          font-size: 14px;
+          font-weight: 700;
+        }
+        .sql-card {
+          width: 100%;
+          background: #1f1e1c;
+          border: 1px solid #3a3834;
+          border-radius: 18px;
+          overflow: hidden;
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+        }
+        .sql-card-header {
+          background: #282723;
+          padding: 14px 24px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          border-bottom: 1px solid #3a3834;
+        }
+        .window-dots {
+          display: flex;
+          gap: 8px;
+        }
+        .window-dot {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: #4a4740;
+        }
+        .verify-pill {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 6px 14px;
+          background: rgba(78, 159, 110, 0.15);
+          border: 1px solid #4e9f6e;
+          color: #6bbf8c;
+          border-radius: 999px;
+          font-size: 14px;
+          font-weight: 600;
+        }
+        .sql-card-body {
+          padding: 28px 32px;
+          font-family: ui-monospace, "Courier New", monospace;
+          font-size: 20px;
+          line-height: 1.6;
+          color: #b0aaa0;
+        }
+        .sql-kw {
+          color: #f2d252;
+          font-weight: 700;
+        }
+        .sql-fn {
+          color: #6bb3e8;
+        }
+      </style>
+
+      <div
+        id="root"
+        data-composition-id="scene-2"
+        data-width="1920"
+        data-height="1080"
+      >
+        <div class="pipeline-container" id="s2-content">
+          <div class="chips-row">
+            <div class="table-badge" id="s2-badge-1">
+              <span>Table: <code>dim_product</code></span>
+              <span class="badge-score">96.4% match</span>
+            </div>
+            <div class="table-badge" id="s2-badge-2">
+              <span>Table: <code>fact_sales</code></span>
+              <span class="badge-score">98.1% match</span>
+            </div>
+          </div>
+          <div class="sql-card" id="s2-sql-card">
+            <div class="sql-card-header">
+              <div class="window-dots">
+                <div class="window-dot"></div>
+                <div class="window-dot"></div>
+                <div class="window-dot"></div>
+              </div>
+              <div class="verify-pill" id="s2-verify">
+                <span>✓</span>
+                <span>SQLGlot: Read-Only &amp; Schema Verified</span>
+              </div>
+            </div>
+            <div class="sql-card-body">
+              <span class="sql-kw">SELECT</span> p.product_name,
+              <span class="sql-fn">ROUND</span>(<span class="sql-fn">SUM</span>(s.sales)::numeric, 2) <span class="sql-kw">AS</span> revenue,<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sql-fn">ROUND</span>(<span class="sql-fn">SUM</span>(s.profit)::numeric, 2) <span class="sql-kw">AS</span> total_profit<br />
+              <span class="sql-kw">FROM</span> fact_sales s<br />
+              <span class="sql-kw">JOIN</span> dim_product p <span class="sql-kw">ON</span> s.product_id = p.product_id<br />
+              <span class="sql-kw">WHERE</span> s.discount &gt; 0.20<br />
+              <span class="sql-kw">GROUP BY</span> p.product_name <span class="sql-kw">HAVING</span> <span class="sql-fn">SUM</span>(s.profit) &lt; 0<br />
+              <span class="sql-kw">ORDER BY</span> total_profit <span class="sql-kw">ASC</span>;
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        const tl = gsap.timeline({ paused: true });
+
+        tl.fromTo("#s2-badge-1", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }, 0.2);
+        tl.fromTo("#s2-badge-2", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }, 0.5);
+        tl.fromTo("#s2-sql-card", { opacity: 0, y: 30, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power2.out" }, 0.9);
+        tl.fromTo("#s2-verify", { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.7)" }, 1.6);
+        tl.to("#s2-content", { opacity: 0, y: -20, duration: 0.4, ease: "power2.in" }, 3.9);
+
+        window.__timelines["scene-2"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

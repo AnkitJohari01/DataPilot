@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>DataPilot Launch</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #181715;
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+        color: #edeae4;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+      [data-composition-id="main"] > div[data-composition-src] {
+        position: absolute;
+        inset: 0;
+      }
+      .bg-layer {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 50% 25%, #2a2822 0%, #181715 70%);
+        z-index: 0;
+      }
+      .ambient-glow {
+        position: absolute;
+        top: 20%;
+        left: 30%;
+        width: 800px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(242, 210, 82, 0.09) 0%, transparent 70%);
+        pointer-events: none;
+        filter: blur(60px);
+      }
+      .top-nav {
+        position: absolute;
+        top: 40px;
+        left: 80px;
+        right: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        z-index: 100;
+        pointer-events: none;
+      }
+      .brand-badge {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .logo-icon {
+        width: 44px;
+        height: 44px;
+        background: #f2d252;
+        color: #181715;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 20px;
+      }
+      .brand-name {
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: #edeae4;
+      }
+      .status-pill {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 18px;
+        background: rgba(42, 41, 38, 0.85);
+        border: 1px solid #3a3834;
+        border-radius: 999px;
+        font-size: 15px;
+        color: #b0aaa0;
+      }
+      .status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #4e9f6e;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="19"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div class="bg-layer">
+        <div id="ambient-glow" class="ambient-glow"></div>
+      </div>
+
+      <div class="top-nav">
+        <div class="brand-badge">
+          <div class="logo-icon">DP</div>
+          <span class="brand-name">DataPilot</span>
+        </div>
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          <span>Connected to: Sales Database</span>
+        </div>
+      </div>
+
+      <!-- Modular scenes as sub-compositions -->
+      <div
+        id="el-scene-1"
+        data-composition-id="scene-1"
+        data-composition-src="compositions/scene-1.html"
+        data-start="0"
+        data-duration="3.2"
+        data-track-index="1"
+        data-width="1920"
+        data-height="1080"
+      ></div>
+
+      <div
+        id="el-scene-2"
+        data-composition-id="scene-2"
+        data-composition-src="compositions/scene-2.html"
+        data-start="3.2"
+        data-duration="4.3"
+        data-track-index="1"
+        data-width="1920"
+        data-height="1080"
+      ></div>
+
+      <div
+        id="el-scene-3"
+        data-composition-id="scene-3"
+        data-composition-src="compositions/scene-3.html"
+        data-start="7.5"
+        data-duration="7.0"
+        data-track-index="1"
+        data-width="1920"
+        data-height="1080"
+      ></div>
+
+      <div
+        id="el-scene-4"
+        data-composition-id="scene-4"
+        data-composition-src="compositions/scene-4.html"
+        data-start="14.5"
+        data-duration="4.5"
+        data-track-index="1"
+        data-width="1920"
+        data-height="1080"
+      ></div>
+
+      <!-- Continuous Audio Tracks -->
+      <audio
+        id="bg-music"
+        data-start="0"
+        data-duration="19"
+        data-track-index="10"
+        data-volume="0.32"
+        src="assets/music/happy-beats-business-moves-vol-12-by-ende-dot-app.mp3"
+      ></audio>
+      <audio
+        id="sfx-type"
+        data-start="0.8"
+        data-duration="0.5"
+        data-track-index="11"
+        data-volume="0.55"
+        src="assets/sfx/keyboard/keypress-001.wav"
+      ></audio>
+      <audio
+        id="sfx-switch"
+        data-start="4.8"
+        data-duration="0.8"
+        data-track-index="12"
+        data-volume="0.65"
+        src="assets/sfx/interface/switch_001.ogg"
+      ></audio>
+      <audio
+        id="sfx-drop"
+        data-start="7.6"
+        data-duration="1.0"
+        data-track-index="13"
+        data-volume="0.70"
+        src="assets/sfx/impact/impactSoft_medium_001.ogg"
+      ></audio>
+      <audio
+        id="sfx-bell"
+        data-start="14.5"
+        data-duration="2.5"
+        data-track-index="14"
+        data-volume="0.75"
+        src="assets/sfx/impact/impactBell_heavy_000.ogg"
+      ></audio>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      tl.to("#ambient-glow", { opacity: 0.6, scale: 1.15, duration: 9.5, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0);
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
