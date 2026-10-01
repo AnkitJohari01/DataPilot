@@ -558,8 +558,9 @@ def create_dataset_import(dataset_name: str, tables: dict[str, "pd.DataFrame"]) 
             row[0]
             for row in connection.execute(
                 text(
-                    "SELECT table_name FROM information_schema.tables "
-                    "WHERE table_schema = :schema"
+                    "SELECT t.typname FROM pg_type t "
+                    "JOIN pg_namespace n ON n.oid = t.typnamespace "
+                    "WHERE n.nspname = :schema"
                 ),
                 {"schema": DATASET_SCHEMA},
             ).all()

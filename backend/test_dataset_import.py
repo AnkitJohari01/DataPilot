@@ -95,7 +95,7 @@ try:
         assert e.status_code == 400
     print("Unsupported extension rejection test passed.")
 
-    # 5. A failed import leaves no visible dataset (single transaction, full rollback)
+    # 5. An existing table name is skipped during import
     conflict_tables = _dataframes_from_upload("conflict test.csv", csv_bytes)
     conflicting_name = normalize_identifier("conflict test", set())
     with engine.begin() as connection:
@@ -104,15 +104,11 @@ try:
         )
     created_table_names.append(conflicting_name)
 
-    dataset_ids_before = {d["id"] for d in list_datasets()}
-    try:
-        create_dataset_import("Conflict Test", conflict_tables)
-        assert False, "expected an exception on table-name collision"
-    except Exception:
-        pass
-    dataset_ids_after = {d["id"] for d in list_datasets()}
-    assert dataset_ids_before == dataset_ids_after, "a dataset row leaked after a failed import"
-    print("Rollback-on-failure test passed.")
+    conflict_dataset = create_dataset_import("Conflict Test", conflict_tables)
+    created_dataset_ids.append(conflict_dataset["id"])
+    created_table_names += [t["db_table_name"] for t in conflict_dataset["tables"]]
+    assert conflict_dataset["tables"][0]["db_table_name"] == f"{conflicting_name}_2"
+    print("Existing-table name collision test passed.")
 
     # 6. Identifier normalization + uniqueness within one import
     messy_df = pd.DataFrame(
