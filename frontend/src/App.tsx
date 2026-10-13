@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef, Fragment, type ReactElement } from "react";
+import { useState, useEffect, useRef, Fragment, type ReactElement, type Dispatch, type SetStateAction } from "react";
 import "./App.css";
+import { formatAnswerText, formatOutputValue } from "./numberFormat";
 import { Bar, BarChart, Line, LineChart, ComposedChart, Pie, PieChart, Cell, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Scatter, ScatterChart, Funnel, FunnelChart, LabelList, Treemap, Area, AreaChart } from "recharts";
 
 type Message = {
@@ -101,47 +102,45 @@ function loadSavedInsights(): SavedInsight[] {
   }
 }
 
-function renderMarkdown(text: string): ReactElement[] {
-    const lines = text.split("\n");
+function trendClass(text: string): string | undefined {
+  // shortcut: Recognizes explicit English trend wording; use structured trend metadata for ambiguous or multilingual answers.
+  if (/\b(?:not|no|never|unchanged|flat|stable|(?:did|does|do|has|have|had|is|are|was|were|can|could|will|would)n['’]t)\b/i.test(text)) return;
+  const up = /\b(?:increas(?:e[sd]?|ing)|ris(?:e[sn]?|ing)|rose|grow(?:s|ing)?|grew|grown|gain(?:s|ed|ing)?|higher)\b|\bup\s+(?:by\s+)?\d/i.test(text);
+  const down = /\b(?:decreas(?:e[sd]?|ing)|declin(?:e[sd]?|ing)|fall(?:s|en|ing)?|fell|drop(?:s|ped|ping)?|lower)\b|\bdown\s+(?:by\s+)?\d/i.test(text);
+  if (up === down) return;
+  return up ? "trend-up" : "trend-down";
+}
+
+function renderInline(text: string): ReactElement[] {
   const output: ReactElement[] = [];
-  let index = 0;
-
- const isTableLine = (_line: string) => false;
-
-  const cells = (line: string) => line.trim().replace(/^\||\|$/g, "").split("|").map((cell) => cell.trim());
-  const inlineHtml = (value: string) => value.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
-
-  while (index < lines.length) {
-    const trimmed = lines[index].trim();
-    if (isTableLine(trimmed)) {
-      const tableLines: string[] = [];
-      while (index < lines.length && isTableLine(lines[index])) {
-        tableLines.push(lines[index].trim());
-        index += 1;
-      }
-      const header = cells(tableLines[0]);
-      const hasSeparator = tableLines[1]?.split("|").every((cell) => /^\s*:?-{3,}:?\s*$/.test(cell));
-      const body = tableLines.slice(hasSeparator ? 2 : 1);
-      output.push(
-        <div className="markdown-table-wrapper" key={`table-${index}`}>
-          <table className="markdown-table">
-            <thead><tr>{header.map((cell, cellIndex) => <th key={cellIndex}>{cell}</th>)}</tr></thead>
-            <tbody>{body.map((row, rowIndex) => <tr key={rowIndex}>{cells(row).map((cell, cellIndex) => <td key={cellIndex} dangerouslySetInnerHTML={{ __html: inlineHtml(cell) }} />)}</tr>)}</tbody>
-          </table>
-        </div>,
-      );
-      continue;
+  let bold = false;
+  const parts = text.split(/([.!?;](?=(?:\*\*)?(?:\s|$))\s*|,(?!\d)\s*|\s+(?:but|while|whereas|and)\s+)/i);
+  for (const [index, part] of parts.entries()) {
+    const formatted: ReactElement[] = [];
+    for (const [i, piece] of part.split("**").entries()) {
+      if (i > 0) bold = !bold;
+      formatted.push(bold ? <strong key={i}>{piece}</strong> : <Fragment key={i}>{piece}</Fragment>);
     }
-    const inline = inlineHtml(trimmed);
-    if (!trimmed) { index += 1; continue; }
-    else if (trimmed.startsWith("### ")) output.push(<h4 key={index}>{trimmed.slice(4)}</h4>);
-    else if (trimmed.startsWith("## ")) output.push(<h3 key={index}>{trimmed.slice(3)}</h3>);
-    else if (trimmed.startsWith("# ")) output.push(<h2 key={index}>{trimmed.slice(2)}</h2>);
-    else if (/^[-*] /.test(trimmed)) output.push(<p className="markdown-list-item" key={index} dangerouslySetInnerHTML={{ __html: `• ${inline.slice(2)}` }} />);
-    else if (/^\d+\. /.test(trimmed)) output.push(<p className="markdown-list-item" key={index} dangerouslySetInnerHTML={{ __html: inline.replace(/^\d+\. /, "") }} />);
-    else output.push(<p key={index} dangerouslySetInnerHTML={{ __html: inline }} />);
-    index += 1;
+    const className = trendClass(part);
+    output.push(className
+      ? <span key={index} className={className}>{formatted}</span>
+      : <Fragment key={index}>{formatted}</Fragment>);
   }
+  return output;
+}
+
+function renderMarkdown(text: string): ReactElement[] {
+  const output: ReactElement[] = [];
+  formatAnswerText(text).split("\n").forEach((line, index) => {
+    const trimmed = line.trim();
+    if (!trimmed) return;
+    if (trimmed.startsWith("### ")) output.push(<h4 key={index}>{renderInline(trimmed.slice(4))}</h4>);
+    else if (trimmed.startsWith("## ")) output.push(<h3 key={index}>{renderInline(trimmed.slice(3))}</h3>);
+    else if (trimmed.startsWith("# ")) output.push(<h2 key={index}>{renderInline(trimmed.slice(2))}</h2>);
+    else if (/^[-*] /.test(trimmed)) output.push(<p className="markdown-list-item" key={index}>• {renderInline(trimmed.slice(2))}</p>);
+    else if (/^\d+\. /.test(trimmed)) output.push(<p className="markdown-list-item" key={index}>{renderInline(trimmed.replace(/^\d+\. /, ""))}</p>);
+    else output.push(<p key={index}>{renderInline(trimmed)}</p>);
+  });
   return output;
 }
 
@@ -154,20 +153,7 @@ type ChartType = "bar" | "pie" | "line" | "combo" | "scatter" | "funnel" | "tree
 
 const CHART_COLORS = ["#C96442", "#4E9F6E", "#5B8DEF", "#D9A441", "#9B6BD9", "#4EA0A0"];
 
-const EXPLICIT_CHART_HINT = /chart|graph|plot|visuali[sz]e|scatter|funnel|treemap|heatmap|heat map|ribbon|waterfall|clustered|\bpie\b|\bline\b|\bbar\b/i;
-
-// Shows a chart when the question explicitly asks for one, OR when the
-// returned rows are naturally chartable: more than one row, at least one
-// label-like column, and at least one numeric column. A single-row answer
-// (e.g. "what's total profit?") or a purely text/list answer won't qualify.
-function wantsChart(question: string, rows: Array<Record<string, unknown>>): boolean {
-  if (EXPLICIT_CHART_HINT.test(question)) return true;
-  if (!rows || rows.length < 2) return false;
-  const keys = Object.keys(rows[0] || {});
-  const numericKeys = keys.filter((k) => typeof rows[0][k] === "number");
-  const hasLabel = keys.some((k) => !numericKeys.includes(k));
-  return numericKeys.length >= 1 && hasLabel;
-}
+const EXPLICIT_CHART_HINT = /\b(?:chart|graph|plot|visuali[sz](?:e|ation)|scatter|funnel|treemap|heat\s?map|ribbon|waterfall)\b/i;
 
 function detectChartTypeFromQuestion(question: string): ChartType | null {
   if (/waterfall/i.test(question)) return "waterfall";
@@ -209,16 +195,16 @@ function HeatmapView({ rows, xKey, yKey, valueKey }: { rows: Array<Record<string
   return (
     <div className="chart-wrapper heatmap-grid" style={{ gridTemplateColumns: `120px repeat(${xValues.length}, 1fr)` }}>
       <div />
-      {xValues.map((x) => <div key={x} className="heatmap-label">{x}</div>)}
+      {xValues.map((x) => <div key={x} className="heatmap-label">{formatOutputValue(x, xKey)}</div>)}
       {yValues.map((y) => (
         <Fragment key={y}>
-          <div className="heatmap-label">{y}</div>
+          <div className="heatmap-label">{formatOutputValue(y, yKey)}</div>
           {xValues.map((x) => {
-            const v = lookup.get(`${y}|${x}`) ?? 0;
-            const intensity = v / max;
+            const v = lookup.get(`${y}|${x}`);
+            const intensity = (v ?? 0) / max;
             return (
-              <div key={`${y}-${x}`} className="heatmap-cell" style={{ background: `rgba(201, 100, 66, ${0.1 + intensity * 0.8})` }} title={`${y} / ${x}: ${v}`}>
-                {v ? v.toLocaleString() : "—"}
+              <div key={`${y}-${x}`} className="heatmap-cell" style={{ background: `rgba(201, 100, 66, ${0.1 + intensity * 0.8})` }} title={`${formatOutputValue(y, yKey)} / ${formatOutputValue(x, xKey)}: ${v === undefined ? "—" : formatOutputValue(v, valueKey)}`}>
+                {v === undefined ? "—" : formatOutputValue(v, valueKey)}
               </div>
             );
           })}
@@ -243,9 +229,9 @@ function WaterfallChart({ rows, labelKey, valueKey }: { rows: Array<Record<strin
       <ResponsiveContainer width="100%" height={280}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-          <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={12} />
-          <YAxis stroke="var(--text-muted)" fontSize={12} />
-          <Tooltip contentStyle={tooltipStyle} />
+          <XAxis dataKey="name" tickFormatter={(value) => formatOutputValue(value, labelKey)} stroke="var(--text-muted)" fontSize={12} />
+          <YAxis tickFormatter={(value) => formatOutputValue(value, valueKey)} stroke="var(--text-muted)" fontSize={12} />
+          <Tooltip formatter={(value) => formatOutputValue(value, valueKey)} labelFormatter={(value) => formatOutputValue(value, labelKey)} contentStyle={tooltipStyle} />
           <Bar dataKey="base" stackId="wf" fill="transparent" />
           <Bar dataKey="delta" stackId="wf" radius={[4, 4, 4, 4]}>
             {data.map((d, i) => <Cell key={i} fill={d.rising ? "var(--success)" : "var(--error)"} />)}
@@ -274,9 +260,9 @@ function RibbonChart({ rows, labelKey, groupKey, valueKey }: { rows: Array<Recor
       <ResponsiveContainer width="100%" height={280}>
         <AreaChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-          <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={12} />
-          <YAxis stroke="var(--text-muted)" fontSize={12} />
-          <Tooltip contentStyle={tooltipStyle} />
+          <XAxis dataKey="name" tickFormatter={(value) => formatOutputValue(value, labelKey)} stroke="var(--text-muted)" fontSize={12} />
+          <YAxis tickFormatter={(value) => formatOutputValue(value, valueKey)} stroke="var(--text-muted)" fontSize={12} />
+          <Tooltip formatter={(value) => formatOutputValue(value, valueKey)} labelFormatter={(value) => formatOutputValue(value, labelKey)} contentStyle={tooltipStyle} />
           {groups.map((g, i) => (
             <Area key={g} type="monotone" dataKey={g} stackId="ribbon" stroke={CHART_COLORS[i % CHART_COLORS.length]} fill={CHART_COLORS[i % CHART_COLORS.length]} fillOpacity={0.55} />
           ))}
@@ -319,9 +305,9 @@ function ChartView({ rows, question }: { rows: Array<Record<string, unknown>>; q
         <ResponsiveContainer width="100%" height={280}>
           <ScatterChart>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-            <XAxis dataKey={numericKeys[0]} name={numericKeys[0]} stroke="var(--text-muted)" fontSize={12} />
-            <YAxis dataKey={numericKeys[1]} name={numericKeys[1]} stroke="var(--text-muted)" fontSize={12} />
-            <Tooltip contentStyle={tooltipStyle} cursor={{ strokeDasharray: "3 3" }} />
+            <XAxis dataKey={numericKeys[0]} tickFormatter={(value) => formatOutputValue(value, numericKeys[0])} name={numericKeys[0]} stroke="var(--text-muted)" fontSize={12} />
+            <YAxis dataKey={numericKeys[1]} tickFormatter={(value) => formatOutputValue(value, numericKeys[1])} name={numericKeys[1]} stroke="var(--text-muted)" fontSize={12} />
+            <Tooltip formatter={(value, name) => formatOutputValue(value, String(name))} contentStyle={tooltipStyle} cursor={{ strokeDasharray: "3 3" }} />
             <Scatter data={data} fill="var(--accent)" />
           </ScatterChart>
         </ResponsiveContainer>
@@ -334,10 +320,10 @@ function ChartView({ rows, question }: { rows: Array<Record<string, unknown>>; q
       <div className="chart-wrapper">
         <ResponsiveContainer width="100%" height={280}>
           <FunnelChart>
-            <Tooltip contentStyle={tooltipStyle} />
+            <Tooltip formatter={(value) => formatOutputValue(value, valueKey)} contentStyle={tooltipStyle} />
             <Funnel dataKey={valueKey} data={funnelData} isAnimationActive>
               {funnelData.map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />)}
-              <LabelList dataKey="name" position="right" fill="var(--text)" />
+              <LabelList dataKey="name" formatter={(value: unknown) => formatOutputValue(value, labelKey)} position="right" fill="var(--text)" />
             </Funnel>
           </FunnelChart>
         </ResponsiveContainer>
@@ -348,7 +334,9 @@ function ChartView({ rows, question }: { rows: Array<Record<string, unknown>>; q
     return (
       <div className="chart-wrapper">
         <ResponsiveContainer width="100%" height={280}>
-          <Treemap data={data.map((d) => ({ name: d.name, size: d[valueKey] }))} dataKey="size" stroke="var(--surface)" fill="var(--accent)" />
+          <Treemap data={data.map((d) => ({ name: d.name, size: d[valueKey] }))} dataKey="size" stroke="var(--surface)" fill="var(--accent)">
+            <Tooltip formatter={(value) => formatOutputValue(value, valueKey)} contentStyle={tooltipStyle} />
+          </Treemap>
         </ResponsiveContainer>
       </div>
     );
@@ -359,9 +347,9 @@ function ChartView({ rows, question }: { rows: Array<Record<string, unknown>>; q
         <ResponsiveContainer width="100%" height={280}>
           <ComposedChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-            <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={12} />
-            <YAxis stroke="var(--text-muted)" fontSize={12} />
-            <Tooltip contentStyle={tooltipStyle} />
+            <XAxis dataKey="name" tickFormatter={(value) => formatOutputValue(value, labelKey)} stroke="var(--text-muted)" fontSize={12} />
+            <YAxis tickFormatter={(value) => formatOutputValue(value, valueKey)} stroke="var(--text-muted)" fontSize={12} />
+            <Tooltip formatter={(value, name) => formatOutputValue(value, String(name))} labelFormatter={(value) => formatOutputValue(value, labelKey)} contentStyle={tooltipStyle} />
             <Bar dataKey={numericKeys[0]} fill="var(--accent)" radius={[6, 6, 0, 0]} />
             <Line type="monotone" dataKey={numericKeys[1]} stroke="var(--success)" strokeWidth={2} dot={{ r: 3 }} />
           </ComposedChart>
@@ -374,10 +362,10 @@ function ChartView({ rows, question }: { rows: Array<Record<string, unknown>>; q
       <div className="chart-wrapper">
         <ResponsiveContainer width="100%" height={280}>
           <PieChart>
-            <Pie data={data} dataKey={valueKey} nameKey="name" outerRadius={100} label>
+            <Pie data={data} dataKey={valueKey} nameKey="name" outerRadius={100} label={({ value }) => formatOutputValue(value, valueKey)}>
               {data.map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />)}
             </Pie>
-            <Tooltip contentStyle={tooltipStyle} />
+            <Tooltip formatter={(value) => formatOutputValue(value, valueKey)} contentStyle={tooltipStyle} />
           </PieChart>
         </ResponsiveContainer>
       </div>
@@ -389,9 +377,9 @@ function ChartView({ rows, question }: { rows: Array<Record<string, unknown>>; q
         <ResponsiveContainer width="100%" height={280}>
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-            <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={12} />
-            <YAxis stroke="var(--text-muted)" fontSize={12} />
-            <Tooltip contentStyle={tooltipStyle} />
+            <XAxis dataKey="name" tickFormatter={(value) => formatOutputValue(value, labelKey)} stroke="var(--text-muted)" fontSize={12} />
+            <YAxis tickFormatter={(value) => formatOutputValue(value, valueKey)} stroke="var(--text-muted)" fontSize={12} />
+            <Tooltip formatter={(value, name) => formatOutputValue(value, String(name))} labelFormatter={(value) => formatOutputValue(value, labelKey)} contentStyle={tooltipStyle} />
             <Line type="monotone" dataKey={valueKey} stroke="var(--accent)" strokeWidth={2} dot={{ r: 3 }} />
           </LineChart>
         </ResponsiveContainer>
@@ -403,9 +391,9 @@ function ChartView({ rows, question }: { rows: Array<Record<string, unknown>>; q
       <ResponsiveContainer width="100%" height={280}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-          <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={12} />
-          <YAxis stroke="var(--text-muted)" fontSize={12} />
-          <Tooltip contentStyle={tooltipStyle} />
+          <XAxis dataKey="name" tickFormatter={(value) => formatOutputValue(value, labelKey)} stroke="var(--text-muted)" fontSize={12} />
+          <YAxis tickFormatter={(value) => formatOutputValue(value, valueKey)} stroke="var(--text-muted)" fontSize={12} />
+          <Tooltip formatter={(value, name) => formatOutputValue(value, String(name))} labelFormatter={(value) => formatOutputValue(value, labelKey)} contentStyle={tooltipStyle} />
           <Bar dataKey={valueKey} fill="var(--accent)" radius={[6, 6, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
@@ -413,6 +401,14 @@ function ChartView({ rows, question }: { rows: Array<Record<string, unknown>>; q
   );
 }
 
+
+function changeClass(column: string, value: unknown): string | undefined {
+  if (!/(?:^|[_\s])(?:change|growth|delta|variance)(?:$|[_\s])/i.test(column)) return;
+  const text = String(value ?? "").trim().replaceAll(",", "");
+  if (!/^[+-]?\d+(?:\.\d+)?%?$/.test(text)) return;
+  const change = Number(text.replace("%", ""));
+  return change > 0 ? "trend-up" : change < 0 ? "trend-down" : undefined;
+}
 
 function ResultsTable({ rows }: { rows: Array<Record<string, unknown>> }) {
   if (!rows.length) return null;
@@ -433,7 +429,7 @@ function ResultsTable({ rows }: { rows: Array<Record<string, unknown>> }) {
             {rows.map((row, i) => (
               <tr key={i}>
                 {columns.map((col) => (
-                  <td key={col}>{String(row[col] ?? "")}</td>
+                  <td key={col} className={changeClass(col, row[col])}>{formatOutputValue(row[col], col)}</td>
                 ))}
               </tr>
             ))}
@@ -998,21 +994,15 @@ function HelpView({ apiBaseUrl }: { apiBaseUrl: string }) {
 }
 
 
-function App() {
+function useChatState(setSessions: Dispatch<SetStateAction<ChatSession[]>>) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const [sessions, setSessions] = useState<ChatSession[]>(() => loadSessions());
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
   const skipNextSyncRef = useRef(false);
-
-  useEffect(() => {
-    localStorage.setItem(SESSIONS_STORAGE_KEY, JSON.stringify(sessions));
-  }, [sessions]);
 
   // Keep the active session's stored messages in sync with what's on screen,
   // creating a new session the first time a message lands in a fresh chat.
@@ -1047,7 +1037,35 @@ function App() {
         ...prev,
       ];
     });
-  }, [messages, activeSessionId]);
+  }, [messages, activeSessionId, setSessions]);
+
+  function restoreSession(session: ChatSession) {
+    skipNextSyncRef.current = true;
+    setActiveSessionId(session.id);
+    setMessages(session.messages);
+  }
+
+  return {
+    messages, setMessages, input, setInput, loading, setLoading, error, setError,
+    activeSessionId, setActiveSessionId, abortControllerRef, restoreSession,
+  };
+}
+
+function App() {
+  const [sessions, setSessions] = useState<ChatSession[]>(() => loadSessions());
+  const [chatMode, setChatMode] = useState<"business" | "data">("business");
+  // Keep both conversations mounted so pending replies update their original mode.
+  const businessChat = useChatState(setSessions);
+  const dataChat = useChatState(setSessions);
+  const {
+    messages, setMessages, input, setInput, loading, setLoading, error, setError,
+    activeSessionId, setActiveSessionId, abortControllerRef,
+  } = chatMode === "business" ? businessChat : dataChat;
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem(SESSIONS_STORAGE_KEY, JSON.stringify(sessions));
+  }, [sessions]);
 
   function startNewChat() {
     setMessages([]);
@@ -1056,22 +1074,27 @@ function App() {
 
   function selectSession(id: string) {
     const target = sessions.find((s) => s.id === id);
-    if (!target || id === activeSessionId) {
+    if (!target) {
       setSidebarOpen(false);
       return;
     }
-    skipNextSyncRef.current = true;
-    setActiveSessionId(id);
-    setMessages(target.messages);
+    const mode = target.messages.some((m) => m.mode === "data") ? "data" : "business";
+    const chat = mode === "business" ? businessChat : dataChat;
+    switchChatMode(mode);
+    if (id !== chat.activeSessionId) {
+      chat.restoreSession(target);
+    }
     setSidebarOpen(false);
   }
 
   function deleteSession(id: string, e: React.MouseEvent) {
     e.stopPropagation();
     setSessions((prev) => prev.filter((s) => s.id !== id));
-    if (id === activeSessionId) {
-      setActiveSessionId(null);
-      setMessages([]);
+    for (const chat of [businessChat, dataChat]) {
+      if (id === chat.activeSessionId) {
+        chat.setActiveSessionId(null);
+        chat.setMessages([]);
+      }
     }
   }
 
@@ -1203,7 +1226,8 @@ function App() {
         // follow-up SQL history from before is no longer valid, so start
         // the chat fresh, same as any other selection change.
         setSelectedDatasetIds((prev) => prev.filter((x) => x !== id));
-        startNewChat();
+        dataChat.setMessages([]);
+        dataChat.setActiveSessionId(null);
       }
     } catch (err: any) {
       setDatasetDeleteError(err.message || "Delete failed");
@@ -1213,14 +1237,11 @@ function App() {
   }
 
   // --- Dataset-scoped chat mode (strict, evidence-only answers) ---
-  const [chatMode, setChatMode] = useState<"business" | "data">("business");
   const [selectedDatasetIds, setSelectedDatasetIds] = useState<number[]>([]);
 
   function switchChatMode(mode: "business" | "data") {
     if (mode === chatMode) return;
     setChatMode(mode);
-    setSelectedDatasetIds([]);
-    startNewChat();
     if (mode === "data" && !datasets && !datasetsLoading) {
       fetchDatasets();
     }
@@ -1310,8 +1331,10 @@ function App() {
   function clearAllChats() {
     if (!window.confirm("Delete all saved chats? This can't be undone.")) return;
     setSessions([]);
-    setActiveSessionId(null);
-    setMessages([]);
+    for (const chat of [businessChat, dataChat]) {
+      chat.setActiveSessionId(null);
+      chat.setMessages([]);
+    }
   }
 
   function clearAllSavedInsights() {
@@ -1391,7 +1414,7 @@ async function handleStrictAsk(question: string, controller: AbortController) {
     .slice(-3)
     .map((m) => ({ question: m.question, sql: m.sql }));
 
-  setMessages((prev) => [...prev, { role: "user", question }]);
+  setMessages((prev) => [...prev, { role: "user", question, mode: "data" }]);
 
   try {
     const res = await fetch(`${getApiBaseUrl()}/api/ask/strict`, {
@@ -1778,7 +1801,7 @@ function handleStop() {
                     />
                   </article>
 
-                  {m.rows && m.rows.length > 0 && wantsChart(m.question, m.rows) && (
+                  {m.rows && m.rows.length > 0 && EXPLICIT_CHART_HINT.test(m.question) && (
                     <ChartView rows={m.rows} question={m.question} />
                   )}
                   {m.rows && m.rows.length > 0 && <ResultsTable rows={m.rows} />}

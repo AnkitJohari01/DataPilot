@@ -1,7 +1,90 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import App from "./App";
+
+describe("answer presentation", () => {
+  beforeEach(() => localStorage.clear());
+
+  async function askWithAnswer(text: string, rows: Array<Record<string, unknown>> = []) {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ insights: { text }, rows }),
+    }));
+    render(<App />);
+    fireEvent.change(screen.getByPlaceholderText("Ask anything about your business data..."), {
+      target: { value: "How did sales and profit change?" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Send" }));
+    return within(await screen.findByRole("article", { name: "Assistant response" }));
+  }
+
+  it("shows profit-margin percentages and two decimal places for the screenshot's raw values", async () => {
+    const answer = await askWithAnswer("Sales were 14236.8950. Profit margin is 0.17210147999265289236.", [
+      { year: 2019, month: 1, total_sales: "14236.8950", total_profit: "2450.1907", profit_margin: "0.17210147999265289236" },
+    ]);
+    expect(screen.getByRole("cell", { name: "17.21%" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "14236.90" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "2450.19" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "2019" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "1" })).toBeInTheDocument();
+    expect(answer.getByText(/Sales were 14236.90/)).toBeInTheDocument();
+    expect(answer.getByText(/Profit margin is 17.21%/)).toBeInTheDocument();
+  });
+
+  it("does not insert an automatic heatmap for decimal sales and profit results", async () => {
+    await askWithAnswer("Sales summary", [
+      { year: 2019, sales: "14236.8950", profit: "2450.1907" },
+      { year: 2019, sales: "4519.8920", profit: "862.3084" },
+    ]);
+    expect(document.querySelector(".heatmap-grid")).toBeNull();
+    expect(document.querySelector(".chart-wrapper")).toBeNull();
+    expect(screen.getByRole("columnheader", { name: "sales" })).toBeInTheDocument();
+    expect(screen.getByText("14236.90")).toBeInTheDocument();
+  });
+
+  it("colors opposing trends separately within the same sentence and preserves bold formatting", async () => {
+    const answer = await askWithAnswer("**Sales increased by 12.5%**, while **profit decreased by 4.2%**. Orders remained unchanged.");
+    expect(answer.getByText("Sales increased by 12.50%").closest(".trend-up")).not.toBeNull();
+    expect(answer.getByText("profit decreased by 4.20%").closest(".trend-down")).not.toBeNull();
+    expect(answer.getByText("Sales increased by 12.50%").tagName).toBe("STRONG");
+    expect(answer.getByText(/Orders remained unchanged/).closest(".trend-up, .trend-down")).toBeNull();
+  });
+
+  it("recognizes growing and falling figures in headings and list items without coloring negated trends", async () => {
+    const answer = await askWithAnswer("## Sales are increasing\n- Revenue grew from 1,000 to 1,250.\n1. Profit fell by 5%.\nSales did not increase. Revenue was flat.");
+    expect(answer.getByText("Sales are increasing").closest(".trend-up")).not.toBeNull();
+    expect(answer.getByText(/Revenue grew from 1,000 to 1,250/).closest(".trend-up")).not.toBeNull();
+    expect(answer.getByText("Profit fell by 5.00%").closest(".trend-down")).not.toBeNull();
+    expect(answer.getByText(/Sales did not increase/).closest(".trend-up, .trend-down")).toBeNull();
+  });
+
+  it("colors signed change columns without treating ordinary totals or years as increases", async () => {
+    await askWithAnswer("Sales summary", [
+      { year: 2019, sales: 1000, sales_change_pct: "12.5", profit_change: -4.2, orders_growth: 0 },
+    ]);
+    expect(screen.getByRole("cell", { name: "12.50%" })).toHaveClass("trend-up");
+    expect(screen.getByRole("cell", { name: "-4.20" })).toHaveClass("trend-down");
+    for (const value of ["2019", "1000", "0"]) {
+      expect(screen.getByRole("cell", { name: value })).not.toHaveClass("trend-up", "trend-down");
+    }
+  });
+
+  it("renders answer HTML as text while keeping trend highlighting", async () => {
+    const answer = await askWithAnswer('Sales increased by 10%. <img src=x onerror="alert(1)">');
+    expect(answer.getByText("Sales increased by 10.00%").closest(".trend-up")).not.toBeNull();
+    expect(document.querySelector(".answer-content img")).toBeNull();
+    expect(answer.getByText(/<img src=x/)).toBeInTheDocument();
+  });
+
+  it("keeps bold formatting across opposing clauses and leaves contractions neutral", async () => {
+    const answer = await askWithAnswer("**Sales increased by 10%, while profit decreased by 3%.**\nSales didn't increase.");
+    expect(answer.getByText("Sales increased by 10.00%").closest(".trend-up")).not.toBeNull();
+    expect(answer.getByText(/profit decreased by 3.00%/).closest(".trend-down")).not.toBeNull();
+    expect(answer.getByText(/profit decreased by 3.00%/).tagName).toBe("STRONG");
+    expect(answer.getByText("Sales didn't increase.").closest(".trend-up, .trend-down")).toBeNull();
+  });
+});
 
 describe("clarification responses", () => {
   beforeEach(() => {
@@ -498,7 +581,153 @@ async function enterDataModeAndSelectDataset() {
   fireEvent.click(screen.getByLabelText("orders.csv"));
 }
 
+function seedSeparateChats() {
+  localStorage.clear();
+  localStorage.setItem("datapilot_sessions", JSON.stringify([
+    { id: "business", title: "Business question", createdAt: 1, updatedAt: 1,
+      messages: [{ role: "user", question: "Business question" },
+        { role: "assistant", question: "Business question", insights: { text: "Saved business answer" } }] },
+    { id: "data", title: "Data question", createdAt: 2, updatedAt: 2,
+      messages: [{ role: "user", question: "Data question", mode: "data" },
+        { role: "assistant", question: "Data question", mode: "data", strictMessage: "Saved data answer" }] },
+  ]));
+}
+
 describe("dataset selection & strict-answer display", () => {
+  it("opens saved chats in their own tab and deletes a hidden conversation", async () => {
+    seedSeparateChats();
+    vi.stubGlobal("fetch", mockDatasetsAndStrictAsk({}));
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: "Open chat: Business question" }));
+    fireEvent.click(screen.getByRole("button", { name: "Open chat: Data question" }));
+    expect(screen.getByRole("tab", { name: "My Data" })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByText("Saved data answer")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("tab", { name: "Business Chat" }));
+    expect(screen.getByText("Saved business answer")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Delete chat: Data question" }));
+    fireEvent.click(screen.getByRole("tab", { name: "My Data" }));
+    expect(screen.queryByText("Saved data answer")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Open chat: Data question" })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("tab", { name: "Business Chat" }));
+    expect(screen.getByText("Saved business answer")).toBeInTheDocument();
+    await waitFor(() => expect(localStorage.getItem("datapilot_sessions")).not.toContain('"id":"data"'));
+  });
+
+  it("clears both cached conversations from Settings", async () => {
+    seedSeparateChats();
+    vi.spyOn(window, "confirm").mockReturnValue(true);
+    vi.stubGlobal("fetch", mockDatasetsAndStrictAsk({}));
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: "Open chat: Business question" }));
+    fireEvent.click(screen.getByRole("button", { name: "Open chat: Data question" }));
+    fireEvent.click(screen.getByRole("button", { name: "Settings" }));
+    fireEvent.click(screen.getByRole("button", { name: "Clear all chats" }));
+    fireEvent.click(screen.getByRole("button", { name: "Recent Chats" }));
+    expect(screen.queryByText("Saved data answer")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("tab", { name: "Business Chat" }));
+    expect(screen.queryByText("Saved business answer")).not.toBeInTheDocument();
+    await waitFor(() => expect(localStorage.getItem("datapilot_sessions")).toBe("[]"));
+  });
+
+  it("deleting a selected dataset clears My Data while preserving the hidden business conversation", async () => {
+    seedSeparateChats();
+    vi.spyOn(window, "confirm").mockReturnValue(true);
+    vi.stubGlobal("fetch", vi.fn((_url: string, init?: RequestInit) =>
+      Promise.resolve({ ok: true, json: async () => init?.method === "DELETE" ? {} : ONE_DATASET }),
+    ));
+    render(<App />);
+    fireEvent.click(screen.getByRole("button", { name: "Open chat: Business question" }));
+    await enterDataModeAndSelectDataset();
+    fireEvent.click(screen.getByRole("button", { name: "Open chat: Data question" }));
+    fireEvent.click(screen.getByRole("tab", { name: "Business Chat" }));
+    fireEvent.click(screen.getByRole("button", { name: "My Datasets" }));
+    fireEvent.click(screen.getByRole("button", { name: "Delete orders.csv" }));
+    await waitFor(() => expect(screen.queryByRole("button", { name: "Delete orders.csv" })).not.toBeInTheDocument());
+    fireEvent.click(screen.getByRole("button", { name: "Recent Chats" }));
+    expect(screen.getByText("Saved business answer")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("tab", { name: "My Data" }));
+    expect(screen.queryByText("Saved data answer")).not.toBeInTheDocument();
+  });
+
+  it("keeps separate conversations, drafts, and dataset selection across mode switches", async () => {
+    localStorage.clear();
+    const fetchMock = vi.fn((url: string, init?: RequestInit) => {
+      if (!init?.method) {
+        return Promise.resolve({ ok: true, json: async () => ONE_DATASET });
+      }
+      return Promise.resolve({
+        ok: true,
+        json: async () => url.endsWith("/strict")
+          ? { sql: "SELECT COUNT(*) AS count FROM imported.orders", rows: [{ count: 10 }] }
+          : { sql: "SELECT SUM(sales) FROM sales", insights: { text: "Business sales answer" } },
+      });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    render(<App />);
+
+    const input = () => screen.getByPlaceholderText("Ask anything about your business data...");
+    fireEvent.change(input(), { target: { value: "Business sales?" } });
+    fireEvent.click(screen.getByRole("button", { name: "Send" }));
+    await screen.findByText("Business sales answer");
+    fireEvent.change(input(), { target: { value: "Business draft" } });
+
+    await enterDataModeAndSelectDataset();
+    expect(screen.queryByText("Business sales answer")).not.toBeInTheDocument();
+    expect(input()).toHaveValue("");
+    fireEvent.change(input(), { target: { value: "How many orders?" } });
+    fireEvent.click(screen.getByRole("button", { name: "Send" }));
+    await screen.findByText("Results");
+    fireEvent.change(input(), { target: { value: "Data draft" } });
+
+    fireEvent.click(screen.getByRole("tab", { name: "Business Chat" }));
+    expect(screen.getByText("Business sales answer")).toBeInTheDocument();
+    expect(screen.queryByText("Results")).not.toBeInTheDocument();
+    expect(input()).toHaveValue("Business draft");
+
+    fireEvent.click(screen.getByRole("tab", { name: "My Data" }));
+    expect(screen.getByText("Results")).toBeInTheDocument();
+    expect(screen.getByLabelText("orders.csv")).toBeChecked();
+    expect(input()).toHaveValue("Data draft");
+    fireEvent.click(screen.getByRole("button", { name: "Send" }));
+    await waitFor(() => expect(screen.getByRole("button", { name: "Send" })).toBeEnabled());
+    const dataRequest = JSON.parse(fetchMock.mock.calls.at(-1)![1]!.body as string);
+    expect(dataRequest.dataset_ids).toEqual([1]);
+    expect(dataRequest.history).toEqual([
+      { question: "How many orders?", sql: "SELECT COUNT(*) AS count FROM imported.orders" },
+    ]);
+
+    fireEvent.click(screen.getByRole("tab", { name: "Business Chat" }));
+    fireEvent.click(screen.getByRole("button", { name: "Send" }));
+    await waitFor(() => expect(screen.getByRole("button", { name: "Send" })).toBeEnabled());
+    expect(JSON.parse(fetchMock.mock.calls.at(-1)![1]!.body as string).history).toEqual([
+      { question: "Business sales?", sql: "SELECT SUM(sales) FROM sales" },
+    ]);
+  });
+
+  it("delivers a pending reply to its original tab and saves it while that tab is hidden", async () => {
+    localStorage.clear();
+    let resolveAsk!: (value: unknown) => void;
+    vi.stubGlobal("fetch", vi.fn((_url: string, init?: RequestInit) =>
+      init?.method === "POST"
+        ? new Promise((resolve) => { resolveAsk = resolve; })
+        : Promise.resolve({ ok: true, json: async () => ONE_DATASET }),
+    ));
+    render(<App />);
+    fireEvent.change(screen.getByPlaceholderText("Ask anything about your business data..."), {
+      target: { value: "Pending business question" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Send" }));
+    await enterDataModeAndSelectDataset();
+    expect(screen.getByRole("button", { name: "Send" })).toBeEnabled();
+
+    resolveAsk({ ok: true, json: async () => ({ insights: { text: "Pending business answer" } }) });
+    await waitFor(() => expect(localStorage.getItem("datapilot_sessions")).toContain("Pending business answer"));
+    expect(screen.queryByText("Pending business answer")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("tab", { name: "Business Chat" }));
+    expect(screen.getByText("Pending business answer")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Send" })).toBeEnabled();
+  });
+
   it("blocks asking until a dataset is selected", async () => {
     vi.stubGlobal("fetch", mockDatasetsAndStrictAsk({}));
     render(<App />);

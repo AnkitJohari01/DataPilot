@@ -16,6 +16,8 @@
   --accent-tint: rgba(242, 210, 82, 0.12);
   --accent-tint-strong: rgba(242, 210, 82, 0.18);
   --success: #4E9F6E;
+  --trend-up: #237341;
+  --trend-down: #B33228;
   --error: #C24A3F;
   --error-bg: rgba(194, 74, 63, 0.08);
   --shadow-sm: 0 1px 2px rgba(43, 42, 40, 0.06);
@@ -40,6 +42,8 @@
   --accent-tint: rgba(213, 225, 238, 0.14);
   --accent-tint-strong: rgba(217, 119, 87, 0.22);
   --success: #6BBF8C;
+  --trend-up: #6BBF8C;
+  --trend-down: #E07A6E;
   --error: #E07A6E;
   --error-bg: rgba(224, 122, 110, 0.12);
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.24);
@@ -836,6 +840,16 @@ input:focus-visible {
 
 .markdown-content p {
   margin: 0 0 10px;
+}
+.trend-up,
+.results-table td.trend-up {
+  color: var(--trend-up);
+  font-weight: 600;
+}
+.trend-down,
+.results-table td.trend-down {
+  color: var(--trend-down);
+  font-weight: 600;
 }
 .markdown-content p:last-child {
   margin-bottom: 0;
