@@ -2,12 +2,10 @@
 Deterministic, dataset-scoped question answering over imported CSV/Excel
 datasets (see dataset_registry-style functions in app.database.metadata).
 
-This intentionally does NOT reuse semantic_retrieval_service.py's
-embedding-based table selection/clarification: the caller passes explicit
-dataset_ids, so there is no ambiguity to resolve. It also never calls
-gemini_service.generate_insights / generate_diagnostic_sql — this path
-returns evidence (SQL + rows), never LLM-authored narrative, causal claims,
-or recommendations.
+The caller passes explicit dataset_ids rather than using embedding-based
+table selection. The route summarizes only the resulting rows using the
+same data-grounded insight generator as Business Chat; it never queries
+additional tables for diagnostic breakdowns.
 """
 import re
 
@@ -23,10 +21,8 @@ from app.services.gemini_service import validate_sql
 
 # Questions phrased as "why did X happen" or "what should we do about Y" ask
 # for causal explanation or advice, neither of which follows from rows alone.
-# This path declines them outright rather than attempting SQL and attaching
-# a narrative on top, which would blur "what the data shows" with "what an
-# LLM inferred" — the exact ambiguity the strict-answer contract exists to
-# avoid.
+# Keep these requests declined; summaries describe the selected data, not
+# unsupported causes or advice.
 _CAUSAL_OR_RECOMMENDATION_PATTERNS = [
     r"\bwhy\b",
     r"\bwhat\s+(?:should|could)\b",
@@ -44,10 +40,9 @@ _CAUSAL_OR_RECOMMENDATION_RE = re.compile(
 
 NO_DATASETS_MESSAGE = "Select at least one dataset before asking a question."
 DECLINED_CAUSAL_MESSAGE = (
-    "This question asks for a cause or a recommendation. This mode only "
-    "answers with direct evidence from your selected data (query results), "
-    "not causal explanations or advice — try rephrasing to ask for the "
-    "underlying numbers instead."
+    "This question asks for a cause or a recommendation that the selected "
+    "data alone cannot establish. Try rephrasing to ask for the underlying "
+    "numbers or comparisons instead."
 )
 NO_EVIDENCE_MESSAGE = "No matching evidence was found in the selected datasets."
 
@@ -168,7 +163,8 @@ def build_dataset_schema_text(tables: list[dict], sample_limit: int = 5) -> str:
                     except Exception:
                         sample_note = ""
 
-                lines.append(f"- {col_name} ({pg_type}, {role}){label_note}{sample_note}")
+                currency_note = f" | {column['comment']}" if (column.get("comment") or "").startswith("Currency:") else ""
+                lines.append(f"- {col_name} ({pg_type}, {role}){label_note}{sample_note}{currency_note}")
 
             lines.append("")
 

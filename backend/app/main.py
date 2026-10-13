@@ -6,6 +6,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from pydantic import BaseModel, Field
+from openpyxl import load_workbook
+from app.services.currency_service import currency_markers, build_currency_context, output_currency
 
 from app.config.settings import settings
 from app.database.connection import get_db
@@ -150,6 +152,19 @@ def _dataframes_from_upload(filename: str, content: bytes) -> dict[str, "pd.Data
         raise HTTPException(
             status_code=400, detail="The uploaded workbook has no non-empty sheets."
         )
+    workbook = load_workbook(io.BytesIO(content), read_only=True, data_only=True)
+    try:
+        for sheet_name, frame in non_empty.items():
+            currencies: dict[str, set[str]] = {}
+            for row in workbook[sheet_name].iter_rows(min_row=2):
+                for index, cell in enumerate(row[:len(frame.columns)]):
+                    if cell.value is not None:
+                        markers = currency_markers(cell.number_format or "")
+                        if markers:
+                            currencies.setdefault(str(frame.columns[index]), set()).update(markers)
+            frame.attrs["currency_context"] = {label: sorted(markers) for label, markers in currencies.items()}
+    finally:
+        workbook.close()
     return non_empty
 
 
@@ -211,6 +226,7 @@ class AskResponse(BaseModel):
     data_sources: list[dict] = Field(default_factory=list)
     clarification_required: bool = False
     presentation: PresentationPayload
+    currency: str | None = "$"
 
 def build_presentation(
     question: str,
@@ -355,11 +371,13 @@ def ask(request: AskRequest, db: Session = Depends(get_db)):
         logger.warning("Diagnostic breakdown query failed, skipping: %s", e)
 
     try:
+        unit_context = build_currency_context(schema_text, row_dicts + breakdown_rows)
         insights = generate_insights(
             request.question,
             row_dicts,
             data_sources=data_sources,
             breakdown_rows=breakdown_rows,
+            unit_context=unit_context,
         )
     except RuntimeError as e:
         logger.error(str(e))
@@ -374,15 +392,14 @@ def ask(request: AskRequest, db: Session = Depends(get_db)):
         "rows": row_dicts,
         "insights": insights,
         "data_sources": data_sources,
+        "currency": output_currency(unit_context),
         "presentation": build_presentation(
             request.question, insights, row_dicts, data_sources, sql=result
         ),
     }
 
 
-# --- Strict, dataset-scoped ask (evidence only: no narrative, no causal
-# inference, no recommendations). A parallel path to /api/ask above, which
-# stays as-is for the existing full-schema, narrative-insights flow. ---
+# Dataset-scoped queries with the same data-grounded summary as Business Chat.
 
 
 class StrictAskRequest(BaseModel):
@@ -399,6 +416,8 @@ class StrictAskResponse(BaseModel):
     sources: list[dict] = Field(default_factory=list)
     declined: bool = False
     message: str | None = None
+    insights: dict = Field(default_factory=dict)
+    currency: str | None = "$"
 
 
 @app.post("/api/ask/strict", response_model=StrictAskResponse)
@@ -460,6 +479,16 @@ def ask_strict(request: StrictAskRequest, db: Session = Depends(get_db)):
     row_dicts = [dict(row) for row in rows]
     sources = extract_data_sources(result)
 
+    insights = {}
+    unit_context = build_currency_context(schema_text, row_dicts)
+    message = None if row_dicts else NO_EVIDENCE_MESSAGE
+    if row_dicts:
+        try:
+            insights = generate_insights(request.question, row_dicts, data_sources=sources, unit_context=unit_context)
+        except RuntimeError as e:
+            logger.warning("Dataset summary unavailable: %s", e)
+            message = "Your results are available below, but the summary could not be generated. Please try again."
+
     return {
         "question": request.question,
         "sql": result,
@@ -467,5 +496,7 @@ def ask_strict(request: StrictAskRequest, db: Session = Depends(get_db)):
         "result_count": len(row_dicts),
         "sources": sources,
         "declined": False,
-        "message": None if row_dicts else NO_EVIDENCE_MESSAGE,
+        "message": message,
+        "insights": insights,
+        "currency": output_currency(unit_context),
     }

@@ -26,13 +26,24 @@ type Message = {
   showSql?: boolean;
   clarificationRequired?: boolean;
   rows?: Array<Record<string, unknown>>;
-  // Set on messages produced by the dataset-scoped strict-answer path
-  // (/api/ask/strict). These never carry insights/presentation — evidence
-  // only, no narrative.
+  currency?: string | null;
+  // Identifies the dataset-scoped conversation, including saved older answers.
   mode?: "business" | "data";
   declined?: boolean;
   strictMessage?: string | null;
 };
+
+function messageAnswer(message: Message): string {
+  const answer = message.insights?.text || message.presentation?.summary || message.insights?.overview;
+  if (answer) return answer;
+  return (message.rows ?? []).slice(0, 20).map(row => {
+    const rowCurrency = Object.entries(row).find(([column]) => /(?:^|_)currency(?:$|_)/i.test(column))?.[1];
+    const currency = typeof rowCurrency === "string" ? rowCurrency : message.currency;
+    return "- " + Object.entries(row).map(([column, value]) =>
+      `${column.replaceAll("_", " ")}: ${formatOutputValue(value, column, currency)}`,
+    ).join("; ");
+  }).join("\n");
+}
 
 const SUGGESTIONS = [
   "Which product categories generate the most profit, and what are their profit margins?",
@@ -129,9 +140,9 @@ function renderInline(text: string): ReactElement[] {
   return output;
 }
 
-function renderMarkdown(text: string): ReactElement[] {
+function renderMarkdown(text: string, currency: string | null = "$"): ReactElement[] {
   const output: ReactElement[] = [];
-  formatAnswerText(text).split("\n").forEach((line, index) => {
+  formatAnswerText(text, currency).split("\n").forEach((line, index) => {
     const trimmed = line.trim();
     if (!trimmed) return;
     if (trimmed.startsWith("### ")) output.push(<h4 key={index}>{renderInline(trimmed.slice(4))}</h4>);
@@ -144,8 +155,8 @@ function renderMarkdown(text: string): ReactElement[] {
   return output;
 }
 
-function MarkdownContent({ text }: { text: string }) {
-  return <div className="markdown-content">{renderMarkdown(text)}</div>;
+function MarkdownContent({ text, currency }: { text: string; currency?: string | null }) {
+  return <div className="markdown-content">{renderMarkdown(text, currency)}</div>;
 }
 
 
@@ -186,7 +197,7 @@ function resolveChartType(question: string, rows: Array<Record<string, unknown>>
   return detectChartTypeFromQuestion(question) ?? pickChartTypeFromShape(rows);
 }
 
-function HeatmapView({ rows, xKey, yKey, valueKey }: { rows: Array<Record<string, unknown>>; xKey: string; yKey: string; valueKey: string }) {
+function HeatmapView({ rows, xKey, yKey, valueKey, currency }: { rows: Array<Record<string, unknown>>; xKey: string; yKey: string; valueKey: string; currency?: string | null }) {
   const xValues = Array.from(new Set(rows.map((r) => String(r[xKey] ?? ""))));
   const yValues = Array.from(new Set(rows.map((r) => String(r[yKey] ?? ""))));
   const lookup = new Map(rows.map((r) => [`${r[yKey]}|${r[xKey]}`, Number(r[valueKey]) || 0]));
@@ -195,16 +206,16 @@ function HeatmapView({ rows, xKey, yKey, valueKey }: { rows: Array<Record<string
   return (
     <div className="chart-wrapper heatmap-grid" style={{ gridTemplateColumns: `120px repeat(${xValues.length}, 1fr)` }}>
       <div />
-      {xValues.map((x) => <div key={x} className="heatmap-label">{formatOutputValue(x, xKey)}</div>)}
+      {xValues.map((x) => <div key={x} className="heatmap-label">{formatOutputValue(x, xKey, currency)}</div>)}
       {yValues.map((y) => (
         <Fragment key={y}>
-          <div className="heatmap-label">{formatOutputValue(y, yKey)}</div>
+          <div className="heatmap-label">{formatOutputValue(y, yKey, currency)}</div>
           {xValues.map((x) => {
             const v = lookup.get(`${y}|${x}`);
             const intensity = (v ?? 0) / max;
             return (
-              <div key={`${y}-${x}`} className="heatmap-cell" style={{ background: `rgba(201, 100, 66, ${0.1 + intensity * 0.8})` }} title={`${formatOutputValue(y, yKey)} / ${formatOutputValue(x, xKey)}: ${v === undefined ? "—" : formatOutputValue(v, valueKey)}`}>
-                {v === undefined ? "—" : formatOutputValue(v, valueKey)}
+              <div key={`${y}-${x}`} className="heatmap-cell" style={{ background: `rgba(201, 100, 66, ${0.1 + intensity * 0.8})` }} title={`${formatOutputValue(y, yKey, currency)} / ${formatOutputValue(x, xKey, currency)}: ${v === undefined ? "—" : formatOutputValue(v, valueKey, currency)}`}>
+                {v === undefined ? "—" : formatOutputValue(v, valueKey, currency)}
               </div>
             );
           })}
@@ -214,7 +225,7 @@ function HeatmapView({ rows, xKey, yKey, valueKey }: { rows: Array<Record<string
   );
 }
 
-function WaterfallChart({ rows, labelKey, valueKey }: { rows: Array<Record<string, unknown>>; labelKey: string; valueKey: string }) {
+function WaterfallChart({ rows, labelKey, valueKey, currency }: { rows: Array<Record<string, unknown>>; labelKey: string; valueKey: string; currency?: string | null }) {
   let running = 0;
   const data = rows.slice(0, 20).map((row) => {
     const value = Number(row[valueKey]) || 0;
@@ -229,9 +240,9 @@ function WaterfallChart({ rows, labelKey, valueKey }: { rows: Array<Record<strin
       <ResponsiveContainer width="100%" height={280}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-          <XAxis dataKey="name" tickFormatter={(value) => formatOutputValue(value, labelKey)} stroke="var(--text-muted)" fontSize={12} />
-          <YAxis tickFormatter={(value) => formatOutputValue(value, valueKey)} stroke="var(--text-muted)" fontSize={12} />
-          <Tooltip formatter={(value) => formatOutputValue(value, valueKey)} labelFormatter={(value) => formatOutputValue(value, labelKey)} contentStyle={tooltipStyle} />
+          <XAxis dataKey="name" tickFormatter={(value) => formatOutputValue(value, labelKey, currency)} stroke="var(--text-muted)" fontSize={12} />
+          <YAxis width={120} tickFormatter={(value) => formatOutputValue(value, valueKey, currency)} stroke="var(--text-muted)" fontSize={12} />
+          <Tooltip formatter={(value) => formatOutputValue(value, valueKey, currency)} labelFormatter={(value) => formatOutputValue(value, labelKey, currency)} contentStyle={tooltipStyle} />
           <Bar dataKey="base" stackId="wf" fill="transparent" />
           <Bar dataKey="delta" stackId="wf" radius={[4, 4, 4, 4]}>
             {data.map((d, i) => <Cell key={i} fill={d.rising ? "var(--success)" : "var(--error)"} />)}
@@ -242,7 +253,7 @@ function WaterfallChart({ rows, labelKey, valueKey }: { rows: Array<Record<strin
   );
 }
 
-function RibbonChart({ rows, labelKey, groupKey, valueKey }: { rows: Array<Record<string, unknown>>; labelKey: string; groupKey: string; valueKey: string }) {
+function RibbonChart({ rows, labelKey, groupKey, valueKey, currency }: { rows: Array<Record<string, unknown>>; labelKey: string; groupKey: string; valueKey: string; currency?: string | null }) {
   const groups = Array.from(new Set(rows.map((r) => String(r[groupKey] ?? ""))));
   const points = Array.from(new Set(rows.map((r) => String(r[labelKey] ?? ""))));
   const data = points.map((p) => {
@@ -260,9 +271,9 @@ function RibbonChart({ rows, labelKey, groupKey, valueKey }: { rows: Array<Recor
       <ResponsiveContainer width="100%" height={280}>
         <AreaChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-          <XAxis dataKey="name" tickFormatter={(value) => formatOutputValue(value, labelKey)} stroke="var(--text-muted)" fontSize={12} />
-          <YAxis tickFormatter={(value) => formatOutputValue(value, valueKey)} stroke="var(--text-muted)" fontSize={12} />
-          <Tooltip formatter={(value) => formatOutputValue(value, valueKey)} labelFormatter={(value) => formatOutputValue(value, labelKey)} contentStyle={tooltipStyle} />
+          <XAxis dataKey="name" tickFormatter={(value) => formatOutputValue(value, labelKey, currency)} stroke="var(--text-muted)" fontSize={12} />
+          <YAxis width={120} tickFormatter={(value) => formatOutputValue(value, valueKey, currency)} stroke="var(--text-muted)" fontSize={12} />
+          <Tooltip formatter={(value) => formatOutputValue(value, valueKey, currency)} labelFormatter={(value) => formatOutputValue(value, labelKey, currency)} contentStyle={tooltipStyle} />
           {groups.map((g, i) => (
             <Area key={g} type="monotone" dataKey={g} stackId="ribbon" stroke={CHART_COLORS[i % CHART_COLORS.length]} fill={CHART_COLORS[i % CHART_COLORS.length]} fillOpacity={0.55} />
           ))}
@@ -272,7 +283,7 @@ function RibbonChart({ rows, labelKey, groupKey, valueKey }: { rows: Array<Recor
   );
 }
 
-function ChartView({ rows, question }: { rows: Array<Record<string, unknown>>; question: string }) {
+function ChartView({ rows, question, currency }: { rows: Array<Record<string, unknown>>; question: string; currency?: string | null }) {
   if (!rows.length) return null;
   const keys = Object.keys(rows[0] || {});
   const numericKeys = keys.filter((k) => typeof rows[0][k] === "number");
@@ -291,13 +302,13 @@ function ChartView({ rows, question }: { rows: Array<Record<string, unknown>>; q
   });
 
   if (type === "heatmap" && secondLabelKey) {
-    return <HeatmapView rows={rows} xKey={secondLabelKey} yKey={labelKey} valueKey={valueKey} />;
+    return <HeatmapView rows={rows} xKey={secondLabelKey} yKey={labelKey} valueKey={valueKey} currency={currency} />;
   }
   if (type === "waterfall") {
-    return <WaterfallChart rows={rows} labelKey={labelKey} valueKey={valueKey} />;
+    return <WaterfallChart rows={rows} labelKey={labelKey} valueKey={valueKey} currency={currency} />;
   }
   if (type === "ribbon" && secondLabelKey) {
-    return <RibbonChart rows={rows} labelKey={labelKey} groupKey={secondLabelKey} valueKey={valueKey} />;
+    return <RibbonChart rows={rows} labelKey={labelKey} groupKey={secondLabelKey} valueKey={valueKey} currency={currency} />;
   }
   if (type === "scatter" && numericKeys.length >= 2) {
     return (
@@ -305,9 +316,9 @@ function ChartView({ rows, question }: { rows: Array<Record<string, unknown>>; q
         <ResponsiveContainer width="100%" height={280}>
           <ScatterChart>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-            <XAxis dataKey={numericKeys[0]} tickFormatter={(value) => formatOutputValue(value, numericKeys[0])} name={numericKeys[0]} stroke="var(--text-muted)" fontSize={12} />
-            <YAxis dataKey={numericKeys[1]} tickFormatter={(value) => formatOutputValue(value, numericKeys[1])} name={numericKeys[1]} stroke="var(--text-muted)" fontSize={12} />
-            <Tooltip formatter={(value, name) => formatOutputValue(value, String(name))} contentStyle={tooltipStyle} cursor={{ strokeDasharray: "3 3" }} />
+            <XAxis dataKey={numericKeys[0]} tickFormatter={(value) => formatOutputValue(value, numericKeys[0], currency)} name={numericKeys[0]} stroke="var(--text-muted)" fontSize={12} />
+            <YAxis width={120} dataKey={numericKeys[1]} tickFormatter={(value) => formatOutputValue(value, numericKeys[1], currency)} name={numericKeys[1]} stroke="var(--text-muted)" fontSize={12} />
+            <Tooltip formatter={(value, name) => formatOutputValue(value, String(name), currency)} contentStyle={tooltipStyle} cursor={{ strokeDasharray: "3 3" }} />
             <Scatter data={data} fill="var(--accent)" />
           </ScatterChart>
         </ResponsiveContainer>
@@ -320,10 +331,10 @@ function ChartView({ rows, question }: { rows: Array<Record<string, unknown>>; q
       <div className="chart-wrapper">
         <ResponsiveContainer width="100%" height={280}>
           <FunnelChart>
-            <Tooltip formatter={(value) => formatOutputValue(value, valueKey)} contentStyle={tooltipStyle} />
+            <Tooltip formatter={(value) => formatOutputValue(value, valueKey, currency)} contentStyle={tooltipStyle} />
             <Funnel dataKey={valueKey} data={funnelData} isAnimationActive>
               {funnelData.map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />)}
-              <LabelList dataKey="name" formatter={(value: unknown) => formatOutputValue(value, labelKey)} position="right" fill="var(--text)" />
+              <LabelList dataKey="name" formatter={(value: unknown) => formatOutputValue(value, labelKey, currency)} position="right" fill="var(--text)" />
             </Funnel>
           </FunnelChart>
         </ResponsiveContainer>
@@ -335,7 +346,7 @@ function ChartView({ rows, question }: { rows: Array<Record<string, unknown>>; q
       <div className="chart-wrapper">
         <ResponsiveContainer width="100%" height={280}>
           <Treemap data={data.map((d) => ({ name: d.name, size: d[valueKey] }))} dataKey="size" stroke="var(--surface)" fill="var(--accent)">
-            <Tooltip formatter={(value) => formatOutputValue(value, valueKey)} contentStyle={tooltipStyle} />
+            <Tooltip formatter={(value) => formatOutputValue(value, valueKey, currency)} contentStyle={tooltipStyle} />
           </Treemap>
         </ResponsiveContainer>
       </div>
@@ -347,9 +358,9 @@ function ChartView({ rows, question }: { rows: Array<Record<string, unknown>>; q
         <ResponsiveContainer width="100%" height={280}>
           <ComposedChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-            <XAxis dataKey="name" tickFormatter={(value) => formatOutputValue(value, labelKey)} stroke="var(--text-muted)" fontSize={12} />
-            <YAxis tickFormatter={(value) => formatOutputValue(value, valueKey)} stroke="var(--text-muted)" fontSize={12} />
-            <Tooltip formatter={(value, name) => formatOutputValue(value, String(name))} labelFormatter={(value) => formatOutputValue(value, labelKey)} contentStyle={tooltipStyle} />
+            <XAxis dataKey="name" tickFormatter={(value) => formatOutputValue(value, labelKey, currency)} stroke="var(--text-muted)" fontSize={12} />
+            <YAxis width={120} tickFormatter={(value) => formatOutputValue(value, valueKey, currency)} stroke="var(--text-muted)" fontSize={12} />
+            <Tooltip formatter={(value, name) => formatOutputValue(value, String(name), currency)} labelFormatter={(value) => formatOutputValue(value, labelKey, currency)} contentStyle={tooltipStyle} />
             <Bar dataKey={numericKeys[0]} fill="var(--accent)" radius={[6, 6, 0, 0]} />
             <Line type="monotone" dataKey={numericKeys[1]} stroke="var(--success)" strokeWidth={2} dot={{ r: 3 }} />
           </ComposedChart>
@@ -362,10 +373,10 @@ function ChartView({ rows, question }: { rows: Array<Record<string, unknown>>; q
       <div className="chart-wrapper">
         <ResponsiveContainer width="100%" height={280}>
           <PieChart>
-            <Pie data={data} dataKey={valueKey} nameKey="name" outerRadius={100} label={({ value }) => formatOutputValue(value, valueKey)}>
+            <Pie data={data} dataKey={valueKey} nameKey="name" outerRadius={100} label={({ value }) => formatOutputValue(value, valueKey, currency)}>
               {data.map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />)}
             </Pie>
-            <Tooltip formatter={(value) => formatOutputValue(value, valueKey)} contentStyle={tooltipStyle} />
+            <Tooltip formatter={(value) => formatOutputValue(value, valueKey, currency)} contentStyle={tooltipStyle} />
           </PieChart>
         </ResponsiveContainer>
       </div>
@@ -377,9 +388,9 @@ function ChartView({ rows, question }: { rows: Array<Record<string, unknown>>; q
         <ResponsiveContainer width="100%" height={280}>
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-            <XAxis dataKey="name" tickFormatter={(value) => formatOutputValue(value, labelKey)} stroke="var(--text-muted)" fontSize={12} />
-            <YAxis tickFormatter={(value) => formatOutputValue(value, valueKey)} stroke="var(--text-muted)" fontSize={12} />
-            <Tooltip formatter={(value, name) => formatOutputValue(value, String(name))} labelFormatter={(value) => formatOutputValue(value, labelKey)} contentStyle={tooltipStyle} />
+            <XAxis dataKey="name" tickFormatter={(value) => formatOutputValue(value, labelKey, currency)} stroke="var(--text-muted)" fontSize={12} />
+            <YAxis width={120} tickFormatter={(value) => formatOutputValue(value, valueKey, currency)} stroke="var(--text-muted)" fontSize={12} />
+            <Tooltip formatter={(value, name) => formatOutputValue(value, String(name), currency)} labelFormatter={(value) => formatOutputValue(value, labelKey, currency)} contentStyle={tooltipStyle} />
             <Line type="monotone" dataKey={valueKey} stroke="var(--accent)" strokeWidth={2} dot={{ r: 3 }} />
           </LineChart>
         </ResponsiveContainer>
@@ -391,9 +402,9 @@ function ChartView({ rows, question }: { rows: Array<Record<string, unknown>>; q
       <ResponsiveContainer width="100%" height={280}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-          <XAxis dataKey="name" tickFormatter={(value) => formatOutputValue(value, labelKey)} stroke="var(--text-muted)" fontSize={12} />
-          <YAxis tickFormatter={(value) => formatOutputValue(value, valueKey)} stroke="var(--text-muted)" fontSize={12} />
-          <Tooltip formatter={(value, name) => formatOutputValue(value, String(name))} labelFormatter={(value) => formatOutputValue(value, labelKey)} contentStyle={tooltipStyle} />
+          <XAxis dataKey="name" tickFormatter={(value) => formatOutputValue(value, labelKey, currency)} stroke="var(--text-muted)" fontSize={12} />
+          <YAxis width={120} tickFormatter={(value) => formatOutputValue(value, valueKey, currency)} stroke="var(--text-muted)" fontSize={12} />
+          <Tooltip formatter={(value, name) => formatOutputValue(value, String(name), currency)} labelFormatter={(value) => formatOutputValue(value, labelKey, currency)} contentStyle={tooltipStyle} />
           <Bar dataKey={valueKey} fill="var(--accent)" radius={[6, 6, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
@@ -401,44 +412,6 @@ function ChartView({ rows, question }: { rows: Array<Record<string, unknown>>; q
   );
 }
 
-
-function changeClass(column: string, value: unknown): string | undefined {
-  if (!/(?:^|[_\s])(?:change|growth|delta|variance)(?:$|[_\s])/i.test(column)) return;
-  const text = String(value ?? "").trim().replaceAll(",", "");
-  if (!/^[+-]?\d+(?:\.\d+)?%?$/.test(text)) return;
-  const change = Number(text.replace("%", ""));
-  return change > 0 ? "trend-up" : change < 0 ? "trend-down" : undefined;
-}
-
-function ResultsTable({ rows }: { rows: Array<Record<string, unknown>> }) {
-  if (!rows.length) return null;
-  const columns = Object.keys(rows[0]);
-  return (
-    <div className="results-table-wrapper">
-      <h4>Results</h4>
-      <div className="results-table-scroll">
-        <table className="results-table">
-          <thead>
-            <tr>
-              {columns.map((col) => (
-                <th key={col}>{col}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row, i) => (
-              <tr key={i}>
-                {columns.map((col) => (
-                  <td key={col} className={changeClass(col, row[col])}>{formatOutputValue(row[col], col)}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
 
 type CatalogColumn = {
   name: string;
@@ -1236,7 +1209,7 @@ function App() {
     }
   }
 
-  // --- Dataset-scoped chat mode (strict, evidence-only answers) ---
+  // --- Dataset-scoped chat mode ---
   const [selectedDatasetIds, setSelectedDatasetIds] = useState<number[]>([]);
 
   function switchChatMode(mode: "business" | "data") {
@@ -1275,7 +1248,7 @@ function App() {
       const exists = prev.some((s) => s.key === key);
       if (exists) return prev.filter((s) => s.key !== key);
 
-      const answerText = m.insights?.text ?? m.presentation?.summary ?? m.insights?.overview ?? "";
+      const answerText = messageAnswer(m);
       const newInsight: SavedInsight = {
         id: `insight-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
         key,
@@ -1394,7 +1367,7 @@ function App() {
 
     setMessages((prev) => [
       ...prev,
-                  { role: "assistant", question: questionForApi, sql: data.sql, rows: data.rows ?? [], insights: data.insights, presentation: data.presentation, data_sources: data.data_sources ?? [], clarificationRequired: data.clarification_required === true, },
+                  { role: "assistant", question: questionForApi, sql: data.sql, rows: data.rows ?? [], insights: data.insights, presentation: data.presentation, currency: data.currency, data_sources: data.data_sources ?? [], clarificationRequired: data.clarification_required === true, },
     ]);
   } catch (err: any) {
     if (err.name === "AbortError") {
@@ -1442,6 +1415,8 @@ async function handleStrictAsk(question: string, controller: AbortController) {
         data_sources: data.sources ?? [],
         declined: data.declined === true,
         strictMessage: data.message ?? null,
+        insights: data.insights,
+        currency: data.currency,
       },
     ]);
   } catch (err: any) {
@@ -1740,8 +1715,8 @@ function handleStop() {
               <h2>Ask your own data</h2>
               <p>
                 {selectedDatasetIds.length === 0
-                  ? "Select at least one dataset above, then ask a question. Answers here are evidence only — query results, no narrative or recommendations."
-                  : "Ask a question about your selected dataset(s). You'll get back the SQL and the matching rows, nothing inferred."}
+                  ? "Select at least one dataset above, then ask a question to get a summary and matching results."
+                  : "Ask about your selected dataset(s) to get a clear summary, comparisons, and matching results."}
               </p>
             </div>
           )}
@@ -1753,15 +1728,27 @@ function handleStop() {
               </div>
             ) : m.mode === "data" ? (
               <div key={i} className="msg-row assistant-row">
-                <div className="msg assistant-msg strict-answer">
+                <div className="msg assistant-msg">
                   {m.declined && <p className="clarification-label">Declined</p>}
-                  {m.strictMessage && (
+                  {!m.declined && messageAnswer(m) && (
                     <article className="answer-content" aria-label="Assistant response">
-                      <MarkdownContent text={m.strictMessage} />
+                      <MarkdownContent text={messageAnswer(m)} currency={m.currency} />
                     </article>
                   )}
-                  {!m.declined && m.rows && m.rows.length > 0 && (
-                    <ResultsTable rows={m.rows} />
+                  {m.strictMessage && (
+                    <article className="answer-content" aria-label="Assistant response">
+                      <MarkdownContent text={m.strictMessage} currency={m.currency} />
+                    </article>
+                  )}
+                  {!m.declined && m.rows && m.rows.length > 0 && EXPLICIT_CHART_HINT.test(m.question) && (
+                    <ChartView rows={m.rows} question={m.question} currency={m.currency} />
+                  )}
+                  {!m.declined && messageAnswer(m) && (
+                    <div className="msg-actions">
+                      <button className={isMessageSaved(i) ? "saved" : ""} onClick={() => toggleSaveInsight(m, i)}>
+                        {isMessageSaved(i) ? "★ Saved" : "☆ Save insight"}
+                      </button>
+                    </div>
                   )}
                   {!m.declined && m.data_sources && m.data_sources.length > 0 && (
                     <div className="strict-sources">
@@ -1797,16 +1784,15 @@ function handleStop() {
                   )}
                   <article className="answer-content" aria-label="Assistant response">
                     <MarkdownContent
-                      text={m.insights?.text ?? m.presentation?.summary ?? m.insights?.overview ?? ""}
+                      text={messageAnswer(m)} currency={m.currency}
                     />
                   </article>
 
                   {m.rows && m.rows.length > 0 && EXPLICIT_CHART_HINT.test(m.question) && (
-                    <ChartView rows={m.rows} question={m.question} />
+                    <ChartView rows={m.rows} question={m.question} currency={m.currency} />
                   )}
-                  {m.rows && m.rows.length > 0 && <ResultsTable rows={m.rows} />}
                   {!m.clarificationRequired &&
-                    (m.insights?.text || m.presentation?.summary || m.insights?.overview) && (
+                    messageAnswer(m) && (
                       <div className="msg-actions">
                         <button
                           className={isMessageSaved(i) ? "saved" : ""}

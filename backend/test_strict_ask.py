@@ -22,6 +22,8 @@ import app.main as main_module
 
 created_dataset_ids: list[int] = []
 created_table_names: list[str] = []
+summary_patch = patch.object(main_module, "generate_insights", return_value={"text": "Selected data summary."})
+summary_patch.start()
 
 
 def _cleanup():
@@ -163,7 +165,7 @@ try:
             assert "query failed" in e.detail.lower()
     print("Failed-query (execution-time) rejection test passed.")
 
-    # 7. Deterministic response shape: only the documented fields, no free-text insight
+    # 7. Existing evidence fields plus a summary of the selected query results.
     with patch.object(
         main_module,
         "generate_sql",
@@ -181,10 +183,13 @@ try:
             "sources",
             "declined",
             "message",
+            "insights",
+            "currency",
         }
         assert response["declined"] is False
         assert response["result_count"] == 2
         assert response["message"] is None
+        assert response["insights"]["text"] == "Selected data summary."
     print("Deterministic response shape test passed.")
 
     # 8. Empty result -> deterministic "no matching evidence" message
@@ -211,21 +216,22 @@ try:
         mock_gen.assert_not_called()
     print("Causal-question decline test passed.")
 
-    # 10. generate_insights / generate_diagnostic_sql never invoked on this path
+    # 10. Summarize successful results; never query extra diagnostic tables.
     with patch.object(
         main_module,
         "generate_sql",
         return_value=f'SELECT * FROM "{DATASET_SCHEMA}"."{sales_table}"',
-    ), patch.object(main_module, "generate_insights") as mock_insights, patch.object(
+    ), patch.object(main_module, "generate_insights", return_value={"text": "Selected data summary."}) as mock_insights, patch.object(
         main_module, "generate_diagnostic_sql"
     ) as mock_diag:
         _call("all rows", [dataset["id"]])
         _call("why did sales drop", [dataset["id"]])
-        mock_insights.assert_not_called()
+        mock_insights.assert_called_once()
         mock_diag.assert_not_called()
-    print("generate_insights/generate_diagnostic_sql never-called test passed.")
+    print("Scoped summary and no diagnostic-query test passed.")
 
     print("\nAll strict-ask tests passed.")
 
 finally:
+    summary_patch.stop()
     _cleanup()

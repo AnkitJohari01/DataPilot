@@ -6,10 +6,10 @@ import App from "./App";
 describe("answer presentation", () => {
   beforeEach(() => localStorage.clear());
 
-  async function askWithAnswer(text: string, rows: Array<Record<string, unknown>> = []) {
+  async function askWithAnswer(text: string, rows: Array<Record<string, unknown>> = [], currency: string | null = "$") {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
       ok: true,
-      json: async () => ({ insights: { text }, rows }),
+      json: async () => ({ insights: { text }, rows, currency }),
     }));
     render(<App />);
     fireEvent.change(screen.getByPlaceholderText("Ask anything about your business data..."), {
@@ -19,17 +19,14 @@ describe("answer presentation", () => {
     return within(await screen.findByRole("article", { name: "Assistant response" }));
   }
 
-  it("shows profit-margin percentages and two decimal places for the screenshot's raw values", async () => {
+  it("shows formatted summaries without a results table", async () => {
     const answer = await askWithAnswer("Sales were 14236.8950. Profit margin is 0.17210147999265289236.", [
       { year: 2019, month: 1, total_sales: "14236.8950", total_profit: "2450.1907", profit_margin: "0.17210147999265289236" },
     ]);
-    expect(screen.getByRole("cell", { name: "17.21%" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "14236.90" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "2450.19" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "2019" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "1" })).toBeInTheDocument();
-    expect(answer.getByText(/Sales were 14236.90/)).toBeInTheDocument();
-    expect(answer.getByText(/Profit margin is 17.21%/)).toBeInTheDocument();
+    expect(screen.queryByRole("table")).not.toBeInTheDocument();
+    expect(screen.queryByText("Results")).not.toBeInTheDocument();
+    expect(answer.getByText(/Sales were \$14236.90/)).toBeInTheDocument();
+    expect(answer.getByText(/Profit margin is 17.21 percentage/)).toBeInTheDocument();
   });
 
   it("does not insert an automatic heatmap for decimal sales and profit results", async () => {
@@ -39,15 +36,14 @@ describe("answer presentation", () => {
     ]);
     expect(document.querySelector(".heatmap-grid")).toBeNull();
     expect(document.querySelector(".chart-wrapper")).toBeNull();
-    expect(screen.getByRole("columnheader", { name: "sales" })).toBeInTheDocument();
-    expect(screen.getByText("14236.90")).toBeInTheDocument();
+    expect(screen.queryByRole("table")).not.toBeInTheDocument();
   });
 
   it("colors opposing trends separately within the same sentence and preserves bold formatting", async () => {
     const answer = await askWithAnswer("**Sales increased by 12.5%**, while **profit decreased by 4.2%**. Orders remained unchanged.");
-    expect(answer.getByText("Sales increased by 12.50%").closest(".trend-up")).not.toBeNull();
-    expect(answer.getByText("profit decreased by 4.20%").closest(".trend-down")).not.toBeNull();
-    expect(answer.getByText("Sales increased by 12.50%").tagName).toBe("STRONG");
+    expect(answer.getByText("Sales increased by 12.50 percentage").closest(".trend-up")).not.toBeNull();
+    expect(answer.getByText("profit decreased by 4.20 percentage").closest(".trend-down")).not.toBeNull();
+    expect(answer.getByText("Sales increased by 12.50 percentage").tagName).toBe("STRONG");
     expect(answer.getByText(/Orders remained unchanged/).closest(".trend-up, .trend-down")).toBeNull();
   });
 
@@ -55,33 +51,37 @@ describe("answer presentation", () => {
     const answer = await askWithAnswer("## Sales are increasing\n- Revenue grew from 1,000 to 1,250.\n1. Profit fell by 5%.\nSales did not increase. Revenue was flat.");
     expect(answer.getByText("Sales are increasing").closest(".trend-up")).not.toBeNull();
     expect(answer.getByText(/Revenue grew from 1,000 to 1,250/).closest(".trend-up")).not.toBeNull();
-    expect(answer.getByText("Profit fell by 5.00%").closest(".trend-down")).not.toBeNull();
+    expect(answer.getByText("Profit fell by 5.00 percentage").closest(".trend-down")).not.toBeNull();
     expect(answer.getByText(/Sales did not increase/).closest(".trend-up, .trend-down")).toBeNull();
   });
 
-  it("colors signed change columns without treating ordinary totals or years as increases", async () => {
-    await askWithAnswer("Sales summary", [
-      { year: 2019, sales: 1000, sales_change_pct: "12.5", profit_change: -4.2, orders_growth: 0 },
+  it("keeps older answers readable as bullets when they have rows but no generated summary", async () => {
+    const answer = await askWithAnswer("", [
+      { year: 2019, sales: 1000, profit_margin: "0.17210147", total_orders: 10 },
     ]);
-    expect(screen.getByRole("cell", { name: "12.50%" })).toHaveClass("trend-up");
-    expect(screen.getByRole("cell", { name: "-4.20" })).toHaveClass("trend-down");
-    for (const value of ["2019", "1000", "0"]) {
-      expect(screen.getByRole("cell", { name: value })).not.toHaveClass("trend-up", "trend-down");
-    }
+    expect(answer.getByText(/year: 2019; sales: \$1000.00; profit margin: 17.21 percentage; total orders: 10/)).toBeInTheDocument();
+    expect(screen.queryByRole("table")).not.toBeInTheDocument();
+  });
+
+  it("uses each row's currency for mixed-currency fallback summaries", async () => {
+    const answer = await askWithAnswer("", [{ sales: 100.123, currency: "USD" }, { sales: 200.456, currency: "INR" }], null);
+    expect(answer.getByText(/sales: \$100.12/)).toBeInTheDocument();
+    expect(answer.getByText(/sales: ₹200.46/)).toBeInTheDocument();
+    expect(screen.queryByRole("table")).not.toBeInTheDocument();
   });
 
   it("renders answer HTML as text while keeping trend highlighting", async () => {
     const answer = await askWithAnswer('Sales increased by 10%. <img src=x onerror="alert(1)">');
-    expect(answer.getByText("Sales increased by 10.00%").closest(".trend-up")).not.toBeNull();
+    expect(answer.getByText("Sales increased by 10.00 percentage").closest(".trend-up")).not.toBeNull();
     expect(document.querySelector(".answer-content img")).toBeNull();
     expect(answer.getByText(/<img src=x/)).toBeInTheDocument();
   });
 
   it("keeps bold formatting across opposing clauses and leaves contractions neutral", async () => {
     const answer = await askWithAnswer("**Sales increased by 10%, while profit decreased by 3%.**\nSales didn't increase.");
-    expect(answer.getByText("Sales increased by 10.00%").closest(".trend-up")).not.toBeNull();
-    expect(answer.getByText(/profit decreased by 3.00%/).closest(".trend-down")).not.toBeNull();
-    expect(answer.getByText(/profit decreased by 3.00%/).tagName).toBe("STRONG");
+    expect(answer.getByText("Sales increased by 10.00 percentage").closest(".trend-up")).not.toBeNull();
+    expect(answer.getByText(/profit decreased by 3.00 percentage/).closest(".trend-down")).not.toBeNull();
+    expect(answer.getByText(/profit decreased by 3.00 percentage/).tagName).toBe("STRONG");
     expect(answer.getByText("Sales didn't increase.").closest(".trend-up, .trend-down")).toBeNull();
   });
 });
@@ -195,7 +195,7 @@ describe("clarification responses", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Send" }));
 
-    await screen.findByText("Total sales are 100.");
+    await screen.findByText("Total sales are $100.00.");
 
     const secondRequest = fetchMock.mock.calls[1][1] as RequestInit;
     const requestBody = JSON.parse(secondRequest.body as string);
@@ -235,11 +235,8 @@ describe("clarification responses", () => {
       { target: { value: "Which products had the most returns?" } },
     );
     fireEvent.click(screen.getByRole("button", { name: "Send" }));
-    expect(await screen.findByText("Results")).toBeInTheDocument();
-    expect(
-      screen.getByRole("columnheader", { name: "product_name" }),
-    ).toBeInTheDocument();
-    expect(screen.getByText("Product 001")).toBeInTheDocument();
+    expect(await screen.findByText("Product 001 has the highest return count.")).toBeInTheDocument();
+    expect(screen.queryByRole("table")).not.toBeInTheDocument();
   });
 });
 
@@ -676,16 +673,16 @@ describe("dataset selection & strict-answer display", () => {
     expect(input()).toHaveValue("");
     fireEvent.change(input(), { target: { value: "How many orders?" } });
     fireEvent.click(screen.getByRole("button", { name: "Send" }));
-    await screen.findByText("Results");
+    await screen.findByText("• count: 10");
     fireEvent.change(input(), { target: { value: "Data draft" } });
 
     fireEvent.click(screen.getByRole("tab", { name: "Business Chat" }));
     expect(screen.getByText("Business sales answer")).toBeInTheDocument();
-    expect(screen.queryByText("Results")).not.toBeInTheDocument();
+    expect(screen.queryByText("• count: 10")).not.toBeInTheDocument();
     expect(input()).toHaveValue("Business draft");
 
     fireEvent.click(screen.getByRole("tab", { name: "My Data" }));
-    expect(screen.getByText("Results")).toBeInTheDocument();
+    expect(screen.getByText("• count: 10")).toBeInTheDocument();
     expect(screen.getByLabelText("orders.csv")).toBeChecked();
     expect(input()).toHaveValue("Data draft");
     fireEvent.click(screen.getByRole("button", { name: "Send" }));
@@ -765,7 +762,7 @@ describe("dataset selection & strict-answer display", () => {
     );
     fireEvent.click(screen.getByRole("button", { name: "Send" }));
 
-    await screen.findByText("Results");
+    await screen.findByText("• count: 10");
     expect(
       screen.getByText("How many orders?", { selector: ".user-msg" }),
     ).toBeInTheDocument();
@@ -776,14 +773,16 @@ describe("dataset selection & strict-answer display", () => {
     expect(
       screen.queryByText("How many orders?", { selector: ".user-msg" }),
     ).not.toBeInTheDocument();
-    expect(screen.queryByText("Results")).not.toBeInTheDocument();
+    expect(screen.queryByText("• count: 10")).not.toBeInTheDocument();
   });
 
-  it("renders evidence (sql + rows), with no narrative insight sections", async () => {
+  it("renders a Business Chat style summary with formatted results and lets it be saved", async () => {
     const fetchMock = mockDatasetsAndStrictAsk({
       question: "Total revenue",
       sql: "SELECT SUM(revenue) AS total FROM imported.orders",
-      rows: [{ total: 500 }],
+      rows: [{ total: "500.1234", profit_margin: "0.17210147" }],
+      insights: { text: "## Sales summary\n- Sales were 500.1234.\n- Sales increased by 12.5%.\n- Profit decreased by 4.2%.\n- Profit margin is 0.17210147." },
+      currency: "INR",
       result_count: 1,
       sources: [{ table: "orders", columns: ["revenue"] }],
       declined: false,
@@ -800,9 +799,15 @@ describe("dataset selection & strict-answer display", () => {
     );
     fireEvent.click(screen.getByRole("button", { name: "Send" }));
 
-    expect(await screen.findByText("Results")).toBeInTheDocument();
-    expect(screen.getByRole("columnheader", { name: "total" })).toBeInTheDocument();
-    expect(screen.getByText("500")).toBeInTheDocument();
+    expect(await screen.findByText(/Sales were ₹500.12/)).toBeInTheDocument();
+    expect(screen.queryByRole("table")).not.toBeInTheDocument();
+    const answer = within(screen.getByRole("article", { name: "Assistant response" }));
+    expect(answer.getByRole("heading", { name: "Sales summary" })).toBeInTheDocument();
+    expect(answer.getByText("Sales increased by 12.50 percentage").closest(".trend-up")).not.toBeNull();
+    expect(answer.getByText("Profit decreased by 4.20 percentage").closest(".trend-down")).not.toBeNull();
+    expect(answer.getByText(/Profit margin is 17.21 percentage/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "☆ Save insight" }));
+    expect(JSON.parse(localStorage.getItem("datapilot_saved_insights")!)[0].answerText).toContain("Sales summary");
     expect(screen.getByText("View query details")).toBeInTheDocument();
 
     expect(screen.queryByText(/Key findings/i)).not.toBeInTheDocument();

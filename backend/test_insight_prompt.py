@@ -6,7 +6,10 @@ prompt = build_insights_prompt(
 )
 
 assert "Do not guess" in prompt
-assert "data does not show the cause" in prompt
-assert "only the result rows" in prompt
+assert "Never invent causes" in prompt
+assert "only on the result rows" in prompt
+assert "Be concise" in prompt
+assert "percentage" in prompt
+assert "default USD ($)" in prompt
 
 print("Insight prompt safety test passed.")

@@ -5,6 +5,7 @@ from google import genai
 from app.config.settings import settings
 import time
 from app.database.metadata import get_schema_catalog
+from app.services.currency_service import currency_markers
 
 client = genai.Client(api_key=settings.gemini_api_key)
 
@@ -321,6 +322,9 @@ def _tables_to_llm_text(tables: list[dict]) -> str:
                     str(value) for value in column["sample_values"]
                 )
                 line += f" | examples: {examples}"
+
+            if currency_markers(column.get("description") or ""):
+                line += f" | description: {column['description']}"
 
             lines.append(line)
 

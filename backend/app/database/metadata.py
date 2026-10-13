@@ -9,6 +9,7 @@ from app.database.connection import engine
 
 import json
 import pandas as pd
+from app.services.currency_service import dataframe_currency_context, currency_markers
 
 def get_schema_summary() -> dict:
     """Inspect the connected database and return a compact schema map."""
@@ -247,7 +248,7 @@ def _build_schema_catalog(sample_limit: int) -> dict:
                         "sample_values": sample_values,
                         "description": description_lookup.get(
                             (table_name, column_name), ""
-                        ),
+                        ) or column_info.get("comment", "") or "",
                     }
                 )
 
@@ -325,6 +326,9 @@ def _catalog_tables_to_llm_text(tables: list[dict]) -> str:
                     str(value) for value in column["sample_values"]
                 )
                 line += f" | examples: {examples}"
+
+            if currency_markers(column.get("description") or ""):
+                line += f" | description: {column['description']}"
 
             lines.append(line)
 
@@ -588,6 +592,10 @@ def create_dataset_import(dataset_name: str, tables: dict[str, "pd.DataFrame"]) 
             connection.execute(
                 text(f'CREATE TABLE "{DATASET_SCHEMA}"."{db_table_name}" ({column_ddl})')
             )
+            for label, currencies in dataframe_currency_context(df).items():
+                db_col = column_map[label]
+                comment = ("Currency: " + ", ".join(currencies)).replace("'", "''")
+                connection.execute(text(f'COMMENT ON COLUMN "{DATASET_SCHEMA}"."{db_table_name}"."{db_col}" IS \'{comment}\''))
 
             renamed_df = df.rename(
                 columns={orig: column_map[str(orig)] for orig in df.columns}
